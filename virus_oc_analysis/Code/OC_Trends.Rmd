@@ -1,0 +1,826 @@
+---
+title: "Interim Data Analysis: <br>Temporal Associations Between Respiratory Virus Cases and Orbital Cellulitis Admissions"
+author: "Ryan Summers"
+date: "2026-03-10"
+output: 
+  bookdown::html_document2:
+    toc: true
+    toc_float: true
+    code_folding: hide
+    css: style.css
+  bookdown::pdf_document2: default
+bibliography: oc_trends.bib
+csl: "apa-5th-edition.csl"
+nocite: '@*'
+---
+
+```{r setup, include=FALSE}
+library(knitr)
+library(ggplot2)
+library(tidyverse)
+library(magrittr)
+library(ggfortify)
+library(olsrr)
+library(readxl)
+library(dlnm)
+library(splines)
+library(MASS)
+library(dplyr)
+library(gt)
+library(naniar)
+library(performance)
+library(ggcorrplot)
+# sources
+# vignette("dlnmOverview")
+# vignette("dlnmExtended")
+# vignette("dlnmTS")
+options(htmltools.preserve.raw = FALSE)
+
+```
+
+## Introduction
+
+>The data for this project consist of monthly hospital admissions for orbital cellulitis from January 2020 through September 2025, alongside counts of respiratory virus cases. Orbital cellulitis admission data were obtained from Children’s Hospital Colorado and Rocky Mountain Children’s Hospital. Viral variables include influenza, respiratory syncytial virus (RSV), adenovirus, human metapneumovirus (HMPV), parainfluenza viruses (types 1–4), rhinovirus/enterovirus, and coronavirus. Respiratory virus surveillance data were obtained from the Centers for Disease Control and Prevention (CDC). 
+>
+The primary objectives of this analysis were:
+>
+>1.	To evaluate whether monthly viral detection counts is associated with orbital cellulitis admissions.
+2.	To assess correlations among viruses to determine whether multicollinearity may affect model stability.
+3.	To determine whether these associations occur with delayed effects across 0–3-month lag periods.
+4.	To compare alternative DLNM specifications and identify the most appropriate lag–exposure structure.
+
+## Methods
+
+### Data Management & Cleanup
+
+```{r, warning=FALSE, message=FALSE}
+trends_raw <- read_excel('/Users/ryan_summers/My Documents/Caroline/OC/Trend Analysis/COVID and Viruses Nov 2025.xlsx', sheet="USE THIS!")
+```
+
+
+```{r,warning=FALSE, message=FALSE}
+NA_cols <- c(
+  "flu", "rsv", "adeno", "hpmv",
+  "para1", "para2", "para3", "para4",
+  "rv_ev", "corona_other")
+
+# cleanup column names
+trends_cleaned <- trends_raw %>% 
+  # lowercase columns & rows
+  setNames(tolower(names(.))) %>%
+  mutate_if(is.character, tolower) %>% 
+  # remove white-space in columns
+  setNames(gsub("\\s+", "_", names(.))) %>% 
+  rename(oc_adm = orbital_cellulitis_admissions,
+         rv_ev = `rv/ev`) %>% 
+  # convert mixed date formats to be more uniform
+  mutate(
+    date = case_when(
+      grepl("^[0-9]+$", ...1) ~ as.Date(as.numeric(...1), origin = "1899-12-30"),
+      TRUE ~ as.Date(paste("01", ...1), format = "%d %B %Y")
+    )) %>% 
+  dplyr::select(-...1) %>% dplyr::select(date, everything()) %>% 
+  # remove NAs (complete case) from NA vector
+  drop_na(all_of(NA_cols))
+  
+```
+
+```{r}
+# virus columns
+virus_columns <- c("covid_numbers","flu", "rsv", "adeno", "hpmv", "para1", "para2", "para3", 
+                   "para4", "rv_ev", "corona_other")
+
+# transform viruses to scale of cases per 100 for computationally efficiency
+trends_cleaned <- trends_cleaned %>%
+  mutate(across(all_of(virus_columns), ~ . / 100, .names = "{.col}_per100"))
+```
+
+#### Missing Data 
+
+<details>
+<summary>Show Missing Data Summary</summary>
+```{r}
+trends_cleaned %>%
+  dplyr::select(covid_numbers,flu, rsv, adeno, hpmv, para1, para2, para3, 
+                   para4, rv_ev, corona_other) %>% 
+  miss_var_summary() %>% 
+  gt() %>% 
+  cols_label(n_miss  = html("# Missing"),
+             pct_miss = html("% Missing")) %>% 
+  tab_style(
+    style = list(
+      cell_fill(color = "gray95"),
+      cell_text(weight = "bold")),
+    locations = cells_column_labels(everything()))
+```
+</details>
+
+
+> Each row of the dataset represented a single month of observational counts of orbital cellulitis admissions and respiratory virus detections. Virus detection counts were scaled to cases per 100 detections to improve computational stability during model estimation.
+>
+>A continuous time variable representing sequential months was created to model long-term temporal trends. Seasonality was accounted for using a categorical month variable derived from the date column.
+>
+>To account for pandemic-related disruptions in respiratory virus circulation, a COVID-era indicator variable representing early pandemic months was created. COVID admission counts were also explored as a potential time-varying covariate in sensitivity analyses.
+>
+>The initial dataset contained 60 monthly observations spanning October 2020 through September 2025. Six observations had missing COVID-19 case counts and were excluded from analyses that adjusted for COVID activity. In addition, because the distributed lag models incorporated a three-month lag structure, the first three observations could not be used in model estimation due to unavailable lagged exposure values. After accounting for these exclusions, the final analytic sample consisted of 51 monthly observations.
+
+
+
+
+
+### Exploratory Data Analysis (EDA)
+
+#### Correlation Analysis
+```{r, fig.width=7, fig.height=6, warning=FALSE, message=FALSE, fig.show='hide'}
+virus_vars <- c(
+  "flu_per100","rsv_per100","adeno_per100","hpmv_per100",
+  "para1_per100","para2_per100","para3_per100","para4_per100",
+  "rv_ev_per100","corona_other_per100", "covid_numbers_per100")
+
+cor_matrix <- cor(
+  trends_cleaned[, virus_vars],
+  use = "pairwise.complete.obs",
+  method = "spearman")
+
+clean_names <- c(
+  "Flu", "RSV", "Adenovirus", "hMPV",
+  "Parainfluenza 1", "Parainfluenza 2", "Parainfluenza 3", "Parainfluenza 4",
+  "Rhinovirus/Enterovirus", "Coronavirus (other)", "COVID-19")
+
+colnames(cor_matrix) <- clean_names
+rownames(cor_matrix) <- clean_names
+
+ggcorrplot(cor_matrix,
+           type = "lower",
+           lab = T)
+```
+
+
+>Prior to model fitting, pairwise associations among respiratory virus variables were evaluated to assess potential collinearity. Spearman rank correlations were calculated due to the count-based and non-normally distributed nature of the virus detection data. A correlation matrix and heatmap visualization were generated to summarize relationships among viruses. Correlations greater than 0.7 were considered indicative of substantial shared variability. Because several viruses exhibited moderate to strong correlations and orbital cellulitis admissions were relatively rare, primary analyses were conducted using separate models for each virus to reduce the risk of unstable coefficient estimates. Sensitivity analyses additionally explored models including multiple viruses simultaneously.
+
+### Primary Analysis
+
+"Distributed lag non-linear models (DLNMs) provide a modeling framework to simultaneously evaluate non-linear and delayed effects of an exposure on an outcome in time-series data. In the context of this study, DLNMs are used to investigate whether monthly counts of viral infections are associated with subsequent hospital admissions for orbital cellulitis, and whether this relationship occurs with a delay over a couple of months. This type of relationship is described as an exposure–lag–response association, where the exposure (virus counts) may influence the outcome (orbital cellulitis admissions) both non-linearly and across multiple time lags.
+
+The DLNM framework relies on the specification of a cross-basis function, which represents a two-dimensional functional space capturing both the exposure–response relationship and the lagged temporal response. In this analysis, the cross-basis allows modeling how changes in viral incidence affect orbital cellulitis admissions and how this effect may vary across different lag periods (e.g., 0–2 months).
+
+Within the dlnm package in R, the function crossbasis() is used to construct this structure. Internally, crossbasis() calls the function onebasis() to generate separate basis functions describing the exposure–response relationship for virus counts and the lag–response relationship across time delays. These two sets of basis functions are then combined through a tensor product to create the cross-basis matrix, which can be incorporated into a regression model to estimate the lagged and potentially nonlinear association between viral infections and orbital cellulitis admissions."
+
+>Because viral infections may influence orbital cellulitis risk with a delay, distributed lag nonlinear models (DLNMs) were used to evaluate associations between viral detection counts and orbital cellulitis admissions using negative binomial regression models to account for over-dispersion.
+>
+>Cross-basis functions were constructed to simultaneously model the relationship between viral exposure levels and delayed effects across lag periods. Lag periods from 0 to 3 months were evaluated to capture short-term delayed associations.
+>
+>Three alternative model specifications were compared:
+>
+>1.	Fully nonlinear model - Nonlinear exposure and nonlinear lag functions (natural splines).
+>2.	Fully linear model - Linear exposure and linear lag effects.
+>3.	Mixed model - Linear exposure with nonlinear lag functions.
+>
+>Model selection was guided by Akaike Information Criterion (AIC). Differences in AIC greater than 2 were considered evidence favoring one model over another.
+
+>Relative risks were estimated for representative exposure levels corresponding to low (20th percentile), median (50th percentile), and high (90th percentile) virus cases.
+>
+>All analyses were conducted in R.
+
+
+## Results
+
+### Correlations
+```{r heat-map, fig.width=7, fig.height=6, warning=FALSE, message=FALSE, fig.cap="***Pairwise correlation matrix of monthly respiratory virus counts and COVID-19 admissions.*** Heatmap showing Pearson correlation coefficients between respiratory virus detection counts scaled per 100 tests, including influenza, RSV, adenovirus, human metapneumovirus (HPMV), parainfluenza viruses (types 1–4), rhinovirus/enterovirus (RV/EV), coronaviruses, and COVID-19 admissions. Colors represent the magnitude and direction of correlation (red = positive, blue = negative), with numerical values displayed within each cell."}
+
+ggcorrplot(cor_matrix,
+           type = "lower",
+           lab = T)
+```
+
+>Spearman rank correlation analysis was performed to assess associations between respiratory virus counts. The analysis revealed moderate to strong correlations among several respiratory viruses. The strongest correlation was observed between Rhinovirus and Parainfluenza type 1 (ρ = 0.78). Additional moderate correlations were observed between Adenovirus and Parainfluenza type 1 (ρ = 0.77), and between Influenza and Coronavirus (ρ = 0.76). These correlations indicate that multiple respiratory viruses often circulate concurrently, which may complicate interpretation of a multi-virus regression model where all viruses are included simultaneously. It should also be noted that these correlations may partially reflect shared seasonal patterns among respiratory viruses rather than direct epidemiologic relationships.
+
+
+### Model Selection
+
+Allow effects from 0 through lag 3 months for each virus
+
+```{r}
+# create named crossbasis objects in the global environment
+for (v in virus_columns) {
+  # for the per 100 cases variable in df
+  varname <- paste0(v, "_per100")
+  cbname <- paste0("cb_", varname)
+
+  assign(
+    cbname,
+    crossbasis(
+      trends_cleaned[[varname]],
+      lag = 3,
+      argvar = list(fun = "lin"),
+      arglag = list(fun = "ns", df=3)))
+  }
+```
+
+
+OC admissions are rare and are over-dispersed, build a negative binomial to handle this
+```{r}
+trends_cleaned$time <- seq_len(nrow(trends_cleaned))
+trends_cleaned$month_num <- as.integer(format(trends_cleaned$date, "%m"))
+
+cb_terms <- paste0("cb_", virus_columns, "_per100")
+form <- as.formula(
+  paste(
+    "oc_adm ~",
+    paste(c(cb_terms, "factor(month_num)", "ns(time, df = 3)"), 
+          collapse = " + ")))
+
+```
+
+
+```{r}
+# mean and variance
+cat(
+  "The mean OC Admission per month was", round(mean(trends_cleaned$oc_adm, na.rm = TRUE),1), 
+  "and variance", round(var(trends_cleaned$oc_adm, na.rm = TRUE),1))
+```
+
+
+Sensitivity on including COVID admission cases into model
+```{r,warning=FALSE, message=FALSE}
+# full model
+nb.model.flu <- glm.nb(oc_adm ~ cb_flu_per100 + factor(month_num) + 
+                         ns(time, df = 3),
+                       data = trends_cleaned)
+# reduced
+nb.model.flu.sens <- glm.nb(oc_adm ~ cb_flu_per100 + factor(month_num) + 
+                         ns(time, df = 3) + covid_numbers_per100,
+                       data = trends_cleaned)
+
+AIC(nb.model.flu,nb.model.flu.sens) %>%
+  rownames_to_column("Model") %>% 
+  mutate(Model = c("Main model", "Model w/COVID")) %>% 
+  gt() %>% 
+  cols_label(df  = html("df"),
+             AIC = html("AIC")) %>% 
+  tab_style(
+    style = list(
+      cell_fill(color = "gray95"),
+      cell_text(weight = "bold")),
+    locations = cells_column_labels(everything()))
+
+anova(nb.model.flu, nb.model.flu.sens) %>% 
+  dplyr::select(!c(theta, Test, `   df`)) %>% 
+  mutate(Model = c("Main model", "Model w/COVID")) %>% 
+  gt() %>%
+  tab_header(title = "Likelihood Ratio Test (LRT)") %>% 
+  fmt_number(decimals = 3) %>% 
+    tab_style(
+    style = list(
+      cell_text(weight = "bold")),
+    locations = cells_column_labels(everything())) %>% 
+  text_transform(
+    locations = cells_body(columns = `Pr(Chi)`),
+     fn = function(x) ifelse(as.numeric(x) < 0.001, "<0.001",
+                            format(round(as.numeric(x), 3), nsmall = 3)))
+
+
+```
+>Adding the COVID variable significantly improves model fit compared to the main model.
+
+Compare using different combinations of linear and non-linear fits
+```{r,warning=FALSE, message=FALSE}
+cb_flu.ns <- crossbasis(
+  trends_cleaned$flu_per100, 
+  lag=3,
+  argvar = list(fun = "ns", df=2), 
+  arglag = list(fun = "ns", df=2))
+
+cb_flu.lin <- crossbasis(
+  trends_cleaned$flu_per100, 
+  lag=3,
+  argvar = list(fun = "lin"), 
+  arglag = list(fun = "lin"))
+
+cb_flu.mix <- crossbasis(
+  trends_cleaned$flu_per100, 
+  lag=3,
+  argvar = list(fun = "lin"), 
+  arglag = list(fun = "ns", df=3))
+
+
+nb.model.ns <- glm.nb(oc_adm ~ cb_flu.ns + factor(month_num) + covid_numbers_per100 +
+                         ns(time, df = 3),
+                       data = trends_cleaned)
+
+nb.model.lin <- glm.nb(oc_adm ~ cb_flu.lin + factor(month_num) + covid_numbers_per100 +
+                         ns(time, df = 3),
+                       data = trends_cleaned)
+
+nb.model.mix <- glm.nb(oc_adm ~ cb_flu.mix + factor(month_num) + covid_numbers_per100 +
+                         ns(time, df = 3),
+                       data = trends_cleaned)
+```
+
+<details>
+<summary>Show Model Summaries</summary>
+```{r}
+# model results
+summary(nb.model.ns)
+summary(nb.model.lin)
+summary(nb.model.mix)
+```
+</details>
+
+```{r}
+AIC(nb.model.ns, nb.model.lin, nb.model.mix) %>% 
+  rownames_to_column("Model") %>%  
+  mutate(Model = c("Natural Spline", "Linear", "NS & Linear")) %>% 
+  gt() %>% 
+  cols_label(df  = html("df"),
+             AIC = html("AIC")) %>% 
+  tab_style(
+    style = list(
+      cell_fill(color = "gray95"),
+      cell_text(weight = "bold")),
+    locations = cells_column_labels(everything()))
+
+```
+
+>Comparison of DLNM specifications showed that the fully linear model provided the lowest AIC, with the mixed model demonstrating similar performance. The fully nonlinear model had a slightly higher AIC, suggesting that additional spline flexibility did not substantially improve model fit.
+>
+>The difference between the linear and mixed models was small (ΔAIC ≈ 1.3), indicating comparable model performance. Because the mixed model allowed for more flexible lag structures, it was selected for primary analyses.
+
+
+
+```{r}
+fit_dlnm_one <- function(varname, data, lag = 3) {
+  
+  cb <- crossbasis(
+    data[[varname]],
+    lag = lag,
+    argvar = list(fun = "lin"),
+    arglag = list(fun = "ns", df = 2))
+  
+  full_model <- glm.nb(
+    oc_adm ~ cb + factor(month_num) + ns(time, df = 3) + covid_numbers_per100,
+    data = data)
+  
+  reduced_model <- glm.nb(
+    oc_adm ~ factor(month_num) + ns(time, df = 3) + covid_numbers_per100,
+    data = data)
+  
+  vals <- quantile(
+    data[[varname]],
+    probs = c(0.20, 0.50, 0.90),
+    na.rm = TRUE)
+  
+  names(vals) <- c("low", "median", "high")
+  
+  pred_slices <- crosspred(
+    cb,
+    full_model,
+    at = as.numeric(vals),
+    cen = median(data[[varname]], na.rm = TRUE))
+  
+  names(pred_slices$predvar) <- names(vals)
+  
+  pred_overall <- crosspred(
+    cb,
+    full_model,
+    at = seq(
+      from = min(data[[varname]], na.rm = TRUE),
+      to = max(data[[varname]], na.rm = TRUE),
+      length.out = 100),
+    cen = median(data[[varname]], na.rm = TRUE))
+  
+  ## LRT test
+  ##***Needs to be investigated. Not sure this is the proper test 
+  ## for this model***
+  pval <- anova(reduced_model, full_model, test = "Chisq")[2, "Pr(Chi)"]
+  
+  # Residuals
+  model_resid <- residuals(full_model, type = "pearson")
+  
+  ## ACF object (plot = FALSE prevents plotting)
+  resid_acf <- acf(model_resid, plot = FALSE)
+  
+  list(
+    varname = varname,
+    cb = cb,
+    model = full_model,
+    reduced_model = reduced_model,
+    vals = vals,
+    pred_slices = pred_slices,
+    pred_overall = pred_overall,
+    nobs_full = nobs(full_model),
+    nobs_red = nobs(reduced_model),
+    aic_full = AIC(full_model),
+    aic_red = AIC(reduced_model),
+    acf_obj = resid_acf,
+    p_value = pval)
+}
+
+```
+
+```{r,warning=FALSE, message=FALSE}
+# warning suppressed for iteration limit reached estimating theta
+results <- suppressWarnings(lapply(virus_vars, fit_dlnm_one, data = trends_cleaned))
+names(results) <- virus_vars
+```
+
+### Plotting Exposure-Response
+
+```{r}
+pretty_names <- c(
+  flu_per100 = "Flu",
+  rsv_per100 = "RSV",
+  adeno_per100 = "Adenovirus",
+  hpmv_per100 = "HPMV",
+  para1_per100 = "Parainfluenza 1",
+  para2_per100 = "Parainfluenza 2",
+  para3_per100 = "Parainfluenza 3",
+  para4_per100 = "Parainfluenza 4",
+  rv_ev_per100 = "Rhinovirus/Enterovirus",
+  corona_other_per100 = "Other coronavirus",
+  covid_numbers_per100 = "COVID Admissions")
+```
+
+
+```{r}
+plot_dlnm_slices <- function(res, pretty_name = NULL,
+                             legend_cex = 0.9,
+                             legend_xintersp = 0.25,
+                             legend_inset = -0.35) {
+
+  if (is.null(pretty_name)) pretty_name <- res$varname
+  
+  plot(
+    res$pred_slices,
+    "slices",
+    var = res$pred_slices$predvar["low"],
+    ci = "n",
+    exp = TRUE,
+    ylim = range(res$pred_slices$matRRfit, na.rm = TRUE),
+    lwd = 1.5,
+    col = "firebrick",
+    xlab = "",
+    ylab = "",
+    main = paste("Lag-response:", pretty_name))
+
+  for (i in 1:2) {
+    lines(
+      res$pred_slices,
+      "slices",
+      var = c(res$pred_slices$predvar["median"],
+              res$pred_slices$predvar["high"])[i],
+      exp = TRUE,
+      col = c("darkgreen", "steelblue")[i],
+      lwd = 1.5)
+  }
+
+  abline(h = 1, lty = 2)
+
+  legend(
+    "bottom",
+    inset = c(0, legend_inset),
+    legend = c(
+      paste0("Low (", round(res$vals["low"], 2), "/100)"),
+      paste0("Median (", round(res$vals["median"], 2), "/100)"),
+      paste0("High (", round(res$vals["high"], 2), "/100)")),
+    col = c("firebrick", "darkgreen", "steelblue"),
+    lwd = 1.5,
+    horiz = TRUE,
+    x.intersp = legend_xintersp,
+    cex = legend_cex,
+    bty = "n",
+    xpd = TRUE)
+}
+```
+
+
+
+```{r, eval=FALSE}
+for (v in names(results)) {
+  plot_dlnm_slices(results[[v]], pretty_name = pretty_names[v])
+}
+
+# Figure \@ref(fig:common-virus)
+```
+
+
+```{r, fig.width=10, fig.height=7}
+par(mfrow = c(2, 2), mar = c(4,4,3,1), oma=c(4,4,0,0)) # 4,4,3,1
+
+plot_dlnm_slices(results[["flu_per100"]], pretty_name = "Flu",
+                 legend_cex = 0.9, legend_xintersp = 0.25)
+plot_dlnm_slices(results[["rsv_per100"]], pretty_name = "RSV",
+                 legend_cex = 0.9, legend_xintersp = 0.25)
+plot_dlnm_slices(results[["rv_ev_per100"]], pretty_name = "RV/EV",
+                 legend_cex = 0.9, legend_xintersp = 0.25)
+plot_dlnm_slices(results[["hpmv_per100"]], pretty_name = "HMPV",
+                 legend_cex = 0.9, legend_xintersp = 0.25)
+
+mtext("Lag (months)", side = 1, outer = TRUE, line = 1.5)
+mtext("Relative risk", side = 2, outer = TRUE)
+```
+
+
+
+
+```{r mod-common-virus, fig.width=10, fig.height=4.5}
+par(mfrow = c(1, 2), mar = c(4,4,3,1),oma=c(5,4,0,0)) # 4,4,3,1
+plot_dlnm_slices(results[["adeno_per100"]], 
+                 pretty_name = "Adenovirus",
+                 legend_cex = 0.8, legend_xintersp = 0.10)
+plot_dlnm_slices(results[["corona_other_per100"]], 
+                 pretty_name = "Corona/Other",
+                 legend_cex = 0.8, legend_xintersp = 0.10)
+
+mtext("Lag (months)", side = 1, outer = TRUE, line = 0.5)
+mtext("Relative risk", side = 2, outer = TRUE)
+```
+
+
+```{r lag-response, fig.width=10, fig.height=7, fig.cap = "***Lag–response association between parainfluenza virus activity and orbital cellulitis admissions.*** The plots display estimated relative risk of orbital cellulitis admissions across a 0–3-month lag period for low (20th percentile), median (50th percentile), and high (90th percentile) levels of virus activity. The dashed horizontal line represents the null value (RR = 1), indicating no association relative to median virus activity."}
+
+par(mfrow = c(2, 2), mar = c(4,4,3,1), oma=c(4,4,0,0)) # 4,4,3,1
+
+plot_dlnm_slices(results[["para1_per100"]], pretty_name = "Para 1",
+                 legend_cex = 0.9, legend_xintersp = 0.25)
+plot_dlnm_slices(results[["para2_per100"]], pretty_name = "Para 2",
+                 legend_cex = 0.9, legend_xintersp = 0.25)
+plot_dlnm_slices(results[["para3_per100"]], pretty_name = "Para 3",
+                 legend_cex = 0.9, legend_xintersp = 0.25)
+plot_dlnm_slices(results[["para4_per100"]], pretty_name = "Para 4",
+                 legend_cex = 0.9, legend_xintersp = 0.25)
+
+mtext("Lag (months)", side = 1, outer = TRUE, line = 1.5)
+mtext("Relative risk", side = 2, outer = TRUE)
+
+```
+
+
+>Lag-response plots were generated to visualize relative risks of orbital cellulitis admissions across lag periods for representative exposure levels.
+>
+>Lag–response plots suggested heterogeneity in the temporal patterns across viruses. For parainfluenza type 1, parainfluenza type 4, and rhinovirus/enterovirus, the estimated relative risk increased across the lag period, indicating stronger associations at later lag months. In contrast, most other viruses showed decreasing relative risk with increasing lag, suggesting that any association with orbital cellulitis admissions was strongest in the same month and diminished over time.
+
+### Cumulative Associations (RR)
+
+```{r, eval=FALSE}
+# create prediction for the entire exposure range
+pred_flu_overall <- crosspred(
+  cb_flu_per100,
+  nb.model.flu.sens,
+  at = seq(
+    from = min(trends_cleaned$flu_per100, na.rm = TRUE),
+    to = max(trends_cleaned$flu_per100, na.rm = TRUE),
+    length.out = 100),
+  cen = median(trends_cleaned$flu_per100, na.rm = TRUE))
+
+```
+
+```{r, eval=FALSE}
+# plot the overall curve
+plot(pred_flu_overall,
+     "overall",  # This gives the overall cumulative effect
+     exp = TRUE,
+     ci = "n",
+     ylim = c(0, 8),  
+     xlab = "Flu cases per 100",
+     ylab = "Relative risk",
+     main = "Overall Cumulative Association: Flu and OC Admissions",
+     lwd = 2,
+     col = "firebrick")
+
+# add CIs
+lines(pred_flu_overall, "overall", exp = TRUE, ci = "bars", col = 4)
+
+# Add reference line
+abline(h = 1, lty = 2, col = "gray50")
+```
+
+
+```{r}
+plot_dlnm_overall <- function(res, pretty_name = NULL) {
+  if (is.null(pretty_name)) pretty_name <- res$varname
+  
+  plot(
+    res$pred_overall,
+    "overall",
+    exp = TRUE,
+    ci = "n",
+    xlab = paste(pretty_name, "cases per 100"),
+    ylab = "",
+    main = paste("Overall cumulative association:", pretty_name),
+    lwd = 2,
+    col = "steelblue")
+  
+  lines(res$pred_overall, "overall", exp = TRUE, ci = "bars", col = 4)
+  abline(h = 1, lty = 2, col = "firebrick", lwd = 2)
+}
+```
+
+
+```{r, fig.width=10, fig.height=7}
+par(mfrow = c(2, 2), mar = c(4,4,3,1), oma=c(4,4,0,0)) # 4,4,3,1
+
+plot_dlnm_overall(results[["flu_per100"]], pretty_name = "Flu")
+plot_dlnm_overall(results[["rsv_per100"]], pretty_name = "RSV")
+plot_dlnm_overall(results[["rv_ev_per100"]], pretty_name = "RV/EV")
+plot_dlnm_overall(results[["hpmv_per100"]], pretty_name = "HPMV")
+
+mtext("Relative risk", side = 2, outer = TRUE)
+
+```
+
+```{r, fig.width=10, fig.height=4.5}
+par(mfrow = c(1, 2), mar = c(4,4,3,1),oma=c(5,4,0,0)) # 4,4,3,1
+plot_dlnm_overall(results[["adeno_per100"]], pretty_name = "ADENO")
+plot_dlnm_overall(results[["corona_other_per100"]], pretty_name = "Corona/Other")
+mtext("Relative risk", side = 2, outer = TRUE)
+
+```
+
+```{r cumm-rr, fig.width=10, fig.height=7, fig.cap = "***Overall cumulative associations between parainfluenza virus activity and orbital cellulitis admissions.*** The plots display the estimated cumulative relative risk (RR) of orbital cellulitis admissions across the full 0–3-month lag period as a function of virus activity. The blue line represents the model-estimated cumulative RR from the distributed lag model, and the vertical bars represent 95% confidence intervals. The red horizontal line indicates the null value (RR = 1), corresponding to the median virus activity used as the reference level."}
+
+par(mfrow = c(2, 2), mar = c(4,4,3,1), oma=c(4,4,0,0)) # 4,4,3,1
+plot_dlnm_overall(results[["para1_per100"]], pretty_name = "PARA1")
+plot_dlnm_overall(results[["para2_per100"]], pretty_name = "PARA2")
+plot_dlnm_overall(results[["para3_per100"]], pretty_name = "PARA3")
+plot_dlnm_overall(results[["para4_per100"]], pretty_name = "PARA4")
+mtext("Relative risk", side = 2, outer = TRUE)
+
+```
+
+> Overall cumulative exposure–response plots demonstrated heterogeneous associations between respiratory virus activity and orbital cellulitis admissions. Influenza, RSV, rhinovirus/enterovirus, coronavirus/other viruses, and parainfluenza types 1 and 4 showed increasing cumulative relative risk with higher virus activity, suggesting a potential positive association between increased viral activity and orbital cellulitis admissions over the 0–3-month lag period. In contrast, adenovirus, human metapneumovirus, and parainfluenza types 2 and 3 showed decreasing cumulative relative risk with increasing virus activity, indicating little evidence of a positive association in these models. Across all viruses, confidence intervals widened substantially at higher exposure levels, reflecting greater uncertainty in estimates at the upper range of virus activity where observations were sparse.
+
+
+```{r}
+summary_table_final <- do.call(rbind, lapply(results, function(res) {
+  
+  vals <- res$vals
+  
+  # high exposure RR and CI
+  rr_high <- unname(res$pred_slices$allRRfit[3])
+  rr_low  <- unname(res$pred_slices$allRRlow[3])
+  rr_up   <- unname(res$pred_slices$allRRhigh[3])
+  
+  # convert to percent change in expected admissions
+  pct_high <- (rr_high - 1) * 100
+  pct_low  <- (rr_low - 1) * 100
+  pct_up   <- (rr_up - 1) * 100
+  
+  data.frame(
+    Virus = unname(pretty_names[res$varname]),
+    `High activity\n(90th pct)` = round(unname(vals["high"]), 2),
+    `Median activity\n(reference)` = round(unname(vals["median"]), 2),
+    `Cumulative RR` = round(rr_high, 2),
+    `Cumulative RR\n95% CI` = paste0("(", round(rr_low, 2), ", ", round(rr_up, 2), ")"),
+    `% Change in Expected\nAdmissions` = round(pct_high, 1),
+    `% Change in Expected Admissions\n95% CI` = 
+      paste0("(", round(pct_low, 1), ", ", round(pct_up, 1), ")"),
+    `p-value` = signif(res$p_value, 3),
+    stringsAsFactors = FALSE
+  )
+}))
+
+rownames(summary_table_final) <- NULL
+summary_table_final
+```
+
+### Model Diagnostics
+
+<details>
+<summary>Show ACF plots</summary>
+
+```{r, fig.cap="***Autocorrelation function (ACF) plots of model residuals for each virus-specific DLNM model.*** The plots assess whether residual temporal autocorrelation remains after adjusting for seasonal effects, time trends, and COVID-19 incidence", fig.show='hold'}
+par(mfrow = c(2,2))
+
+for (v in names(results)) {
+  plot(results[[v]]$acf_obj,
+       main = paste("Residual ACF –", gsub("_per100", "", v)))
+}
+
+```
+</details>
+
+
+
+```{r}
+tbl_compare <- summary_table_final %>%
+  filter(Virus != "COVID Admissions") %>%
+  dplyr::select(!p.value) %>% 
+  gt(
+    caption = md("Association Between High Virus 
+                 Detections and OC Admissions. The table summarizes cumulative 
+                 associations between virus
+                  activity and orbital cellulitis admissions estimated using
+                  distributed lag models. High virus activity was defined as
+                  the 90th percentile of observed virus activity for each virus
+                  and compared with the median activity level (reference).
+                  Cumulative relative risks (RR) represent the combined
+                  association across the 0–3 month lag period. Percent change in
+                  expected admissions was calculated as (RR − 1) × 100. Values
+                  greater than 1 indicate higher expected admissions during
+                  periods of elevated virus activity relative to typical activity.")) %>% 
+  tab_style(
+  style = cell_text(align = "center"),
+  locations = cells_title(groups = "title")) %>% 
+  cols_label(
+    High.activity..90th.pct. = "High (cases/100)",
+    `Median.activity..reference.` = "Median (cases/100)",
+    Cumulative.RR = "RR",
+    Cumulative.RR.95..CI = "95% CI",
+    X..Change.in.Expected.Admissions = "%Δ in Adm",
+    X..Change.in.Expected.Admissions.95..CI   = "95% CI") %>%
+    #p.value = "P-value") %>%
+  # header f
+  tab_spanner(
+    label = "High Virus Activity (90th percentile) Compared with Median Activity",
+    columns = c(Cumulative.RR, Cumulative.RR.95..CI, 
+                X..Change.in.Expected.Admissions,
+                X..Change.in.Expected.Admissions.95..CI)) %>%
+  # # format numbers
+  # fmt_number(columns = p.value, decimals = 3) %>%
+  # 
+  # #change p-value reporting style
+  # text_transform(
+  #   locations = cells_body(columns = p.value),
+  #    fn = function(x) ifelse(as.numeric(x) < 0.001, "<0.001",
+  #                           format(round(as.numeric(x), 3), nsmall = 3))) %>%
+  
+  # bold specific text
+  tab_style(
+    style = cell_text(weight = "bold"),
+    locations = cells_stub(rows = everything())) %>%
+  tab_style(
+    style = cell_text(weight = "bold"),
+    locations = cells_column_spanners()) %>% 
+  
+  # add a footnotes
+  tab_footnote(
+    footnote = "Cumulative relative risks (RR) represent the combined association 
+    between virus activity and orbital cellulitis admissions across the 0–3 month 
+    lag period relative to the reference exposure level (median virus activity).",
+    locations = cells_column_labels(columns = c(Cumulative.RR))) %>%
+  tab_footnote(
+    footnote = "Percent change in expected admissions represents the relative 
+    change in the estimated number of orbital cellulitis admissions 
+    associated with high virus activity compared with the median activity level 
+    and was calculated as (RR − 1) × 100",
+    locations = cells_column_labels(columns = c(X..Change.in.Expected.Admissions))) %>% 
+  # tab_footnote(
+  #   footnote = "P-values were derived from likelihood ratio tests comparing full 
+  #   and reduced negative binomial models, where the reduced model excluded the 
+  #   virus cross-basis term",
+  #   locations = cells_column_labels(columns = c(p.value))) %>% 
+  # makes for a more condensed table
+  tab_options(
+    table.font.size = "medium",
+    heading.align = "left",
+    data_row.padding = px(2), #3 appears to be best
+    # reduce table width
+    table.width = pct(95),
+    # thickness of the horizontal borders
+    table.border.top.width = px(2),
+    table.border.bottom.width = px(2))
+
+tbl_compare
+```
+
+>The cumulative exposure–response plots illustrate the overall shape of the association between virus activity and orbital cellulitis admissions across the full range of observed exposure levels, whereas Table 1 summarizes the magnitude of the cumulative association comparing high virus activity (90th percentile) with the median reference level. Consistent with the upward trends observed in the exposure–response curves, influenza, RSV, parainfluenza types 1 and 4, rhinovirus/enterovirus, and other coronaviruses showed elevated cumulative relative risks at higher virus activity levels. 
+>
+>The strongest associations were observed for parainfluenza type 1 (RR = 2.12, 95% CI: 1.28 to 3.52) and influenza (RR = 2.05, 95% CI: 1.25 to 3.34), corresponding to increases of approximately 112% and 105% in expected orbital cellulitis admissions, respectively. RSV, rhinovirus/enterovirus, parainfluenza type 4, and other coronaviruses also demonstrated positive cumulative associations, although with wider confidence intervals. In contrast, adenovirus, human metapneumovirus, and parainfluenza types 2 and 3 showed cumulative relative risks below 1, indicating no evidence of increased admissions at higher virus activity levels. 
+>
+>Overall, these results suggest that certain respiratory viruses, particularly influenza and specific parainfluenza subtypes, may be associated with increased orbital cellulitis admissions during periods of elevated viral activity, although uncertainty remains substantial for several viruses where RR confidence intervals included the null value.
+
+## Discussion
+
+>This project evaluated the association between monthly respiratory virus activity and orbital cellulitis (OC) admissions using distributed lag models that accounted for delayed effects across a 0–3-month period. Overall, several viruses demonstrated patterns suggesting a potential positive association between increased viral circulation and OC admissions, although the strength and certainty of these associations varied across viruses.
+>
+>Among the viruses examined, influenza and parainfluenza type 1 showed the strongest cumulative associations with OC admissions when comparing high virus activity (90th percentile) to median activity levels. Influenza activity was associated with an estimated doubling of expected OC admissions, while parainfluenza type 1 showed an even larger estimated effect. Parainfluenza type 4, rhinovirus/enterovirus, RSV, and other coronaviruses also demonstrated positive cumulative associations, although these estimates were accompanied by wide confidence intervals. In contrast, adenovirus, human metapneumovirus (HPMV), and parainfluenza types 2 and 3 showed cumulative relative risks below one, suggesting little evidence of a positive association between higher virus activity and OC admissions in these models.
+>
+>The lag-response analyses further highlighted differences in the temporal patterns of association across viruses. For parainfluenza types 1 and 4 and rhinovirus/enterovirus, the estimated relative risk increased with longer lag periods, suggesting that the association with OC admissions may become more pronounced several months after peaks in virus activity. In contrast, most other viruses showed decreasing relative risk across the lag period, indicating that any association with OC admissions may be strongest closer to the time of virus circulation and attenuate over subsequent months. These heterogeneous lag patterns are consistent with the possibility that different respiratory viruses may influence OC risk through distinct mechanisms or timelines, although the limited number of OC admissions and associated uncertainty make definitive conclusions difficult.
+>
+>The exposure–response plots also demonstrated increasing uncertainty at higher levels of virus activity, as reflected by widening confidence intervals. This likely reflects the relatively small number of observations at extreme virus activity levels and the overall rarity of orbital cellulitis admissions. Consequently, while the models suggest possible associations between certain viruses and OC admissions, these findings should be interpreted cautiously.
+
+### Limitations
+
+>Several limitations should be considered when interpreting these findings. First, the virus surveillance data represent statewide pediatric virus counts, whereas orbital cellulitis admissions were obtained from two pediatric hospitals. Although both datasets reflect pediatric populations, statewide virus activity may not perfectly capture local exposure patterns for the hospital catchment areas. Second, orbital cellulitis is a relatively rare outcome, resulting in small monthly admission counts and substantial uncertainty in estimated associations, particularly at higher virus activity levels. Third, the observational nature of this analysis limits causal inference, and unmeasured factors such as changes in clinical admission practices, seasonal environmental conditions, or concurrent infections may confound the observed relationships. Finally, virus activity was measured using aggregated surveillance counts rather than individual patient-level infection data, which prevents direct attribution of OC cases to specific viral infections.
+
+### Conclusions
+
+>In this time-series analysis, several respiratory viruses, including influenza, parainfluenza types 1 and 4, RSV, and rhinovirus/enterovirus, showed patterns suggesting a possible association between higher virus activity and increased orbital cellulitis admissions across a 0–3-month lag period. In contrast, adenovirus, human metapneumovirus, and parainfluenza types 2 and 3 showed little evidence of positive associations. While these findings support the hypothesis that respiratory viral circulation may contribute to fluctuations in OC admissions, the observed associations were heterogeneous and often accompanied by wide confidence intervals. 
+
+### References
+
+ChatGPT was used to check R code errors for some of the packages used and to grammar check [@openai2025].
+
+<div id="refs"></div>
+
+## Session Information
+```{r, results='show', echo=F}
+MA.session = sessionInfo(package = NULL)
+print(MA.session)
+```
+
+## Appendix: R Code
+```{r, ref.label=knitr::all_labels(), echo=TRUE, eval=FALSE}
+```
+

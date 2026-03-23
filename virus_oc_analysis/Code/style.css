@@ -1,0 +1,62 @@
+/* Center and size the title, author, and date */
+
+h1.title {
+  text-align: center;
+  font-size: 32px;
+}
+
+h4.author {
+  text-align: center;
+  font-size: 18px;
+}
+
+h4.date {
+  text-align: center;
+  font-size: 16px;
+}
+
+/* Section headings */
+
+h1 {
+  font-size: 28px;
+}
+
+h2 {
+  font-size: 22px;
+}
+
+h3 {
+  font-size: 18px;
+}
+
+h4 {
+  font-size: 16px;
+}
+
+body {
+  font-size: 16px;   /* default ~16px */
+}
+
+pre code {
+  font-size: 13px;   /* code blocks */
+}
+
+
+blockquote {
+  font-size: 96%;      /* smaller than normal text */
+  color: #444;         /* optional: softer color */
+  margin-left: 1em;
+  padding-left: 1em;
+  border-left: 3px solid #cccccc;
+}
+
+/* Add space between bibliography entries */
+#refs .csl-entry {
+  margin-bottom: 0.25em !important;
+}
+
+/* Move gt table caption below the table */
+
+.gt_caption {
+  caption-side: bottom;
+}
