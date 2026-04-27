@@ -1,0 +1,490 @@
+---
+title: 'Interim Data Analysis : Associations with Adult Orbital Cellulitis'
+author: "Ryan Summers"
+date: "2026-04-19"
+output: 
+  bookdown::html_document2:
+    toc: true
+    toc_float: true
+    code_folding: hide
+    css: style.css
+  bookdown::pdf_document2: default
+bibliography: oc_trends.bib
+csl: "apa-5th-edition.csl"
+nocite: '@*'
+---
+
+```{r setup, include=FALSE}
+library(knitr)
+library(ggplot2)
+library(tidyverse)
+library(magrittr)
+library(ggfortify)
+library(olsrr)
+library(readxl)
+library(splines)
+library(MASS)
+library(dplyr)
+library(gt)
+library(naniar)
+library(performance)
+library(ggcorrplot)
+library(gtsummary)
+library(ncvreg)
+library(StepReg)
+library(logistf)
+library(glmnet)
+library(pROC)
+
+# scripts
+source("/Users/ryan_summers/Library/Mobile\ Documents/com~apple~CloudDocs/GitHub/Orbital-Cellulitis-Research/adult_analysis/Code/group_counts_ftn.R")
+```
+
+## Introduction
+
+>The data for this analyses consists of hospital admissions for orbital cellulitis 
+from January 2020 through September 2025, from a retrospective chart review across 
+three hospital systems. Orbital cellulitis admission data were obtained from 
+Denver Health (DH), University of Colorado (UC), and Oregon Health and Science (OHSU).
+This dataset includes
+
+Viral variables include influenza, respiratory syncytial virus (RSV), adenovirus, human metapneumovirus (HMPV), parainfluenza viruses (types 1–4), rhinovirus/enterovirus, and coronavirus. Respiratory virus surveillance data were obtained from the Centers for Disease Control and Prevention (CDC). 
+>
+The primary objectives of this analysis were:
+>
+>1.	To evaluate whether monthly viral detection counts is associated with orbital cellulitis admissions.
+2.	To assess correlations among viruses to determine whether multicollinearity may affect model stability.
+3.	To determine whether these associations occur with delayed effects across 0–3-month lag periods.
+4.	To compare alternative DLNM specifications and identify the most appropriate lag–exposure structure.
+
+1. What are the factors influencing need for surgery? 
+    - age
+    - sinusitis
+    - diabetes
+    - immunocompromise
+    - drugs
+    - asthma
+    - trauma
+    - prior surgery
+    - dental 
+    - NLDO
+    - SPA
+    - OA
+    - ICE
+2. What are the factors influencing length of stay (same as before) 
+3. What are the factors influencing development of SPA? OA? ICE? 
+
+## Methods
+
+### Data Management & Cleanup
+
+```{r, warning=FALSE, message=FALSE}
+oc_raw <- read_excel("/Users/ryan_summers/Library/Mobile\ Documents/com~apple~CloudDocs/GitHub/Orbital-Cellulitis-Research/adult_analysis/DataRaw/OHSU\ and\ UC.xlsx", sheet="Adults")
+```
+
+A priori variables based on discussion with PI
+```{r}
+priori <- c("age", "sinusitis", "diabetes", "immunocompromise", "drug/alc",
+            "asthma", "trauma", "prior_surgery", "surgery_adm",
+            "dental_infection",  "nldo/infection", "spa", "oa", "ice")
+```
+
+
+```{r,warning=FALSE, message=FALSE}
+# cleanup column names
+oc_cleaned <- oc_raw %>% 
+  # lowercase columns & rows & remove white-space in columns
+    setNames(names(.) |> tolower() |> gsub("\\s+", "_", x = _) |> 
+               make.unique(sep = "_dup_")) %>%
+  # lower case and remove white-space from rows
+  mutate(across(where(is.character), \(x) str_squish(tolower(x)))) %>%
+  # for stability mark other sex as NA since its only one case
+  mutate(sex = ifelse(sex == "other", NA, sex),
+         # re-calculate age variable (og is AAA)
+         age = as.numeric(difftime(doa, dob, units = "days") / 365.25),
+         sex = factor(sex, levels = c(0,1), labels = c("Female", "Male"))) %>% 
+  # relocate age
+  relocate(age, .after = doa) %>% 
+  # rename(oc_adm = orbital_cellulitis_admissions,
+  #        rv_ev = `rv/ev`) %>% 
+  # remove last two rows containing summaries
+  filter(!is.na(record_id)) %>% 
+  # rename duplicate surgery variables
+  rename(
+    prior_surgery = surgery...28,
+    surgery_adm = surgery...61) %>% 
+  # convert variables to factors
+  mutate(across(all_of(priori[priori != "age"]),
+                ~ factor(.x, levels = c(0, 1), labels = c("No", "Yes"))),
+         # collapse race/ethnicity into one column vector
+         race_eth = case_when(
+           hl == 1 ~ "Hispanic",
+           nonhl == 1 & white == 1 ~ "White non-Hispanic",
+           nonhl == 1 & black == 1 ~ "Black non-Hispanic",
+           nonhl == 1 & `asian/pi`== 1 & native_american == 1 & other...10 == 1
+           ~ "Other",
+           TRUE ~ NA_character_))
+
+# duplicate names
+# which(names(oc_cleaned) == "surgery")
+# names(oc_cleaned)[grepl("surgery", names(oc_cleaned))]
+
+```
+
+
+```{r}
+# find duplicated column names
+names(oc_raw)[duplicated(names(oc_raw))]
+which(duplicated(names(oc_raw)))
+
+# check where in my pipeline its creating a duplicate
+n1 <- names(oc_raw)
+n2 <- tolower(n1)
+n3 <- gsub("\\s+", "_", n2)
+
+n1[duplicated(n1)]
+n2[duplicated(n2)]
+n3[duplicated(n3)]
+```
+> The race/ethnicity covariate was categorized as White non-Hispanic, Black non-Hispanic, and Hispanic. We acknowledge that race is a social construct and that observed differences likely reflect structural inequities rather than biological differences.  
+
+### Exploratory Data Analysis (EDA)
+
+
+```{r label = "Used in final report as Table 1"}
+tbl1 <- oc_cleaned %>%
+  tbl_summary(
+    by = surgery_adm,
+    include = c(
+      age, sex, race_eth, sinusitis, diabetes, immunocompromise, `drug/alc`,
+      asthma, trauma, prior_surgery, dental_infection, `nldo/infection`, spa, oa, ice),
+    type = list(
+      all_continuous() ~ "continuous2",
+      all_categorical() ~ "categorical"),
+    statistic = list(
+      all_continuous() ~ c(
+        "{mean} ({sd})",
+        "{median} ({p25}, {p75})",
+        "{min} - {max}"),
+      all_categorical() ~ "{n} ({p}%)"),
+    #igits = list(AGE ~ 0, SYSBP ~ 0),
+    missing = "ifany",
+    missing_text = "NA",
+    missing_stat = "{N_miss} ({p_miss}%)",
+    label = list(
+      age ~ "Age",
+      sex ~ "Sex",
+      race_eth ~ "Race/Ethnicity",
+      sinusitis ~ "Sinusitis",
+      diabetes ~ "Diabetes",
+      immunocompromise ~ "Immunocompromise",
+      `drug/alc` ~ "Drug/Alcohol",
+      asthma ~ "Asthma",
+      trauma ~ "Trauma",
+      prior_surgery ~ "Prior Surgery",
+      dental_infection ~ "Dental",
+      `nldo/infection`~ "NLDO",
+      spa ~ "SPA",
+      oa ~ "OA",
+      ice ~ "ICE"
+      )) %>%
+  add_overall() %>% bold_labels() %>% italicize_levels() %>% add_n() %>%
+  modify_spanning_header(
+    c("stat_1", "stat_2") ~ "**Surgery Needed**") %>%
+  as_gt() %>%
+  gt::fmt_markdown(columns = everything()) %>%
+  tab_header(
+    title = "Characteristics of Orbital Cellulitis Adult Cohort") %>% 
+  tab_options(
+    table.width = pct(70),
+    table.font.size = "small",
+    heading.align = "left",
+    data_row.padding = px(3),
+    table.border.top.width = px(2),
+    table.border.bottom.width = px(2))
+
+tbl1
+```
+
+
+```{r}
+# change label names for hospitals
+unique(oc_cleaned$hospital)
+```
+
+Number of patients
+```{r}
+cat("Number of patients:",
+  length(unique(oc_cleaned$record_id)),"\n\n")
+```
+
+Missing values
+```{r}
+oc_cleaned %>% ungroup() %>% miss_var_summary()
+# missing values for predictors of interest
+oc_cleaned[, priori] %>% ungroup() %>% miss_var_summary()
+```
+
+
+**NLDO** = Nasolacrimal duct infection:
+a tear duct inflammation and/or infection, can happen in newborn infants and in
+adults. Treatment usually includes antibiotics. Surgery is a possible option to 
+stop recurrences.
+
+**Dacryocystitis** is an infection of the tear sac (lacrimal sac) caused by a 
+blockage in the tear duct (nasolacrimal duct), leading to pain, redness, and 
+swelling around the eye. Treatment typically involves antibiotics, and in some 
+cases, surgery may be necessary to relieve the blockage.
+
+Neutrophils = innate, acute inflammation
+Lymphocytes (T,B,NK) = adaptive, regulated immunity
+  * Neutrophils ↑ = acute inflammation, stress, infection
+  * Lymphocytes ↓ = stress response, immune suppression, chronic disease
+  * So high NLR = More inflammation + relatively weaker adaptive immune response
+  
+Physiological meaning of high vs low NLR
+
+High NLR:
+  * Acute stress or infection
+  * Chronic inflammation
+  * Poor prognosis in some diseases
+
+Low NLR:
+  * Lower inflammation
+  * Stronger relative adaptive immunity (context-dependent)
+
+Get group counts
+```{r}
+count_grp_obs(oc_cleaned, vars = priori[priori != "age"], 
+              mode = "separate")
+```
+
+```{r}
+sapply(oc_cleaned[priori[priori != "age"]], table) 
+```
+Correlations
+```{r label = "Correlations"}
+# need to convert back to numeric
+X_bin <- oc_cleaned %>%
+  dplyr::select(all_of(priori[priori != "age"])) %>%
+  mutate(across(everything(), ~ as.numeric(.x) - 1))
+
+clean_names <- c(
+  "Sinusitis", "Diabetes", "Immunocompromise", "Drug/Alc",
+  "Asthma", "Trauma", "Prior Surgery", "Surgery Needed",
+  "Dental Infection", "NLDO Infection", "SPA", "OA", "ICE")
+
+cor_matrix <- cor(X_bin, use = "pairwise.complete.obs", method = "pearson")
+colnames(cor_matrix) <- clean_names
+rownames(cor_matrix) <- clean_names
+
+ggcorrplot(cor_matrix, type = "lower",lab = T)
+```
+
+
+
+Per Frank Harrell - Events per varialbe (EPV) ≈ 10 EPV rule
+$EPV = \frac{\text{Events}}{\text{Predictors}}$
+
+Variable Selection
+
+```{r}
+form <- surgery_adm ~ .
+
+step.fit <- stepwise(formula = form,
+                data = oc_cleaned,
+                type = "logit",
+                include = c("age", "sex", "race_eth", "sinusitis", "diabetes",
+                            "immunocompromise", "drug/alc", "asthma", "trauma", 
+                            "prior_surgery", "dental_infection", "nldo/infection", 
+                            "spa", "oa", "ice"),
+                strategy = "backward",
+                metric = c("AICc", "SBC"))
+
+summary(step.fit$backward$AICc)
+summary(step.fit$backward$SBC)
+performance(step.fit)
+```
+```{r}
+# Check unique values and class of each predictor
+vars_to_check <- c("age", "sex", "race_eth", "sinusitis", "diabetes",
+                   "immunocompromise", "drug/alc", "asthma", "trauma", 
+                   "prior_surgery", "dental_infection", "nldo/infection", 
+                   "spa", "oa", "ice")
+
+for (v in vars_to_check) {
+  if (v %in% names(oc_cleaned)) {
+    cat(v, ":", 
+        "class =", class(oc_cleaned[[v]]), 
+        "unique values =", length(unique(na.omit(oc_cleaned[[v]]))), 
+        "\n")
+  } else {
+    cat(v, "NOT FOUND in data\n")
+  }
+}
+```
+
+### Primary Analysis
+
+**logistf**
+logistic regression model using Firth's bias reduction method, equivalent to 
+penalization of the log-likelihood by the Jeffreys prior
+  * Profile likelihood = method used in statistics to estimate the likelihood 
+  of a parameter by fixing other parameters and optimizing the remaining ones
+  * Penalized likelihood = method that incorporates a penalty term into the 
+  likelihood function to prevent overfitting and improve model estimation, 
+  especially in cases with complex models or limited data.
+  
+> Variables were selected using penalized regression and then entered into a 
+Firth logistic model for estimation.
+
+> Candidate predictors were screened using cross-validated penalized logistic 
+regression. Variables selected by glmnet were then entered into a Firth penalized 
+logistic regression model along with prespecified adjustment covariates: age, 
+sex, and race/ethnicity.
+  
+```{r}
+vars_quoted <- ifelse(grepl("/", vars_to_check), 
+                      paste0("`", vars_to_check, "`"), vars_to_check)
+form <- as.formula(paste("surgery_adm ~", paste(vars_quoted, collapse = " + ")))
+nfs.model.fbm <- logistf(form,data=oc_cleaned)
+
+summary(nfs.model.fbm)
+```
+
+GLM
+```{r}
+nfs.model.glm <- glm(form,family="binomial",data=oc_cleaned)
+
+summary(nfs.model.glm)
+```
+
+GLMnet
+```{r}
+# handles NA removal to be consistent with dimensions of outcome
+mf <- model.frame(form, data = oc_cleaned)
+
+X <- model.matrix(form, data = mf)[, -1] # remove y vector
+y <- mf$surgery_adm
+```
+
+```{r}
+# set so that covariates have a penalty factor of 0 so theyre always retained
+penalty_factor <- rep(1, ncol(X))
+penalty_factor[
+  colnames(X) %in% c("age", "sexMale", "race_ethWhite non-Hispanic", 
+                     "race_ethHispanic")] <- 0
+cvfit <- cv.glmnet(
+  X, y,
+  family = "binomial",
+  alpha = 1,
+  type.measure = "class",
+  penalty.factor = penalty_factor)
+
+plot(cvfit)
+```
+
+extract best model
+```{r}
+coef(cvfit, s = "lambda.min")
+coef(cvfit, s = "lambda.1se")
+# variables selected per cross-validation results
+rownames(coef(cvfit, s = "lambda.1se"))[
+  as.numeric(coef(cvfit, s = "lambda.1se")) != 0]
+```
+
+Predictions and model performance
+```{r}
+pred_prob <- predict(cvfit, newx = X, s = "lambda.min", type = "response")
+pred_class <- ifelse(pred_prob > 0.5, 1, 0)
+
+# ROC curve - evaluate PC1 as a predictor of malignancy on test set
+roc_obj = roc(y, pred_prob)
+
+# Find optimal sensitivity, specificity, and threshold using Youden's method
+opt_coords <- coords(roc_obj, "best", 
+                     ret = c("threshold", "sensitivity", "specificity"), 
+                     best.method = "youden")
+
+# Plot the ROC curve and display the AUC
+plot(roc_obj, print.auc = TRUE, xlim = c(1, 0), ylim = c(0, 1))
+text(0.4, 0.20, paste("Optimal Threshold:", round(opt_coords$threshold, 3)), 
+     cex = 0.9, col = "steelblue")
+text(0.4, 0.15, paste("Sensitivity:", round(opt_coords$sensitivity, 3)), 
+     cex = 0.9, col = "steelblue")
+text(0.4, 0.10, paste("Specificity:", round(opt_coords$specificity, 3)), 
+     cex = 0.9, col = "steelblue")
+
+auc(roc_obj)
+```
+
+
+#### Final Model
+
+```{r}
+# OR & 95% CI
+fbm_tbl <- data.frame(
+  #term = names(nfs.model.fbm$coefficients),
+  OR = exp(nfs.model.fbm$coefficients),
+  LL = exp(nfs.model.fbm$ci.lower),
+  UL = exp(nfs.model.fbm$ci.upper),
+  p_value = nfs.model.fbm$prob) %>% 
+  mutate(
+    # % change in odds (per unit increase)
+    pct_chg  = (OR  - 1) * 100,
+    pct_LL = (LL - 1) * 100,
+    pct_UL = (UL - 1) * 100) %>% 
+  mutate(pct_ci  = sprintf("(%.2f, %.2f)", pct_LL, pct_UL)) 
+
+fbm_tbl
+```
+
+
+```{r label = "Used in final report as table XX"}
+nfs_tbl <- fbm_tbl %>%
+  mutate(n_fbm= nrow(model.frame(nfs.model.fbm))) %>% 
+  select(n_fbm, OR, pct_chg, pct_ci, p_value) %>%
+  gt(rowname_col = "Predictor") %>%
+  cols_label(
+    n_fbm = "N", 
+    OR = "OR",
+    pct_chg = "%Δ in Odds",
+    pct_ci = "95% HDI",
+    p_value  = "P-value") %>%
+  # tab_spanner(
+  #   label = "Bayesian",
+  #   columns = c(n_brm, bay_pct, bay_ci)) %>%
+  fmt_number(columns = pct_ch, decimals = 2) %>%
+  fmt_number(columns = p_value, decimals = 3) %>%
+    # bold specific text
+  tab_style(
+    style = cell_text(weight = "bold"),
+    locations = cells_stub(rows = everything())) %>%
+  # tab_style(
+  #   style = cell_text(weight = "bold"),
+  #   locations = cells_column_spanners(
+  #     spanners = c("Frequentist", "Bayesian"))) %>% 
+  # p-value formatting like your other tables
+  text_transform(
+    locations = cells_body(columns = freq_p),
+    fn = function(x) ifelse(as.numeric(x) < 0.001, "<0.001",
+                            format(round(as.numeric(x), 3), nsmall = 3))) %>%
+  tab_options(table.font.size = "small") %>%
+  tab_source_note(
+    source_note = "Values represent percent change in the odds of needing surgery
+    per one-unit increase in the predictor (computed as (OR − 1) × 100).
+    Negative values indicate lower odds of surgical need.") %>% 
+  tab_options(
+    table.font.size = "small",
+    heading.align = "left",
+    data_row.padding = px(3),
+    table.width = pct(85),
+    table.border.top.width = px(2),
+    table.border.bottom.width = px(2))
+
+tbl_dropout_compare
+```
+
+
+
+
