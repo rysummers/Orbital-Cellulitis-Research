@@ -3,13 +3,14 @@ title: 'Interim Data Analysis : Associations with Adult Orbital Cellulitis'
 author: "Ryan Summers"
 date: "2026-04-19"
 output: 
+  word_document: default
+  bookdown::pdf_document2: default
   bookdown::html_document2:
     toc: true
     toc_float: true
     code_folding: hide
     css: style.css
-  bookdown::pdf_document2: default
-bibliography: oc_trends.bib
+bibliography: oc_adults.bib
 csl: "apa-5th-edition.csl"
 nocite: '@*'
 ---
@@ -36,45 +37,31 @@ library(logistf)
 library(glmnet)
 library(pROC)
 
+library(flextable)
+
 # scripts
 source("/Users/ryan_summers/Library/Mobile\ Documents/com~apple~CloudDocs/GitHub/Orbital-Cellulitis-Research/adult_analysis/Code/group_counts_ftn.R")
 ```
 
 ## Introduction
 
->The data for this analyses consists of hospital admissions for orbital cellulitis 
-from January 2020 through September 2025, from a retrospective chart review across 
-three hospital systems. Orbital cellulitis admission data were obtained from 
-Denver Health (DH), University of Colorado (UC), and Oregon Health and Science (OHSU).
-This dataset includes
-
-Viral variables include influenza, respiratory syncytial virus (RSV), adenovirus, human metapneumovirus (HMPV), parainfluenza viruses (types 1–4), rhinovirus/enterovirus, and coronavirus. Respiratory virus surveillance data were obtained from the Centers for Disease Control and Prevention (CDC). 
+> Orbital cellulitis (OC) is a serious infection of the orbital tissues that can lead to vision-threatening and life-threatening complications, often requiring hospitalization and, in severe cases, surgical intervention. Clinical presentations can vary, ranging from localized inflammation to the development of orbital and intracranial complications such as subperiosteal abscess (SPA), orbital abscess (OA), and intracranial extension (ICE). 
 >
-The primary objectives of this analysis were:
+> The data for these analyses consist of hospital admissions for OC from June 2006 through May 2025, derived from a retrospective chart review across three hospital systems: Denver Health (DH), University of Colorado (UC), and Oregon Health and Science University (OHSU). The dataset includes 330 adult subjects with detailed clinical, demographic, and outcome information collected at the time of admission.
 >
->1.	To evaluate whether monthly viral detection counts is associated with orbital cellulitis admissions.
-2.	To assess correlations among viruses to determine whether multicollinearity may affect model stability.
-3.	To determine whether these associations occur with delayed effects across 0–3-month lag periods.
-4.	To compare alternative DLNM specifications and identify the most appropriate lag–exposure structure.
+> The primary objectives of this analysis were to identify factors associated with need for surgical intervention and length of hospital stay (LOS) among adults admitted for orbital cellulitis. Secondary analyses examined factors associated with the development of complications, including SPA, OA, and ICE. We hypothesized that markers of disease severity and underlying comorbidities would be associated with increased likelihood of surgery and prolonged LOS.
 
-1. What are the factors influencing need for surgery? 
-    - age
-    - sinusitis
-    - diabetes
-    - immunocompromise
-    - drugs
-    - asthma
-    - trauma
-    - prior surgery
-    - dental 
-    - NLDO
-    - SPA
-    - OA
-    - ICE
-2. What are the factors influencing length of stay (same as before) 
-3. What are the factors influencing development of SPA? OA? ICE? 
 
 ## Methods
+
+* OR - relates to probability of an event
+* RR - relates to amount of something (counts/time)
+  * OR=2 ≠ RR=2 - OR is usually more extreme when event is more common
+  
+Logistic regression models estimated odds ratios (ORs) for binary outcomes, 
+representing the relative odds of an event. Negative binomial models estimated 
+rate ratios (RRs) for length of stay, representing multiplicative changes in 
+expected LOS.
 
 ### Data Management & Cleanup
 
@@ -146,6 +133,7 @@ n1[duplicated(n1)]
 n2[duplicated(n2)]
 n3[duplicated(n3)]
 ```
+
 > The race/ethnicity covariate was categorized as White non-Hispanic, Black non-Hispanic, and Hispanic. We acknowledge that race is a social construct and that observed differences likely reflect structural inequities rather than biological differences.  
 
 ### Exploratory Data Analysis (EDA)
@@ -157,14 +145,15 @@ tbl1 <- oc_cleaned %>%
     by = surgery_adm,
     include = c(
       age, sex, race_eth, sinusitis, diabetes, immunocompromise, `drug/alc`,
-      asthma, trauma, prior_surgery, dental_infection, `nldo/infection`, spa, oa, ice),
+      asthma, trauma, prior_surgery, dental_infection, `nldo/infection`, 
+      spa, oa, ice, los),
     type = list(
       all_continuous() ~ "continuous2",
       all_categorical() ~ "categorical"),
     statistic = list(
       all_continuous() ~ c(
         "{mean} ({sd})",
-        "{median} ({p25}, {p75})",
+        "{median} [{p25}, {p75}]",
         "{min} - {max}"),
       all_categorical() ~ "{n} ({p}%)"),
     #igits = list(AGE ~ 0, SYSBP ~ 0),
@@ -186,7 +175,8 @@ tbl1 <- oc_cleaned %>%
       `nldo/infection`~ "NLDO",
       spa ~ "SPA",
       oa ~ "OA",
-      ice ~ "ICE"
+      ice ~ "ICE",
+      los ~ "Length of Stay"
       )) %>%
   add_overall() %>% bold_labels() %>% italicize_levels() %>% add_n() %>%
   modify_spanning_header(
@@ -195,6 +185,9 @@ tbl1 <- oc_cleaned %>%
   gt::fmt_markdown(columns = everything()) %>%
   tab_header(
     title = "Characteristics of Orbital Cellulitis Adult Cohort") %>% 
+  tab_source_note(
+    source_note = "Percentages are calculated within levels of the stratifying 
+    variable") %>% 
   tab_options(
     table.width = pct(70),
     table.font.size = "small",
@@ -204,6 +197,205 @@ tbl1 <- oc_cleaned %>%
     table.border.bottom.width = px(2))
 
 tbl1
+```
+
+For knitting to Word
+
+```{r}
+tbl1 <- oc_cleaned %>%
+  tbl_summary(
+    by = surgery_adm,
+    include = c(
+      age, sex, race_eth, sinusitis, diabetes, immunocompromise, `drug/alc`,
+      asthma, trauma, prior_surgery, dental_infection, `nldo/infection`, 
+      spa, oa, ice, los),
+    type = list(
+      all_continuous() ~ "continuous2",
+      all_categorical() ~ "categorical"),
+    statistic = list(
+      all_continuous() ~ c(
+        "Mean (SD)" = "{mean} ({sd})",
+        "Median [Q1, Q3]" = "{median} [{p25}, {p75}]",
+        "Min - Max" = "{min} - {max}"),
+      all_categorical() ~ "{n} ({p}%)"),
+    missing = "ifany",
+    missing_text = "NA",
+    label = list(
+      age ~ "Age",
+      sex ~ "Sex",
+      race_eth ~ "Race/Ethnicity",
+      sinusitis ~ "Sinusitis",
+      diabetes ~ "Diabetes",
+      immunocompromise ~ "Immunocompromised",
+      `drug/alc` ~ "Drug/Alcohol",
+      asthma ~ "Asthma",
+      trauma ~ "Trauma",
+      prior_surgery ~ "Prior Surgery",
+      dental_infection ~ "Dental",
+      `nldo/infection` ~ "NLDO",
+      spa ~ "SPA",
+      oa ~ "OA",
+      ice ~ "ICE",
+      los ~ "Length of Stay")) %>%
+  add_overall() %>%
+  add_n() %>%
+  bold_labels() %>%
+  italicize_levels() %>%
+  modify_spanning_header(
+    c("stat_1", "stat_2") ~ "**Surgery Needed**") %>%
+  modify_caption(
+    "**Table 1: Characteristics of Orbital Cellulitis Adult Cohort**") %>%
+  as_flex_table()
+
+tbl1
+```
+
+```{r}
+tbl2 <- oc_cleaned %>%
+  tbl_summary(
+    by = spa,
+    include = c(
+      age, sex, race_eth, sinusitis, diabetes, immunocompromise, `drug/alc`,
+      asthma, trauma, prior_surgery, dental_infection, `nldo/infection`, 
+      surgery_adm, oa, ice, los),
+    type = list(
+      all_continuous() ~ "continuous2",
+      all_categorical() ~ "categorical"),
+    statistic = list(
+      all_continuous() ~ c(
+        "Mean (SD)" = "{mean} ({sd})",
+        "Median [Q1, Q3]" = "{median} [{p25}, {p75}]",
+        "Min - Max" = "{min} - {max}"),
+      all_categorical() ~ "{n} ({p}%)"),
+    missing = "ifany",
+    missing_text = "NA",
+    label = list(
+      age ~ "Age",
+      sex ~ "Sex",
+      race_eth ~ "Race/Ethnicity",
+      sinusitis ~ "Sinusitis",
+      diabetes ~ "Diabetes",
+      immunocompromise ~ "Immunocompromised",
+      `drug/alc` ~ "Drug/Alcohol",
+      asthma ~ "Asthma",
+      trauma ~ "Trauma",
+      prior_surgery ~ "Prior Surgery",
+      dental_infection ~ "Dental",
+      `nldo/infection` ~ "NLDO",
+      surgery_adm ~ "Surgery During Admission",
+      oa ~ "OA",
+      ice ~ "ICE",
+      los ~ "Length of Stay")) %>%
+  add_overall() %>%
+  add_n() %>%
+  bold_labels() %>%
+  italicize_levels() %>%
+  modify_spanning_header(
+    c("stat_1", "stat_2") ~ "**SPA**") %>%
+  modify_caption(
+    "**Table 1: Characteristics of Orbital Cellulitis Adult Cohort**") %>%
+  as_flex_table()
+
+tbl2
+```
+
+```{r}
+tbl3 <- oc_cleaned %>%
+  tbl_summary(
+    by = oa,
+    include = c(
+      age, sex, race_eth, sinusitis, diabetes, immunocompromise, `drug/alc`,
+      asthma, trauma, prior_surgery, dental_infection, `nldo/infection`, 
+      surgery_adm, spa, ice, los),
+    type = list(
+      all_continuous() ~ "continuous2",
+      all_categorical() ~ "categorical"),
+    statistic = list(
+      all_continuous() ~ c(
+        "Mean (SD)" = "{mean} ({sd})",
+        "Median [Q1, Q3]" = "{median} [{p25}, {p75}]",
+        "Min - Max" = "{min} - {max}"),
+      all_categorical() ~ "{n} ({p}%)"),
+    missing = "ifany",
+    missing_text = "NA",
+    label = list(
+      age ~ "Age",
+      sex ~ "Sex",
+      race_eth ~ "Race/Ethnicity",
+      sinusitis ~ "Sinusitis",
+      diabetes ~ "Diabetes",
+      immunocompromise ~ "Immunocompromised",
+      `drug/alc` ~ "Drug/Alcohol",
+      asthma ~ "Asthma",
+      trauma ~ "Trauma",
+      prior_surgery ~ "Prior Surgery",
+      dental_infection ~ "Dental",
+      `nldo/infection` ~ "NLDO",
+      surgery_adm ~ "Surgery During Admission",
+      spa ~ "SPA",
+      ice ~ "ICE",
+      los ~ "Length of Stay")) %>%
+  add_overall() %>%
+  add_n() %>%
+  bold_labels() %>%
+  italicize_levels() %>%
+  modify_spanning_header(
+    c("stat_1", "stat_2") ~ "**SPA**") %>%
+  modify_caption(
+    "**Table 1: Characteristics of Orbital Cellulitis Adult Cohort**") %>%
+  as_flex_table()
+
+tbl3
+```
+
+
+```{r}
+tbl4 <- oc_cleaned %>%
+  tbl_summary(
+    by = ice,
+    include = c(
+      age, sex, race_eth, sinusitis, diabetes, immunocompromise, `drug/alc`,
+      asthma, trauma, prior_surgery, dental_infection, `nldo/infection`, 
+      surgery_adm, oa, spa, los),
+    type = list(
+      all_continuous() ~ "continuous2",
+      all_categorical() ~ "categorical"),
+    statistic = list(
+      all_continuous() ~ c(
+        "Mean (SD)" = "{mean} ({sd})",
+        "Median [Q1, Q3]" = "{median} [{p25}, {p75}]",
+        "Min - Max" = "{min} - {max}"),
+      all_categorical() ~ "{n} ({p}%)"),
+    missing = "ifany",
+    missing_text = "NA",
+    label = list(
+      age ~ "Age",
+      sex ~ "Sex",
+      race_eth ~ "Race/Ethnicity",
+      sinusitis ~ "Sinusitis",
+      diabetes ~ "Diabetes",
+      immunocompromise ~ "Immunocompromised",
+      `drug/alc` ~ "Drug/Alcohol",
+      asthma ~ "Asthma",
+      trauma ~ "Trauma",
+      prior_surgery ~ "Prior Surgery",
+      dental_infection ~ "Dental",
+      `nldo/infection` ~ "NLDO",
+      surgery_adm ~ "Surgery During Admission",
+      oa ~ "OA",
+      spa ~ "SPA",
+      los ~ "Length of Stay")) %>%
+  add_overall() %>%
+  add_n() %>%
+  bold_labels() %>%
+  italicize_levels() %>%
+  modify_spanning_header(
+    c("stat_1", "stat_2") ~ "**ICE**") %>%
+  modify_caption(
+    "**Table 1: Characteristics of Orbital Cellulitis Adult Cohort**") %>%
+  as_flex_table()
+
+tbl4
 ```
 
 
@@ -262,8 +454,9 @@ count_grp_obs(oc_cleaned, vars = priori[priori != "age"],
 ```{r}
 sapply(oc_cleaned[priori[priori != "age"]], table) 
 ```
+
 Correlations
-```{r label = "Correlations"}
+```{r label = "Correlations", fig.width=8, fig.height=6}
 # need to convert back to numeric
 X_bin <- oc_cleaned %>%
   dplyr::select(all_of(priori[priori != "age"])) %>%
@@ -289,28 +482,30 @@ $EPV = \frac{\text{Events}}{\text{Predictors}}$
 Variable Selection
 
 ```{r}
-form <- surgery_adm ~ .
-
-step.fit <- stepwise(formula = form,
-                data = oc_cleaned,
-                type = "logit",
-                include = c("age", "sex", "race_eth", "sinusitis", "diabetes",
-                            "immunocompromise", "drug/alc", "asthma", "trauma", 
-                            "prior_surgery", "dental_infection", "nldo/infection", 
-                            "spa", "oa", "ice"),
-                strategy = "backward",
-                metric = c("AICc", "SBC"))
-
-summary(step.fit$backward$AICc)
-summary(step.fit$backward$SBC)
-performance(step.fit)
+# form <- surgery_adm ~ .
+# 
+# step.fit <- stepwise(formula = form,
+#                 data = oc_cleaned,
+#                 type = "logit",
+#                 include = c("age", "sex", "race_eth", "sinusitis", "diabetes",
+#                             "immunocompromise", "drug/alc", "asthma", "trauma", 
+#                             "prior_surgery", "dental_infection", "nldo/infection", 
+#                             "spa", "oa", "ice"),
+#                 strategy = "backward",
+#                 metric = c("AICc", "SBC"))
+# 
+# summary(step.fit$backward$AICc)
+# summary(step.fit$backward$SBC)
+# performance(step.fit)
 ```
+
+
 ```{r}
 # Check unique values and class of each predictor
 vars_to_check <- c("age", "sex", "race_eth", "sinusitis", "diabetes",
                    "immunocompromise", "drug/alc", "asthma", "trauma", 
-                   "prior_surgery", "dental_infection", "nldo/infection", 
-                   "spa", "oa", "ice")
+                   "prior_surgery", "dental_infection", "nldo/infection" 
+                   ) #"spa", "oa", "ice"
 
 for (v in vars_to_check) {
   if (v %in% names(oc_cleaned)) {
@@ -325,6 +520,8 @@ for (v in vars_to_check) {
 ```
 
 ### Primary Analysis
+
+#### Need for Surgery
 
 **logistf**
 logistic regression model using Firth's bias reduction method, equivalent to 
@@ -342,7 +539,9 @@ Firth logistic model for estimation.
 regression. Variables selected by glmnet were then entered into a Firth penalized 
 logistic regression model along with prespecified adjustment covariates: age, 
 sex, and race/ethnicity.
-  
+
+##### logistf
+
 ```{r}
 vars_quoted <- ifelse(grepl("/", vars_to_check), 
                       paste0("`", vars_to_check, "`"), vars_to_check)
@@ -352,14 +551,40 @@ nfs.model.fbm <- logistf(form,data=oc_cleaned)
 summary(nfs.model.fbm)
 ```
 
-GLM
+##### GLM
 ```{r}
 nfs.model.glm <- glm(form,family="binomial",data=oc_cleaned)
 
 summary(nfs.model.glm)
 ```
 
-GLMnet
+##### GLMnet
+
+https://stackoverflow.com/questions/12937331/why-is-it-inadvisable-to-get-statistical-summary-information-for-regression-coef/17725220#17725220
+
+"It is a very natural question to ask for standard errors of regression 
+coefficients or other estimated quantities. In principle such standard errors 
+can easily be calculated, e.g. using the bootstrap.
+
+Still, this package deliberately does not provide them. The reason for this is 
+that standard errors are not very meaningful for strongly biased estimates such 
+as arise from penalized estimation methods. Penalized estimation is a procedure 
+that reduces the variance of estimators by introducing substantial bias. The 
+bias of each estimator is therefore a major component of its mean squared error,
+whereas its variance may contribute only a small part.
+
+Unfortunately, in most applications of penalized regression it is impossible to 
+obtain a sufficiently precise estimate of the bias. Any bootstrap-based 
+calculations can only give an assessment of the variance of the estimates. 
+Reliable estimates of the bias are only available if reliable unbiased estimates
+are available, which is typically not the case in situations in which penalized
+estimates are used.
+
+Reporting a standard error of a penalized estimate therefore tells only part of
+the story. It can give a mistaken impression of great precision, completely 
+ignoring the inaccuracy caused by the bias. It is certainly a mistake to make 
+confidence statements that are only based on an assessment of the variance of 
+the estimates, such as bootstrap-based confidence intervals do."
 ```{r}
 # handles NA removal to be consistent with dimensions of outcome
 mf <- model.frame(form, data = oc_cleaned)
@@ -386,7 +611,7 @@ plot(cvfit)
 
 extract best model
 ```{r}
-coef(cvfit, s = "lambda.min")
+#coef(cvfit, s = "lambda.min")
 coef(cvfit, s = "lambda.1se")
 # variables selected per cross-validation results
 rownames(coef(cvfit, s = "lambda.1se"))[
@@ -431,10 +656,11 @@ fbm_tbl <- data.frame(
   p_value = nfs.model.fbm$prob) %>% 
   mutate(
     # % change in odds (per unit increase)
-    pct_chg  = (OR  - 1) * 100,
+    pct_chg = (OR  - 1) * 100,
     pct_LL = (LL - 1) * 100,
     pct_UL = (UL - 1) * 100) %>% 
-  mutate(pct_ci  = sprintf("(%.2f, %.2f)", pct_LL, pct_UL)) 
+  mutate(pct_ci = sprintf("(%.2f, %.2f)", pct_LL, pct_UL),
+         OR_ci = sprintf("(%.2f, %.2f)", LL, UL)) 
 
 fbm_tbl
 ```
@@ -442,48 +668,507 @@ fbm_tbl
 
 ```{r label = "Used in final report as table XX"}
 nfs_tbl <- fbm_tbl %>%
-  mutate(n_fbm= nrow(model.frame(nfs.model.fbm))) %>% 
-  select(n_fbm, OR, pct_chg, pct_ci, p_value) %>%
-  gt(rowname_col = "Predictor") %>%
+  rownames_to_column("Predictor") %>% 
+  mutate(n_fbm= nrow(model.frame(nfs.model.fbm)),
+      Predictor = recode(
+        Predictor,
+        "age" = "Age (per 1yr)",
+        "sexMale" = "Sex (Male vs Female)",
+        "race_ethHispanic" = "HL vs Blk non-HL",
+        "race_ethWhite non-Hispanic" = "White non-HL vs Blk non-HL)",
+        "sinusitisYes" = "Sinusitis (Yes vs No)",
+        "diabetesYes" = "Diabetes (Yes vs No)",
+        "immunocompromiseYes" = "Immuno (Yes vs No)",
+        "`drug/alc`Yes" = "Drugs/Alcohol (Yes vs No)",
+        "asthmaYes" = "Asthma (Yes vs No)",
+        "traumaYes" = "Trauma (Yes vs No)",
+        "prior_surgeryYes" = "Prior Surgery (Yes vs No)",
+        "dental_infectionYes" = "Dental (Yes vs No)",
+        "`nldo/infection`Yes" = "NLDO (Yes vs No)",
+        "spaYes" = "SPA (Yes vs No)",
+        "oaYes" = "OA (Yes vs No)",
+        "iceYes" = "ICE (Yes vs No)")) %>% 
+  select(Predictor, n_fbm, OR, OR_ci, pct_chg, p_value) %>%
+  filter(Predictor != "(Intercept)") %>% 
+  gt() %>%
   cols_label(
     n_fbm = "N", 
     OR = "OR",
     pct_chg = "%Δ in Odds",
-    pct_ci = "95% HDI",
+    OR_ci = "95% CI",
     p_value  = "P-value") %>%
   # tab_spanner(
   #   label = "Bayesian",
   #   columns = c(n_brm, bay_pct, bay_ci)) %>%
-  fmt_number(columns = pct_ch, decimals = 2) %>%
+  fmt_number(columns = c(OR), decimals = 2) %>%
+  fmt_number(columns = pct_chg, decimals = 1) %>% 
   fmt_number(columns = p_value, decimals = 3) %>%
     # bold specific text
-  tab_style(
-    style = cell_text(weight = "bold"),
+  tab_style(style = cell_text(weight = "bold"),
     locations = cells_stub(rows = everything())) %>%
-  # tab_style(
-  #   style = cell_text(weight = "bold"),
-  #   locations = cells_column_spanners(
-  #     spanners = c("Frequentist", "Bayesian"))) %>% 
+  tab_style(style = cell_text(weight = "bold"),
+    locations = cells_column_labels()) %>%
+    # highlight significant predictors <0.05
+  tab_style(style = cell_fill(color = "#FFF3CD"),
+            locations = list(
+              cells_body(rows = p_value < 0.05),
+              cells_stub(rows = p_value < 0.05))) %>% 
   # p-value formatting like your other tables
   text_transform(
-    locations = cells_body(columns = freq_p),
+    locations = cells_body(columns = p_value),
     fn = function(x) ifelse(as.numeric(x) < 0.001, "<0.001",
                             format(round(as.numeric(x), 3), nsmall = 3))) %>%
   tab_options(table.font.size = "small") %>%
   tab_source_note(
-    source_note = "Values represent percent change in the odds of needing surgery
-    per one-unit increase in the predictor (computed as (OR − 1) × 100).
-    Negative values indicate lower odds of surgical need.") %>% 
+    source_note = "%Δ in Odds represents percent change in the odds of needing surgery
+    in the predictor (computed as (OR − 1) × 100). Negative values indicate lower
+    odds of surgical need.") %>% 
+  tab_source_note(
+    source_note = "Variables with very large odds ratios (e.g., SPA) reflect
+    near-complete separation; effect sizes should be interpreted clinically 
+    rather than numerically.") %>% 
+    tab_header(
+    title = "Factors Associated with Need for Surgery Among Adults Admitted for OC",
+    subtitle = "Firth Logistic Regression Analysis") %>% 
   tab_options(
     table.font.size = "small",
-    heading.align = "left",
+    #heading.align = "left",
     data_row.padding = px(3),
     table.width = pct(85),
     table.border.top.width = px(2),
     table.border.bottom.width = px(2))
 
-tbl_dropout_compare
+nfs_tbl
 ```
+> SPA was strongly associated with surgery, with very high rates of surgery 
+among affected patients
+
+#### Length of Stay
+
+```{r}
+summary(oc_cleaned$los)
+hist(oc_cleaned$los)
+```
+
+
+##### Negative Binomial
+
+```{r}
+los.nb.model <- glm.nb(
+  los ~ age + sex + race_eth +
+    sinusitis + diabetes + immunocompromise + `drug/alc` +
+    asthma + trauma + prior_surgery + surgery_adm + dental_infection +
+    `nldo/infection` , #spa + oa + ice
+  data = oc_cleaned)
+
+summary(los.nb.model)
+```
+
+```{r}
+nb_tbl <- broom::tidy(los.nb.model, exponentiate = T, conf.int = T) %>%
+  filter(term != "(Intercept)") %>%
+  mutate(
+    pct_chg = (estimate  - 1) * 100,
+    pct_LL = (conf.low - 1) * 100,
+    pct_UL = (conf.high - 1) * 100) %>% 
+  mutate(pct_ci = sprintf("(%.2f, %.2f)", pct_LL, pct_UL),
+         RR_ci = sprintf("(%.2f, %.2f)", conf.low, conf.high))
+
+nb_tbl
+```
+
+
+```{r}
+los_tbl <- nb_tbl %>%
+  mutate(n_los= nrow(model.frame(los.nb.model)),
+      term = recode(
+        term,
+        "age" = "Age (per 1yr)",
+        "sexMale" = "Sex (Male vs Female)",
+        "race_ethHispanic" = "HL vs Blk non-HL",
+        "race_ethWhite non-Hispanic" = "White non-HL vs Blk non-HL",
+        "sinusitisYes" = "Sinusitis (Yes vs No)",
+        "diabetesYes" = "Diabetes (Yes vs No)",
+        "immunocompromiseYes" = "Immuno (Yes vs No)",
+        "`drug/alc`Yes" = "Drugs/Alcohol (Yes vs No)",
+        "asthmaYes" = "Asthma (Yes vs No)",
+        "traumaYes" = "Trauma (Yes vs No)",
+        "prior_surgeryYes" = "Prior Surgery (Yes vs No)",
+        "surgery_admYes" = "Surgery During Admission (Yes vs No)",
+        "dental_infectionYes" = "Dental (Yes vs No)",
+        "`nldo/infection`Yes" = "NLDO (Yes vs No)",
+        "spaYes" = "SPA (Yes vs No)",
+        "oaYes" = "OA (Yes vs No)",
+        "iceYes" = "ICE (Yes vs No)")) %>% 
+  select(term, n_los, estimate, RR_ci, pct_chg, p.value) %>%
+  filter(term != "(Intercept)") %>% 
+  gt() %>%
+  cols_label(
+    term = "Predictor",
+    n_los = "N", 
+    estimate = "RR",
+    pct_chg = "%Δ in LOS",
+    RR_ci = "95% CI",
+    p.value  = "P-value") %>%
+  fmt_number(columns = c(estimate), decimals = 2) %>%
+  fmt_number(columns = pct_chg, decimals =1) %>% 
+  fmt_number(columns = p.value, decimals = 3) %>%
+    # bold specific text
+  tab_style(style = cell_text(weight = "bold"),
+    locations = cells_stub(rows = everything())) %>%
+  tab_style(style = cell_text(weight = "bold"),
+    locations = cells_column_labels()) %>%
+  tab_style(
+  style = cell_fill(color = "#FFF3CD"),
+  locations = cells_body(rows = p.value < 0.05)) %>% 
+  # p-value formatting like your other tables
+  text_transform(
+    locations = cells_body(columns = p.value),
+    fn = function(x) ifelse(as.numeric(x) < 0.001, "<0.001",
+                            format(round(as.numeric(x), 3), nsmall = 3))) %>%
+  tab_options(table.font.size = "small") %>%
+  tab_source_note(
+    source_note = "RR (rate ratio) represents the relative change in expected
+    length of stay associated with each predictor. Values >1 indicate longer 
+    LOS and values <1 indicate shorter LOS. Percent change in LOS is calculated
+    as (RR − 1) × 100") %>% 
+  tab_header(
+    title = "Factors Associated with Length of Stay Among Adults Admitted for OC",
+    subtitle = "Negative Binomial Regression Analysis") %>% 
+  tab_options(
+    table.font.size = "small",
+    #heading.align = "left",
+    data_row.padding = px(3),
+    table.width = pct(85),
+    table.border.top.width = px(2),
+    table.border.bottom.width = px(2))
+
+los_tbl
+```
+
+> Patients with XX had XX% longer/shorter expected length of stay (mean LOS), 
+adjusting for other factors.
+
+
+#### Subperiosteal abscess (SPA) 
+
+```{r}
+spa_vars <- c("age", "sex", "race_eth", "sinusitis", "diabetes",
+              "immunocompromise", "drug/alc", "asthma", "trauma", 
+              "prior_surgery", "surgery_adm","dental_infection",
+              "nldo/infection") # "oa", "ice"
+
+spa_vars_qt <- ifelse(grepl("/", spa_vars), 
+                      paste0("`", spa_vars, "`"), spa_vars)
+
+spa_form <- as.formula(paste("spa ~", paste(spa_vars_qt, collapse = " + ")))
+spa.model <- logistf(spa_form, data=oc_cleaned)
+
+summary(spa.model)
+```
+
+
+```{r}
+# OR & 95% CI
+fbm_spa_tbl <- data.frame(
+  #term = names(nfs.model.fbm$coefficients),
+  RR = exp(spa.model$coefficients),
+  LL = exp(spa.model$ci.lower),
+  UL = exp(spa.model$ci.upper),
+  p_value = spa.model$prob) %>% 
+  mutate(
+    # % change in odds (per unit increase)
+    pct_chg = (RR  - 1) * 100,
+    pct_LL = (LL - 1) * 100,
+    pct_UL = (UL - 1) * 100) %>% 
+  mutate(pct_ci = sprintf("(%.2f, %.2f)", pct_LL, pct_UL),
+         RR_ci = sprintf("(%.2f, %.2f)", LL, UL)) 
+
+fbm_spa_tbl
+```
+
+```{r}
+spa_tbl <- fbm_spa_tbl %>%
+  rownames_to_column("Predictor") %>% 
+  mutate(n_fbm= nrow(model.frame(spa.model)),
+      Predictor = recode(
+        Predictor,
+        "age" = "Age (per 1yr)",
+        "sexMale" = "Sex (Male vs Female)",
+        "race_ethHispanic" = "HL vs Blk non-HL",
+        "race_ethWhite non-Hispanic" = "White non-HL vs Blk non-HL)",
+        "sinusitisYes" = "Sinusitis (Yes vs No)",
+        "diabetesYes" = "Diabetes (Yes vs No)",
+        "immunocompromiseYes" = "Immuno (Yes vs No)",
+        "`drug/alc`Yes" = "Drugs/Alcohol (Yes vs No)",
+        "asthmaYes" = "Asthma (Yes vs No)",
+        "traumaYes" = "Trauma (Yes vs No)",
+        "prior_surgeryYes" = "Prior Surgery (Yes vs No)",
+        "surgery_admYes" = "Surgery in Admission (Yes vs No)",
+        "dental_infectionYes" = "Dental (Yes vs No)",
+        "`nldo/infection`Yes" = "NLDO (Yes vs No)",
+        "oaYes" = "OA (Yes vs No)",
+        "iceYes" = "ICE (Yes vs No)")) %>% 
+  select(Predictor, n_fbm, RR, RR_ci, pct_chg, p_value) %>%
+  filter(Predictor != "(Intercept)") %>% 
+  gt() %>%
+  cols_label(
+    n_fbm = "N", 
+    RR = "OR",
+    pct_chg = "%Δ in Odds",
+    RR_ci = "95% CI",
+    p_value  = "P-value") %>%
+  fmt_number(columns = c(RR), decimals = 2) %>%
+  fmt_number(columns = c(pct_chg), decimals = 1) %>%
+  fmt_number(columns = p_value, decimals = 3) %>%
+    # bold specific text
+  tab_style(style = cell_text(weight = "bold"),
+    locations = cells_stub(rows = everything())) %>%
+  tab_style(style = cell_text(weight = "bold"),
+    locations = cells_column_labels()) %>%
+  # highlight significant predictors <0.05
+  tab_style(style = cell_fill(color = "#FFF3CD"),
+            locations = list(
+              cells_body(rows = p_value < 0.05),
+              cells_stub(rows = p_value < 0.05))) %>% 
+  # p-value formatting like your other tables
+  text_transform(
+    locations = cells_body(columns = p_value),
+    fn = function(x) ifelse(as.numeric(x) < 0.001, "<0.001",
+                            format(round(as.numeric(x), 3), nsmall = 3))) %>%
+  tab_options(table.font.size = "small") %>%
+  tab_source_note(
+    source_note = "%Δ in Odds represents percent change in the odds of needing surgery
+    in the predictor (computed as (OR − 1) × 100). Negative values indicate lower
+    odds of having an SPA.") %>% 
+  tab_header(
+    title = "Factors Associated with SPA Among Adults Admitted for OC",
+    subtitle = "Firth Logistic Regression Analysis") %>% 
+  tab_options(
+    table.font.size = "small",
+    #heading.align = "left",
+    data_row.padding = px(3),
+    table.width = pct(85),
+    table.border.top.width = px(2),
+    table.border.bottom.width = px(2))
+
+spa_tbl
+```
+
+
+#### Orbital Abscess (OA) 
+
+```{r}
+oa_vars <- c("age", "sex", "race_eth", "sinusitis", "diabetes",
+              "immunocompromise", "drug/alc", "asthma", "trauma", 
+              "prior_surgery", "surgery_adm","dental_infection",
+              "nldo/infection") #"spa", "ice"
+
+oa_vars_qt <- ifelse(grepl("/", oa_vars), 
+                      paste0("`", oa_vars, "`"), oa_vars)
+
+oa_form <- as.formula(paste("oa ~", paste(oa_vars_qt, collapse = " + ")))
+oa.model <- logistf(oa_form, data=oc_cleaned)
+
+summary(oa.model)
+```
+
+```{r}
+# OR & 95% CI
+fbm_oa_tbl <- data.frame(
+  #term = names(nfs.model.fbm$coefficients),
+  RR = exp(oa.model$coefficients),
+  LL = exp(oa.model$ci.lower),
+  UL = exp(oa.model$ci.upper),
+  p_value = oa.model$prob) %>% 
+  mutate(
+    # % change in odds (per unit increase)
+    pct_chg = (RR  - 1) * 100,
+    pct_LL = (LL - 1) * 100,
+    pct_UL = (UL - 1) * 100) %>% 
+  mutate(pct_ci = sprintf("(%.2f, %.2f)", pct_LL, pct_UL),
+         RR_ci = sprintf("(%.2f, %.2f)", LL, UL)) 
+
+fbm_oa_tbl
+```
+
+```{r}
+oa_tbl <- fbm_oa_tbl %>%
+  rownames_to_column("Predictor") %>% 
+  mutate(n_fbm= nrow(model.frame(oa.model)),
+      Predictor = recode(
+        Predictor,
+        "age" = "Age (per 1yr)",
+        "sexMale" = "Sex (Male vs Female)",
+        "race_ethHispanic" = "HL vs Blk non-HL",
+        "race_ethWhite non-Hispanic" = "White non-HL vs Blk non-HL)",
+        "sinusitisYes" = "Sinusitis (Yes vs No)",
+        "diabetesYes" = "Diabetes (Yes vs No)",
+        "immunocompromiseYes" = "Immuno (Yes vs No)",
+        "`drug/alc`Yes" = "Drugs/Alcohol (Yes vs No)",
+        "asthmaYes" = "Asthma (Yes vs No)",
+        "traumaYes" = "Trauma (Yes vs No)",
+        "prior_surgeryYes" = "Prior Surgery (Yes vs No)",
+        "surgery_admYes" = "Surgery in Admission (Yes vs No)",
+        "dental_infectionYes" = "Dental (Yes vs No)",
+        "`nldo/infection`Yes" = "NLDO (Yes vs No)",
+        "spaYes" = "SPA (Yes vs No)",
+        "iceYes" = "ICE (Yes vs No)")) %>% 
+  select(Predictor, n_fbm, RR, RR_ci, pct_chg, p_value) %>%
+  filter(Predictor != "(Intercept)") %>% 
+  gt() %>%
+  cols_label(
+    n_fbm = "N", 
+    RR = "OR",
+    pct_chg = "%Δ in Odds",
+    RR_ci = "95% CI",
+    p_value  = "P-value") %>%
+  fmt_number(columns = c(RR), decimals = 2) %>%
+   fmt_number(columns = c(pct_chg), decimals = 1) %>%
+  fmt_number(columns = p_value, decimals = 3) %>%
+    # bold specific text
+  tab_style(style = cell_text(weight = "bold"),
+    locations = cells_stub(rows = everything())) %>%
+  tab_style(style = cell_text(weight = "bold"),
+    locations = cells_column_labels()) %>%
+  # highlight significant predictors <0.05
+  tab_style(style = cell_fill(color = "#FFF3CD"),
+            locations = list(
+              cells_body(rows = p_value < 0.05),
+              cells_stub(rows = p_value < 0.05))) %>% 
+  # p-value formatting like your other tables
+  text_transform(
+    locations = cells_body(columns = p_value),
+    fn = function(x) ifelse(as.numeric(x) < 0.001, "<0.001",
+                            format(round(as.numeric(x), 3), nsmall = 3))) %>%
+  tab_options(table.font.size = "small") %>%
+  tab_source_note(
+    source_note = "%Δ in Odds represents percent change in the odds of needing surgery
+    in the predictor (computed as (OR − 1) × 100). Negative values indicate lower
+    odds of having an OA.") %>% 
+  tab_header(
+    title = "Factors Associated with OA Among Adults Admitted for OC",
+    subtitle = "Firth Logistic Regression Analysis") %>% 
+  tab_options(
+    table.font.size = "small",
+    #heading.align = "left",
+    data_row.padding = px(3),
+    table.width = pct(85),
+    table.border.top.width = px(2),
+    table.border.bottom.width = px(2))
+
+oa_tbl
+```
+
+
+#### Intracranial Extension (ICE) 
+
+```{r}
+ice_vars <- c("age", "sex", "race_eth", "sinusitis", "diabetes",
+              "immunocompromise", "drug/alc", "asthma", "trauma", 
+              "prior_surgery", "surgery_adm","dental_infection",
+              "nldo/infection") # "spa", "oa"
+
+ice_vars_qt <- ifelse(grepl("/", ice_vars), 
+                      paste0("`", ice_vars, "`"), ice_vars)
+
+ice_form <- as.formula(paste("ice ~", paste(ice_vars_qt, collapse = " + ")))
+ice.model <- logistf(ice_form, data=oc_cleaned)
+
+summary(ice.model)
+```
+
+
+```{r}
+# OR & 95% CI
+fbm_ice_tbl <- data.frame(
+  #term = names(nfs.model.fbm$coefficients),
+  OR = exp(ice.model$coefficients),
+  LL = exp(ice.model$ci.lower),
+  UL = exp(ice.model$ci.upper),
+  p_value = ice.model$prob) %>% 
+  mutate(
+    # % change in odds (per unit increase)
+    pct_chg = (OR  - 1) * 100,
+    pct_LL = (LL - 1) * 100,
+    pct_UL = (UL - 1) * 100) %>% 
+  mutate(pct_ci = sprintf("(%.2f, %.2f)", pct_LL, pct_UL),
+         OR_ci = sprintf("(%.2f, %.2f)", LL, UL)) 
+
+fbm_ice_tbl
+```
+
+
+```{r}
+ice_tbl <- fbm_ice_tbl %>%
+  rownames_to_column("Predictor") %>% 
+  mutate(n_fbm= nrow(model.frame(ice.model)),
+      Predictor = recode(
+        Predictor,
+        "age" = "Age (per 1yr)",
+        "sexMale" = "Sex (Male vs Female)",
+        "race_ethHispanic" = "HL vs Blk non-HL",
+        "race_ethWhite non-Hispanic" = "White non-HL vs Blk non-HL)",
+        "sinusitisYes" = "Sinusitis (Yes vs No)",
+        "diabetesYes" = "Diabetes (Yes vs No)",
+        "immunocompromiseYes" = "Immuno (Yes vs No)",
+        "`drug/alc`Yes" = "Drugs/Alcohol (Yes vs No)",
+        "asthmaYes" = "Asthma (Yes vs No)",
+        "traumaYes" = "Trauma (Yes vs No)",
+        "prior_surgeryYes" = "Prior Surgery (Yes vs No)",
+        "surgery_admYes" = "Surgery in Admission (Yes vs No)",
+        "dental_infectionYes" = "Dental (Yes vs No)",
+        "`nldo/infection`Yes" = "NLDO (Yes vs No)",
+        "spaYes" = "SPA (Yes vs No)",
+        "oaYes" = "OA (Yes vs No)")) %>% 
+  select(Predictor, n_fbm, RR, RR_ci, pct_chg, p_value) %>%
+  filter(Predictor != "(Intercept)") %>% 
+  gt() %>%
+  cols_label(
+    n_fbm = "N", 
+    RR = "OR",
+    pct_chg = "%Δ in Odds",
+    RR_ci = "95% CI",
+    p_value  = "P-value") %>%
+  fmt_number(columns = c(RR), decimals = 2) %>%
+  fmt_number(columns = c(pct_chg), decimals = 1) %>%
+  fmt_number(columns = p_value, decimals = 3) %>%
+    # bold specific text
+  tab_style(style = cell_text(weight = "bold"),
+    locations = cells_stub(rows = everything())) %>%
+  tab_style(style = cell_text(weight = "bold"),
+    locations = cells_column_labels()) %>%
+  # highlight significant predictors <0.05
+  tab_style(style = cell_fill(color = "#FFF3CD"),
+            locations = list(
+              cells_body(rows = p_value < 0.05),
+              cells_stub(rows = p_value < 0.05))) %>% 
+  # p-value formatting like your other tables
+  text_transform(
+    locations = cells_body(columns = p_value),
+    fn = function(x) ifelse(as.numeric(x) < 0.001, "<0.001",
+                            format(round(as.numeric(x), 3), nsmall = 3))) %>%
+  tab_options(table.font.size = "small") %>%
+  tab_source_note(
+    source_note = "%Δ in Odds represents percent change in the odds of needing surgery
+    in the predictor (computed as (OR − 1) × 100). Negative values indicate lower
+    odds of having an ICE.") %>% 
+  tab_header(
+    title = "Factors Associated with ICE Among Adults Admitted for OC",
+    subtitle = "Firth Logistic Regression Analysis") %>% 
+  tab_options(
+    table.font.size = "small",
+    #heading.align = "left",
+    data_row.padding = px(3),
+    table.width = pct(85),
+    table.border.top.width = px(2),
+    table.border.bottom.width = px(2))
+
+ice_tbl
+```
+
+
+
 
 
 

@@ -1,0 +1,2709 @@
+% Options for packages loaded elsewhere
+\PassOptionsToPackage{unicode}{hyperref}
+\PassOptionsToPackage{hyphens}{url}
+\documentclass[
+]{article}
+\usepackage{xcolor}
+\usepackage[margin=1in]{geometry}
+\usepackage{amsmath,amssymb}
+\setcounter{secnumdepth}{5}
+\usepackage{iftex}
+\ifPDFTeX
+  \usepackage[T1]{fontenc}
+  \usepackage[utf8]{inputenc}
+  \usepackage{textcomp} % provide euro and other symbols
+\else % if luatex or xetex
+  \usepackage{unicode-math} % this also loads fontspec
+  \defaultfontfeatures{Scale=MatchLowercase}
+  \defaultfontfeatures[\rmfamily]{Ligatures=TeX,Scale=1}
+\fi
+\usepackage{lmodern}
+\ifPDFTeX\else
+  % xetex/luatex font selection
+\fi
+% Use upquote if available, for straight quotes in verbatim environments
+\IfFileExists{upquote.sty}{\usepackage{upquote}}{}
+\IfFileExists{microtype.sty}{% use microtype if available
+  \usepackage[]{microtype}
+  \UseMicrotypeSet[protrusion]{basicmath} % disable protrusion for tt fonts
+}{}
+\makeatletter
+\@ifundefined{KOMAClassName}{% if non-KOMA class
+  \IfFileExists{parskip.sty}{%
+    \usepackage{parskip}
+  }{% else
+    \setlength{\parindent}{0pt}
+    \setlength{\parskip}{6pt plus 2pt minus 1pt}}
+}{% if KOMA class
+  \KOMAoptions{parskip=half}}
+\makeatother
+\usepackage{color}
+\usepackage{fancyvrb}
+\newcommand{\VerbBar}{|}
+\newcommand{\VERB}{\Verb[commandchars=\\\{\}]}
+\DefineVerbatimEnvironment{Highlighting}{Verbatim}{commandchars=\\\{\}}
+% Add ',fontsize=\small' for more characters per line
+\usepackage{framed}
+\definecolor{shadecolor}{RGB}{248,248,248}
+\newenvironment{Shaded}{\begin{snugshade}}{\end{snugshade}}
+\newcommand{\AlertTok}[1]{\textcolor[rgb]{0.94,0.16,0.16}{#1}}
+\newcommand{\AnnotationTok}[1]{\textcolor[rgb]{0.56,0.35,0.01}{\textbf{\textit{#1}}}}
+\newcommand{\AttributeTok}[1]{\textcolor[rgb]{0.13,0.29,0.53}{#1}}
+\newcommand{\BaseNTok}[1]{\textcolor[rgb]{0.00,0.00,0.81}{#1}}
+\newcommand{\BuiltInTok}[1]{#1}
+\newcommand{\CharTok}[1]{\textcolor[rgb]{0.31,0.60,0.02}{#1}}
+\newcommand{\CommentTok}[1]{\textcolor[rgb]{0.56,0.35,0.01}{\textit{#1}}}
+\newcommand{\CommentVarTok}[1]{\textcolor[rgb]{0.56,0.35,0.01}{\textbf{\textit{#1}}}}
+\newcommand{\ConstantTok}[1]{\textcolor[rgb]{0.56,0.35,0.01}{#1}}
+\newcommand{\ControlFlowTok}[1]{\textcolor[rgb]{0.13,0.29,0.53}{\textbf{#1}}}
+\newcommand{\DataTypeTok}[1]{\textcolor[rgb]{0.13,0.29,0.53}{#1}}
+\newcommand{\DecValTok}[1]{\textcolor[rgb]{0.00,0.00,0.81}{#1}}
+\newcommand{\DocumentationTok}[1]{\textcolor[rgb]{0.56,0.35,0.01}{\textbf{\textit{#1}}}}
+\newcommand{\ErrorTok}[1]{\textcolor[rgb]{0.64,0.00,0.00}{\textbf{#1}}}
+\newcommand{\ExtensionTok}[1]{#1}
+\newcommand{\FloatTok}[1]{\textcolor[rgb]{0.00,0.00,0.81}{#1}}
+\newcommand{\FunctionTok}[1]{\textcolor[rgb]{0.13,0.29,0.53}{\textbf{#1}}}
+\newcommand{\ImportTok}[1]{#1}
+\newcommand{\InformationTok}[1]{\textcolor[rgb]{0.56,0.35,0.01}{\textbf{\textit{#1}}}}
+\newcommand{\KeywordTok}[1]{\textcolor[rgb]{0.13,0.29,0.53}{\textbf{#1}}}
+\newcommand{\NormalTok}[1]{#1}
+\newcommand{\OperatorTok}[1]{\textcolor[rgb]{0.81,0.36,0.00}{\textbf{#1}}}
+\newcommand{\OtherTok}[1]{\textcolor[rgb]{0.56,0.35,0.01}{#1}}
+\newcommand{\PreprocessorTok}[1]{\textcolor[rgb]{0.56,0.35,0.01}{\textit{#1}}}
+\newcommand{\RegionMarkerTok}[1]{#1}
+\newcommand{\SpecialCharTok}[1]{\textcolor[rgb]{0.81,0.36,0.00}{\textbf{#1}}}
+\newcommand{\SpecialStringTok}[1]{\textcolor[rgb]{0.31,0.60,0.02}{#1}}
+\newcommand{\StringTok}[1]{\textcolor[rgb]{0.31,0.60,0.02}{#1}}
+\newcommand{\VariableTok}[1]{\textcolor[rgb]{0.00,0.00,0.00}{#1}}
+\newcommand{\VerbatimStringTok}[1]{\textcolor[rgb]{0.31,0.60,0.02}{#1}}
+\newcommand{\WarningTok}[1]{\textcolor[rgb]{0.56,0.35,0.01}{\textbf{\textit{#1}}}}
+\usepackage{longtable,booktabs,array}
+\newcounter{none} % for unnumbered tables
+\usepackage{calc} % for calculating minipage widths
+% Correct order of tables after \paragraph or \subparagraph
+\usepackage{etoolbox}
+\makeatletter
+\patchcmd\longtable{\par}{\if@noskipsec\mbox{}\fi\par}{}{}
+\makeatother
+% Allow footnotes in longtable head/foot
+\IfFileExists{footnotehyper.sty}{\usepackage{footnotehyper}}{\usepackage{footnote}}
+\makesavenoteenv{longtable}
+\usepackage{graphicx}
+\makeatletter
+\newsavebox\pandoc@box
+\newcommand*\pandocbounded[1]{% scales image to fit in text height/width
+  \sbox\pandoc@box{#1}%
+  \Gscale@div\@tempa{\textheight}{\dimexpr\ht\pandoc@box+\dp\pandoc@box\relax}%
+  \Gscale@div\@tempb{\linewidth}{\wd\pandoc@box}%
+  \ifdim\@tempb\p@<\@tempa\p@\let\@tempa\@tempb\fi% select the smaller of both
+  \ifdim\@tempa\p@<\p@\scalebox{\@tempa}{\usebox\pandoc@box}%
+  \else\usebox{\pandoc@box}%
+  \fi%
+}
+% Set default figure placement to htbp
+\def\fps@figure{htbp}
+\makeatother
+% definitions for citeproc citations
+\NewDocumentCommand\citeproctext{}{}
+\NewDocumentCommand\citeproc{mm}{%
+  \begingroup\def\citeproctext{#2}\cite{#1}\endgroup}
+\makeatletter
+ % allow citations to break across lines
+ \let\@cite@ofmt\@firstofone
+ % avoid brackets around text for \cite:
+ \def\@biblabel#1{}
+ \def\@cite#1#2{{#1\if@tempswa , #2\fi}}
+\makeatother
+\newlength{\cslhangindent}
+\setlength{\cslhangindent}{1.5em}
+\newlength{\csllabelwidth}
+\setlength{\csllabelwidth}{3em}
+\newenvironment{CSLReferences}[2] % #1 hanging-indent, #2 entry-spacing
+ {\begin{list}{}{%
+  \setlength{\itemindent}{0pt}
+  \setlength{\leftmargin}{0pt}
+  \setlength{\parsep}{0pt}
+  % turn on hanging indent if param 1 is 1
+  \ifodd #1
+   \setlength{\leftmargin}{\cslhangindent}
+   \setlength{\itemindent}{-1\cslhangindent}
+  \fi
+  % set entry spacing
+  \setlength{\itemsep}{#2\baselineskip}}}
+ {\end{list}}
+\usepackage{calc}
+\newcommand{\CSLBlock}[1]{\hfill\break\parbox[t]{\linewidth}{\strut\ignorespaces#1\strut}}
+\newcommand{\CSLLeftMargin}[1]{\parbox[t]{\csllabelwidth}{\strut#1\strut}}
+\newcommand{\CSLRightInline}[1]{\parbox[t]{\linewidth - \csllabelwidth}{\strut#1\strut}}
+\newcommand{\CSLIndent}[1]{\hspace{\cslhangindent}#1}
+\setlength{\emergencystretch}{3em} % prevent overfull lines
+\providecommand{\tightlist}{%
+  \setlength{\itemsep}{0pt}\setlength{\parskip}{0pt}}
+\usepackage{booktabs}
+\usepackage{caption}
+\usepackage{longtable}
+\usepackage{colortbl}
+\usepackage{array}
+\usepackage{anyfontsize}
+\usepackage{multirow}
+\usepackage{bookmark}
+\IfFileExists{xurl.sty}{\usepackage{xurl}}{} % add URL line breaks if available
+\urlstyle{same}
+\hypersetup{
+  pdftitle={Interim Data Analysis : Associations with Adult Orbital Cellulitis},
+  pdfauthor={Ryan Summers},
+  hidelinks,
+  pdfcreator={LaTeX via pandoc}}
+
+\title{Interim Data Analysis : Associations with Adult Orbital Cellulitis}
+\author{Ryan Summers}
+\date{2026-04-19}
+
+\begin{document}
+\maketitle
+
+{
+\setcounter{tocdepth}{2}
+\tableofcontents
+}
+\subsection{Introduction}\label{introduction}
+
+\begin{quote}
+Orbital cellulitis (OC) is a serious infection of the orbital tissues that can lead to vision-threatening and life-threatening complications, often requiring hospitalization and, in severe cases, surgical intervention. Clinical presentations can vary, ranging from localized inflammation to the development of orbital and intracranial complications such as subperiosteal abscess (SPA), orbital abscess (OA), and intracranial extension (ICE).
+
+The data for these analyses consist of hospital admissions for OC from June 2006 through May 2025, derived from a retrospective chart review across three hospital systems: Denver Health (DH), University of Colorado (UC), and Oregon Health and Science University (OHSU). The dataset includes 330 adult subjects with detailed clinical, demographic, and outcome information collected at the time of admission.
+
+The primary objectives of this analysis were to identify factors associated with need for surgical intervention and length of hospital stay (LOS) among adults admitted for orbital cellulitis. Secondary analyses examined factors associated with the development of complications, including SPA, OA, and ICE. We hypothesized that markers of disease severity and underlying comorbidities would be associated with increased likelihood of surgery and prolonged LOS.
+\end{quote}
+
+\subsection{Methods}\label{methods}
+
+\begin{itemize}
+\tightlist
+\item
+  OR - relates to probability of an event
+\item
+  RR - relates to amount of something (counts/time)
+
+  \begin{itemize}
+  \tightlist
+  \item
+    OR=2 ≠ RR=2 - OR is usually more extreme when event is more common
+  \end{itemize}
+\end{itemize}
+
+Logistic regression models estimated odds ratios (ORs) for binary outcomes,
+representing the relative odds of an event. Negative binomial models estimated
+rate ratios (RRs) for length of stay, representing multiplicative changes in
+expected LOS.
+
+\subsubsection{Data Management \& Cleanup}\label{data-management-cleanup}
+
+\begin{Shaded}
+\begin{Highlighting}[]
+\NormalTok{oc\_raw }\OtherTok{\textless{}{-}} \FunctionTok{read\_excel}\NormalTok{(}\StringTok{"/Users/ryan\_summers/Library/Mobile\textbackslash{} Documents/com\textasciitilde{}apple\textasciitilde{}CloudDocs/GitHub/Orbital{-}Cellulitis{-}Research/adult\_analysis/DataRaw/OHSU\textbackslash{} and\textbackslash{} UC.xlsx"}\NormalTok{, }\AttributeTok{sheet=}\StringTok{"Adults"}\NormalTok{)}
+\end{Highlighting}
+\end{Shaded}
+
+A priori variables based on discussion with PI
+
+\begin{Shaded}
+\begin{Highlighting}[]
+\NormalTok{priori }\OtherTok{\textless{}{-}} \FunctionTok{c}\NormalTok{(}\StringTok{"age"}\NormalTok{, }\StringTok{"sinusitis"}\NormalTok{, }\StringTok{"diabetes"}\NormalTok{, }\StringTok{"immunocompromise"}\NormalTok{, }\StringTok{"drug/alc"}\NormalTok{,}
+            \StringTok{"asthma"}\NormalTok{, }\StringTok{"trauma"}\NormalTok{, }\StringTok{"prior\_surgery"}\NormalTok{, }\StringTok{"surgery\_adm"}\NormalTok{,}
+            \StringTok{"dental\_infection"}\NormalTok{,  }\StringTok{"nldo/infection"}\NormalTok{, }\StringTok{"spa"}\NormalTok{, }\StringTok{"oa"}\NormalTok{, }\StringTok{"ice"}\NormalTok{)}
+\end{Highlighting}
+\end{Shaded}
+
+\begin{Shaded}
+\begin{Highlighting}[]
+\CommentTok{\# cleanup column names}
+\NormalTok{oc\_cleaned }\OtherTok{\textless{}{-}}\NormalTok{ oc\_raw }\SpecialCharTok{\%\textgreater{}\%} 
+  \CommentTok{\# lowercase columns \& rows \& remove white{-}space in columns}
+    \FunctionTok{setNames}\NormalTok{(}\FunctionTok{names}\NormalTok{(.) }\SpecialCharTok{|\textgreater{}} \FunctionTok{tolower}\NormalTok{() }\SpecialCharTok{|\textgreater{}} \FunctionTok{gsub}\NormalTok{(}\StringTok{"}\SpecialCharTok{\textbackslash{}\textbackslash{}}\StringTok{s+"}\NormalTok{, }\StringTok{"\_"}\NormalTok{, }\AttributeTok{x =}\NormalTok{ \_) }\SpecialCharTok{|\textgreater{}} 
+               \FunctionTok{make.unique}\NormalTok{(}\AttributeTok{sep =} \StringTok{"\_dup\_"}\NormalTok{)) }\SpecialCharTok{\%\textgreater{}\%}
+  \CommentTok{\# lower case and remove white{-}space from rows}
+  \FunctionTok{mutate}\NormalTok{(}\FunctionTok{across}\NormalTok{(}\FunctionTok{where}\NormalTok{(is.character), \textbackslash{}(x) }\FunctionTok{str\_squish}\NormalTok{(}\FunctionTok{tolower}\NormalTok{(x)))) }\SpecialCharTok{\%\textgreater{}\%}
+  \CommentTok{\# for stability mark other sex as NA since its only one case}
+  \FunctionTok{mutate}\NormalTok{(}\AttributeTok{sex =} \FunctionTok{ifelse}\NormalTok{(sex }\SpecialCharTok{==} \StringTok{"other"}\NormalTok{, }\ConstantTok{NA}\NormalTok{, sex),}
+         \CommentTok{\# re{-}calculate age variable (og is AAA)}
+         \AttributeTok{age =} \FunctionTok{as.numeric}\NormalTok{(}\FunctionTok{difftime}\NormalTok{(doa, dob, }\AttributeTok{units =} \StringTok{"days"}\NormalTok{) }\SpecialCharTok{/} \FloatTok{365.25}\NormalTok{),}
+         \AttributeTok{sex =} \FunctionTok{factor}\NormalTok{(sex, }\AttributeTok{levels =} \FunctionTok{c}\NormalTok{(}\DecValTok{0}\NormalTok{,}\DecValTok{1}\NormalTok{), }\AttributeTok{labels =} \FunctionTok{c}\NormalTok{(}\StringTok{"Female"}\NormalTok{, }\StringTok{"Male"}\NormalTok{))) }\SpecialCharTok{\%\textgreater{}\%} 
+  \CommentTok{\# relocate age}
+  \FunctionTok{relocate}\NormalTok{(age, }\AttributeTok{.after =}\NormalTok{ doa) }\SpecialCharTok{\%\textgreater{}\%} 
+  \CommentTok{\# rename(oc\_adm = orbital\_cellulitis\_admissions,}
+  \CommentTok{\#        rv\_ev = \textasciigrave{}rv/ev\textasciigrave{}) \%\textgreater{}\% }
+  \CommentTok{\# remove last two rows containing summaries}
+  \FunctionTok{filter}\NormalTok{(}\SpecialCharTok{!}\FunctionTok{is.na}\NormalTok{(record\_id)) }\SpecialCharTok{\%\textgreater{}\%} 
+  \CommentTok{\# rename duplicate surgery variables}
+  \FunctionTok{rename}\NormalTok{(}
+    \AttributeTok{prior\_surgery =}\NormalTok{ surgery...}\DecValTok{28}\NormalTok{,}
+    \AttributeTok{surgery\_adm =}\NormalTok{ surgery...}\DecValTok{61}\NormalTok{) }\SpecialCharTok{\%\textgreater{}\%} 
+  \CommentTok{\# convert variables to factors}
+  \FunctionTok{mutate}\NormalTok{(}\FunctionTok{across}\NormalTok{(}\FunctionTok{all\_of}\NormalTok{(priori[priori }\SpecialCharTok{!=} \StringTok{"age"}\NormalTok{]),}
+                \SpecialCharTok{\textasciitilde{}} \FunctionTok{factor}\NormalTok{(.x, }\AttributeTok{levels =} \FunctionTok{c}\NormalTok{(}\DecValTok{0}\NormalTok{, }\DecValTok{1}\NormalTok{), }\AttributeTok{labels =} \FunctionTok{c}\NormalTok{(}\StringTok{"No"}\NormalTok{, }\StringTok{"Yes"}\NormalTok{))),}
+         \CommentTok{\# collapse race/ethnicity into one column vector}
+         \AttributeTok{race\_eth =} \FunctionTok{case\_when}\NormalTok{(}
+\NormalTok{           hl }\SpecialCharTok{==} \DecValTok{1} \SpecialCharTok{\textasciitilde{}} \StringTok{"Hispanic"}\NormalTok{,}
+\NormalTok{           nonhl }\SpecialCharTok{==} \DecValTok{1} \SpecialCharTok{\&}\NormalTok{ white }\SpecialCharTok{==} \DecValTok{1} \SpecialCharTok{\textasciitilde{}} \StringTok{"White non{-}Hispanic"}\NormalTok{,}
+\NormalTok{           nonhl }\SpecialCharTok{==} \DecValTok{1} \SpecialCharTok{\&}\NormalTok{ black }\SpecialCharTok{==} \DecValTok{1} \SpecialCharTok{\textasciitilde{}} \StringTok{"Black non{-}Hispanic"}\NormalTok{,}
+\NormalTok{           nonhl }\SpecialCharTok{==} \DecValTok{1} \SpecialCharTok{\&} \StringTok{\textasciigrave{}}\AttributeTok{asian/pi}\StringTok{\textasciigrave{}}\SpecialCharTok{==} \DecValTok{1} \SpecialCharTok{\&}\NormalTok{ native\_american }\SpecialCharTok{==} \DecValTok{1} \SpecialCharTok{\&}\NormalTok{ other...}\DecValTok{10} \SpecialCharTok{==} \DecValTok{1}
+           \SpecialCharTok{\textasciitilde{}} \StringTok{"Other"}\NormalTok{,}
+           \ConstantTok{TRUE} \SpecialCharTok{\textasciitilde{}} \ConstantTok{NA\_character\_}\NormalTok{))}
+
+\CommentTok{\# duplicate names}
+\CommentTok{\# which(names(oc\_cleaned) == "surgery")}
+\CommentTok{\# names(oc\_cleaned)[grepl("surgery", names(oc\_cleaned))]}
+\end{Highlighting}
+\end{Shaded}
+
+\begin{Shaded}
+\begin{Highlighting}[]
+\CommentTok{\# find duplicated column names}
+\FunctionTok{names}\NormalTok{(oc\_raw)[}\FunctionTok{duplicated}\NormalTok{(}\FunctionTok{names}\NormalTok{(oc\_raw))]}
+\end{Highlighting}
+\end{Shaded}
+
+\begin{verbatim}
+## character(0)
+\end{verbatim}
+
+\begin{Shaded}
+\begin{Highlighting}[]
+\FunctionTok{which}\NormalTok{(}\FunctionTok{duplicated}\NormalTok{(}\FunctionTok{names}\NormalTok{(oc\_raw)))}
+\end{Highlighting}
+\end{Shaded}
+
+\begin{verbatim}
+## integer(0)
+\end{verbatim}
+
+\begin{Shaded}
+\begin{Highlighting}[]
+\CommentTok{\# check where in my pipeline its creating a duplicate}
+\NormalTok{n1 }\OtherTok{\textless{}{-}} \FunctionTok{names}\NormalTok{(oc\_raw)}
+\NormalTok{n2 }\OtherTok{\textless{}{-}} \FunctionTok{tolower}\NormalTok{(n1)}
+\NormalTok{n3 }\OtherTok{\textless{}{-}} \FunctionTok{gsub}\NormalTok{(}\StringTok{"}\SpecialCharTok{\textbackslash{}\textbackslash{}}\StringTok{s+"}\NormalTok{, }\StringTok{"\_"}\NormalTok{, n2)}
+
+\NormalTok{n1[}\FunctionTok{duplicated}\NormalTok{(n1)]}
+\end{Highlighting}
+\end{Shaded}
+
+\begin{verbatim}
+## character(0)
+\end{verbatim}
+
+\begin{Shaded}
+\begin{Highlighting}[]
+\NormalTok{n2[}\FunctionTok{duplicated}\NormalTok{(n2)]}
+\end{Highlighting}
+\end{Shaded}
+
+\begin{verbatim}
+## [1] "pseudo"
+\end{verbatim}
+
+\begin{Shaded}
+\begin{Highlighting}[]
+\NormalTok{n3[}\FunctionTok{duplicated}\NormalTok{(n3)]}
+\end{Highlighting}
+\end{Shaded}
+
+\begin{verbatim}
+## [1] "pseudo"
+\end{verbatim}
+
+\begin{quote}
+The race/ethnicity covariate was categorized as White non-Hispanic, Black non-Hispanic, and Hispanic. We acknowledge that race is a social construct and that observed differences likely reflect structural inequities rather than biological differences.
+\end{quote}
+
+\subsubsection{Exploratory Data Analysis (EDA)}\label{exploratory-data-analysis-eda}
+
+\begin{Shaded}
+\begin{Highlighting}[]
+\NormalTok{tbl1 }\OtherTok{\textless{}{-}}\NormalTok{ oc\_cleaned }\SpecialCharTok{\%\textgreater{}\%}
+  \FunctionTok{tbl\_summary}\NormalTok{(}
+    \AttributeTok{by =}\NormalTok{ surgery\_adm,}
+    \AttributeTok{include =} \FunctionTok{c}\NormalTok{(}
+\NormalTok{      age, sex, race\_eth, sinusitis, diabetes, immunocompromise, }\StringTok{\textasciigrave{}}\AttributeTok{drug/alc}\StringTok{\textasciigrave{}}\NormalTok{,}
+\NormalTok{      asthma, trauma, prior\_surgery, dental\_infection, }\StringTok{\textasciigrave{}}\AttributeTok{nldo/infection}\StringTok{\textasciigrave{}}\NormalTok{, }
+\NormalTok{      spa, oa, ice, los),}
+    \AttributeTok{type =} \FunctionTok{list}\NormalTok{(}
+      \FunctionTok{all\_continuous}\NormalTok{() }\SpecialCharTok{\textasciitilde{}} \StringTok{"continuous2"}\NormalTok{,}
+      \FunctionTok{all\_categorical}\NormalTok{() }\SpecialCharTok{\textasciitilde{}} \StringTok{"categorical"}\NormalTok{),}
+    \AttributeTok{statistic =} \FunctionTok{list}\NormalTok{(}
+      \FunctionTok{all\_continuous}\NormalTok{() }\SpecialCharTok{\textasciitilde{}} \FunctionTok{c}\NormalTok{(}
+        \StringTok{"\{mean\} (\{sd\})"}\NormalTok{,}
+        \StringTok{"\{median\} [\{p25\}, \{p75\}]"}\NormalTok{,}
+        \StringTok{"\{min\} {-} \{max\}"}\NormalTok{),}
+      \FunctionTok{all\_categorical}\NormalTok{() }\SpecialCharTok{\textasciitilde{}} \StringTok{"\{n\} (\{p\}\%)"}\NormalTok{),}
+    \CommentTok{\#igits = list(AGE \textasciitilde{} 0, SYSBP \textasciitilde{} 0),}
+    \AttributeTok{missing =} \StringTok{"ifany"}\NormalTok{,}
+    \AttributeTok{missing\_text =} \StringTok{"NA"}\NormalTok{,}
+    \AttributeTok{missing\_stat =} \StringTok{"\{N\_miss\} (\{p\_miss\}\%)"}\NormalTok{,}
+    \AttributeTok{label =} \FunctionTok{list}\NormalTok{(}
+\NormalTok{      age }\SpecialCharTok{\textasciitilde{}} \StringTok{"Age"}\NormalTok{,}
+\NormalTok{      sex }\SpecialCharTok{\textasciitilde{}} \StringTok{"Sex"}\NormalTok{,}
+\NormalTok{      race\_eth }\SpecialCharTok{\textasciitilde{}} \StringTok{"Race/Ethnicity"}\NormalTok{,}
+\NormalTok{      sinusitis }\SpecialCharTok{\textasciitilde{}} \StringTok{"Sinusitis"}\NormalTok{,}
+\NormalTok{      diabetes }\SpecialCharTok{\textasciitilde{}} \StringTok{"Diabetes"}\NormalTok{,}
+\NormalTok{      immunocompromise }\SpecialCharTok{\textasciitilde{}} \StringTok{"Immunocompromise"}\NormalTok{,}
+      \StringTok{\textasciigrave{}}\AttributeTok{drug/alc}\StringTok{\textasciigrave{}} \SpecialCharTok{\textasciitilde{}} \StringTok{"Drug/Alcohol"}\NormalTok{,}
+\NormalTok{      asthma }\SpecialCharTok{\textasciitilde{}} \StringTok{"Asthma"}\NormalTok{,}
+\NormalTok{      trauma }\SpecialCharTok{\textasciitilde{}} \StringTok{"Trauma"}\NormalTok{,}
+\NormalTok{      prior\_surgery }\SpecialCharTok{\textasciitilde{}} \StringTok{"Prior Surgery"}\NormalTok{,}
+\NormalTok{      dental\_infection }\SpecialCharTok{\textasciitilde{}} \StringTok{"Dental"}\NormalTok{,}
+      \StringTok{\textasciigrave{}}\AttributeTok{nldo/infection}\StringTok{\textasciigrave{}}\SpecialCharTok{\textasciitilde{}} \StringTok{"NLDO"}\NormalTok{,}
+\NormalTok{      spa }\SpecialCharTok{\textasciitilde{}} \StringTok{"SPA"}\NormalTok{,}
+\NormalTok{      oa }\SpecialCharTok{\textasciitilde{}} \StringTok{"OA"}\NormalTok{,}
+\NormalTok{      ice }\SpecialCharTok{\textasciitilde{}} \StringTok{"ICE"}\NormalTok{,}
+\NormalTok{      los }\SpecialCharTok{\textasciitilde{}} \StringTok{"Length of Stay"}
+\NormalTok{      )) }\SpecialCharTok{\%\textgreater{}\%}
+  \FunctionTok{add\_overall}\NormalTok{() }\SpecialCharTok{\%\textgreater{}\%} \FunctionTok{bold\_labels}\NormalTok{() }\SpecialCharTok{\%\textgreater{}\%} \FunctionTok{italicize\_levels}\NormalTok{() }\SpecialCharTok{\%\textgreater{}\%} \FunctionTok{add\_n}\NormalTok{() }\SpecialCharTok{\%\textgreater{}\%}
+  \FunctionTok{modify\_spanning\_header}\NormalTok{(}
+    \FunctionTok{c}\NormalTok{(}\StringTok{"stat\_1"}\NormalTok{, }\StringTok{"stat\_2"}\NormalTok{) }\SpecialCharTok{\textasciitilde{}} \StringTok{"**Surgery Needed**"}\NormalTok{) }\SpecialCharTok{\%\textgreater{}\%}
+  \FunctionTok{as\_gt}\NormalTok{() }\SpecialCharTok{\%\textgreater{}\%}
+\NormalTok{  gt}\SpecialCharTok{::}\FunctionTok{fmt\_markdown}\NormalTok{(}\AttributeTok{columns =} \FunctionTok{everything}\NormalTok{()) }\SpecialCharTok{\%\textgreater{}\%}
+  \FunctionTok{tab\_header}\NormalTok{(}
+    \AttributeTok{title =} \StringTok{"Characteristics of Orbital Cellulitis Adult Cohort"}\NormalTok{) }\SpecialCharTok{\%\textgreater{}\%} 
+  \FunctionTok{tab\_source\_note}\NormalTok{(}
+    \AttributeTok{source\_note =} \StringTok{"Percentages are calculated within levels of the stratifying }
+\StringTok{    variable"}\NormalTok{) }\SpecialCharTok{\%\textgreater{}\%} 
+  \FunctionTok{tab\_options}\NormalTok{(}
+    \AttributeTok{table.width =} \FunctionTok{pct}\NormalTok{(}\DecValTok{70}\NormalTok{),}
+    \AttributeTok{table.font.size =} \StringTok{"small"}\NormalTok{,}
+    \AttributeTok{heading.align =} \StringTok{"left"}\NormalTok{,}
+    \AttributeTok{data\_row.padding =} \FunctionTok{px}\NormalTok{(}\DecValTok{3}\NormalTok{),}
+    \AttributeTok{table.border.top.width =} \FunctionTok{px}\NormalTok{(}\DecValTok{2}\NormalTok{),}
+    \AttributeTok{table.border.bottom.width =} \FunctionTok{px}\NormalTok{(}\DecValTok{2}\NormalTok{))}
+
+\NormalTok{tbl1}
+\end{Highlighting}
+\end{Shaded}
+
+\begin{table}[t]
+\caption*{
+{\fontsize{20}{25}\selectfont  Characteristics of Orbital Cellulitis Adult Cohort\small }
+} 
+\begin{tabular*}{0.7\linewidth}{@{\extracolsep{\fill}}lcccc}
+\toprule
+ &  &  & \multicolumn{2}{c}{\textbf{Surgery Needed}} \\ 
+\cmidrule(lr){4-5}
+\textbf{Characteristic} & \textbf{N} & \textbf{Overall}  N = 330\textsuperscript{\textit{1}} & \textbf{No}  N = 137\textsuperscript{\textit{1}} & \textbf{Yes}  N = 193\textsuperscript{\textit{1}} \\ 
+\midrule\addlinespace[2.5pt]
+{\bfseries Age} & 330 &  &  &  \\ 
+{\itshape     Mean (SD)} &  & 49 (19) & 49 (19) & 50 (19) \\ 
+{\itshape     Median {[}Q1, Q3{]}} &  & 49 {[}34, 64{]} & 48 {[}32, 65{]} & 51 {[}35, 64{]} \\ 
+{\itshape     Min - Max} &  & 18 - 94 & 19 - 93 & 18 - 94 \\ 
+{\bfseries Sex} & 329 &  &  &  \\ 
+{\itshape     Female} &  & 122 (37\%) & 54 (39\%) & 68 (35\%) \\ 
+{\itshape     Male} &  & 207 (63\%) & 83 (61\%) & 124 (65\%) \\ 
+{\itshape     NA} &  & 1 (0.3\%) & 0 (0\%) & 1 (0.5\%) \\ 
+{\bfseries Race/Ethnicity} & 298 &  &  &  \\ 
+{\itshape     Black non-Hispanic} &  & 19 (6.4\%) & 9 (7.3\%) & 10 (5.7\%) \\ 
+{\itshape     Hispanic} &  & 47 (16\%) & 18 (15\%) & 29 (17\%) \\ 
+{\itshape     White non-Hispanic} &  & 232 (78\%) & 96 (78\%) & 136 (78\%) \\ 
+{\itshape     NA} &  & 32 (9.7\%) & 14 (10\%) & 18 (9.3\%) \\ 
+{\bfseries Sinusitis} & 330 &  &  &  \\ 
+{\itshape     No} &  & 145 (44\%) & 76 (55\%) & 69 (36\%) \\ 
+{\itshape     Yes} &  & 185 (56\%) & 61 (45\%) & 124 (64\%) \\ 
+{\bfseries Diabetes} & 330 &  &  &  \\ 
+{\itshape     No} &  & 272 (82\%) & 119 (87\%) & 153 (79\%) \\ 
+{\itshape     Yes} &  & 58 (18\%) & 18 (13\%) & 40 (21\%) \\ 
+{\bfseries Immunocompromise} & 330 &  &  &  \\ 
+{\itshape     No} &  & 280 (85\%) & 115 (84\%) & 165 (85\%) \\ 
+{\itshape     Yes} &  & 50 (15\%) & 22 (16\%) & 28 (15\%) \\ 
+{\bfseries Drug/Alcohol} & 330 &  &  &  \\ 
+{\itshape     No} &  & 280 (85\%) & 116 (85\%) & 164 (85\%) \\ 
+{\itshape     Yes} &  & 50 (15\%) & 21 (15\%) & 29 (15\%) \\ 
+{\bfseries Asthma} & 330 &  &  &  \\ 
+{\itshape     No} &  & 311 (94\%) & 128 (93\%) & 183 (95\%) \\ 
+{\itshape     Yes} &  & 19 (5.8\%) & 9 (6.6\%) & 10 (5.2\%) \\ 
+{\bfseries Trauma} & 330 &  &  &  \\ 
+{\itshape     No} &  & 283 (86\%) & 116 (85\%) & 167 (87\%) \\ 
+{\itshape     Yes} &  & 47 (14\%) & 21 (15\%) & 26 (13\%) \\ 
+{\bfseries Prior Surgery} & 330 &  &  &  \\ 
+{\itshape     No} &  & 297 (90\%) & 123 (90\%) & 174 (90\%) \\ 
+{\itshape     Yes} &  & 33 (10\%) & 14 (10\%) & 19 (9.8\%) \\ 
+{\bfseries Dental} & 330 &  &  &  \\ 
+{\itshape     No} &  & 308 (93\%) & 128 (93\%) & 180 (93\%) \\ 
+{\itshape     Yes} &  & 22 (6.7\%) & 9 (6.6\%) & 13 (6.7\%) \\ 
+{\bfseries NLDO} & 330 &  &  &  \\ 
+{\itshape     No} &  & 323 (98\%) & 133 (97\%) & 190 (98\%) \\ 
+{\itshape     Yes} &  & 7 (2.1\%) & 4 (2.9\%) & 3 (1.6\%) \\ 
+{\bfseries SPA} & 330 &  &  &  \\ 
+{\itshape     No} &  & 262 (79\%) & 134 (98\%) & 128 (66\%) \\ 
+{\itshape     Yes} &  & 68 (21\%) & 3 (2.2\%) & 65 (34\%) \\ 
+{\bfseries OA} & 330 &  &  &  \\ 
+{\itshape     No} &  & 278 (84\%) & 125 (91\%) & 153 (79\%) \\ 
+{\itshape     Yes} &  & 52 (16\%) & 12 (8.8\%) & 40 (21\%) \\ 
+{\bfseries ICE} & 330 &  &  &  \\ 
+{\itshape     No} &  & 315 (95\%) & 134 (98\%) & 181 (94\%) \\ 
+{\itshape     Yes} &  & 15 (4.5\%) & 3 (2.2\%) & 12 (6.2\%) \\ 
+{\bfseries Length of Stay} & 327 &  &  &  \\ 
+{\itshape     Mean (SD)} &  & 7 (8) & 5 (5) & 9 (8) \\ 
+{\itshape     Median {[}Q1, Q3{]}} &  & 5 {[}3, 9{]} & 3 {[}2, 5{]} & 7 {[}4, 11{]} \\ 
+{\itshape     Min - Max} &  & 0 - 56 & 0 - 33 & 1 - 56 \\ 
+{\itshape     NA} &  & 3 (0.9\%) & 1 (0.7\%) & 2 (1.0\%) \\ 
+\bottomrule
+\end{tabular*}
+\begin{minipage}{\linewidth}
+\textsuperscript{\textit{1}}n (\%)\\
+Percentages are calculated within levels of the stratifying 
+    variable\\
+\end{minipage}
+\end{table}
+
+\begin{Shaded}
+\begin{Highlighting}[]
+\NormalTok{tbl2 }\OtherTok{\textless{}{-}}\NormalTok{ oc\_cleaned }\SpecialCharTok{\%\textgreater{}\%}
+  \FunctionTok{tbl\_summary}\NormalTok{(}
+    \AttributeTok{by =}\NormalTok{ spa,}
+    \AttributeTok{include =} \FunctionTok{c}\NormalTok{(}
+\NormalTok{      age, sex, race\_eth, sinusitis, diabetes, immunocompromise, }\StringTok{\textasciigrave{}}\AttributeTok{drug/alc}\StringTok{\textasciigrave{}}\NormalTok{,}
+\NormalTok{      asthma, trauma, prior\_surgery, dental\_infection, }\StringTok{\textasciigrave{}}\AttributeTok{nldo/infection}\StringTok{\textasciigrave{}}\NormalTok{, }
+\NormalTok{      oa, ice, los, surgery\_adm),}
+    \AttributeTok{type =} \FunctionTok{list}\NormalTok{(}
+      \FunctionTok{all\_continuous}\NormalTok{() }\SpecialCharTok{\textasciitilde{}} \StringTok{"continuous2"}\NormalTok{,}
+      \FunctionTok{all\_categorical}\NormalTok{() }\SpecialCharTok{\textasciitilde{}} \StringTok{"categorical"}\NormalTok{),}
+    \AttributeTok{statistic =} \FunctionTok{list}\NormalTok{(}
+      \FunctionTok{all\_continuous}\NormalTok{() }\SpecialCharTok{\textasciitilde{}} \FunctionTok{c}\NormalTok{(}
+        \StringTok{"\{mean\} (\{sd\})"}\NormalTok{,}
+        \StringTok{"\{median\} [\{p25\}, \{p75\}]"}\NormalTok{,}
+        \StringTok{"\{min\} {-} \{max\}"}\NormalTok{),}
+      \FunctionTok{all\_categorical}\NormalTok{() }\SpecialCharTok{\textasciitilde{}} \StringTok{"\{n\} (\{p\}\%)"}\NormalTok{),}
+    \CommentTok{\#igits = list(AGE \textasciitilde{} 0, SYSBP \textasciitilde{} 0),}
+    \AttributeTok{missing =} \StringTok{"ifany"}\NormalTok{,}
+    \AttributeTok{missing\_text =} \StringTok{"NA"}\NormalTok{,}
+    \AttributeTok{missing\_stat =} \StringTok{"\{N\_miss\} (\{p\_miss\}\%)"}\NormalTok{,}
+    \AttributeTok{label =} \FunctionTok{list}\NormalTok{(}
+\NormalTok{      age }\SpecialCharTok{\textasciitilde{}} \StringTok{"Age"}\NormalTok{,}
+\NormalTok{      sex }\SpecialCharTok{\textasciitilde{}} \StringTok{"Sex"}\NormalTok{,}
+\NormalTok{      race\_eth }\SpecialCharTok{\textasciitilde{}} \StringTok{"Race/Ethnicity"}\NormalTok{,}
+\NormalTok{      sinusitis }\SpecialCharTok{\textasciitilde{}} \StringTok{"Sinusitis"}\NormalTok{,}
+\NormalTok{      diabetes }\SpecialCharTok{\textasciitilde{}} \StringTok{"Diabetes"}\NormalTok{,}
+\NormalTok{      immunocompromise }\SpecialCharTok{\textasciitilde{}} \StringTok{"Immunocompromise"}\NormalTok{,}
+      \StringTok{\textasciigrave{}}\AttributeTok{drug/alc}\StringTok{\textasciigrave{}} \SpecialCharTok{\textasciitilde{}} \StringTok{"Drug/Alcohol"}\NormalTok{,}
+\NormalTok{      asthma }\SpecialCharTok{\textasciitilde{}} \StringTok{"Asthma"}\NormalTok{,}
+\NormalTok{      trauma }\SpecialCharTok{\textasciitilde{}} \StringTok{"Trauma"}\NormalTok{,}
+\NormalTok{      prior\_surgery }\SpecialCharTok{\textasciitilde{}} \StringTok{"Prior Surgery"}\NormalTok{,}
+\NormalTok{      dental\_infection }\SpecialCharTok{\textasciitilde{}} \StringTok{"Dental"}\NormalTok{,}
+      \StringTok{\textasciigrave{}}\AttributeTok{nldo/infection}\StringTok{\textasciigrave{}}\SpecialCharTok{\textasciitilde{}} \StringTok{"NLDO"}\NormalTok{,}
+\NormalTok{      surgery\_adm }\SpecialCharTok{\textasciitilde{}} \StringTok{"Surgery during admission"}\NormalTok{,}
+\NormalTok{      oa }\SpecialCharTok{\textasciitilde{}} \StringTok{"OA"}\NormalTok{,}
+\NormalTok{      ice }\SpecialCharTok{\textasciitilde{}} \StringTok{"ICE"}\NormalTok{,}
+\NormalTok{      los }\SpecialCharTok{\textasciitilde{}} \StringTok{"Length of Stay"}
+\NormalTok{      )) }\SpecialCharTok{\%\textgreater{}\%}
+  \FunctionTok{add\_overall}\NormalTok{() }\SpecialCharTok{\%\textgreater{}\%} \FunctionTok{bold\_labels}\NormalTok{() }\SpecialCharTok{\%\textgreater{}\%} \FunctionTok{italicize\_levels}\NormalTok{() }\SpecialCharTok{\%\textgreater{}\%} \FunctionTok{add\_n}\NormalTok{() }\SpecialCharTok{\%\textgreater{}\%}
+  \FunctionTok{modify\_spanning\_header}\NormalTok{(}
+    \FunctionTok{c}\NormalTok{(}\StringTok{"stat\_1"}\NormalTok{, }\StringTok{"stat\_2"}\NormalTok{) }\SpecialCharTok{\textasciitilde{}} \StringTok{"**SPA**"}\NormalTok{) }\SpecialCharTok{\%\textgreater{}\%}
+  \FunctionTok{as\_gt}\NormalTok{() }\SpecialCharTok{\%\textgreater{}\%}
+\NormalTok{  gt}\SpecialCharTok{::}\FunctionTok{fmt\_markdown}\NormalTok{(}\AttributeTok{columns =} \FunctionTok{everything}\NormalTok{()) }\SpecialCharTok{\%\textgreater{}\%}
+  \FunctionTok{tab\_header}\NormalTok{(}
+    \AttributeTok{title =} \StringTok{"Characteristics of Orbital Cellulitis Adult Cohort"}\NormalTok{) }\SpecialCharTok{\%\textgreater{}\%} 
+    \FunctionTok{tab\_source\_note}\NormalTok{(}
+    \AttributeTok{source\_note =} \StringTok{"Percentages are calculated within levels of the stratifying }
+\StringTok{    variable"}\NormalTok{) }\SpecialCharTok{\%\textgreater{}\%}
+  \FunctionTok{tab\_options}\NormalTok{(}
+    \AttributeTok{table.width =} \FunctionTok{pct}\NormalTok{(}\DecValTok{70}\NormalTok{),}
+    \AttributeTok{table.font.size =} \StringTok{"small"}\NormalTok{,}
+    \AttributeTok{heading.align =} \StringTok{"left"}\NormalTok{,}
+    \AttributeTok{data\_row.padding =} \FunctionTok{px}\NormalTok{(}\DecValTok{3}\NormalTok{),}
+    \AttributeTok{table.border.top.width =} \FunctionTok{px}\NormalTok{(}\DecValTok{2}\NormalTok{),}
+    \AttributeTok{table.border.bottom.width =} \FunctionTok{px}\NormalTok{(}\DecValTok{2}\NormalTok{))}
+
+\NormalTok{tbl2}
+\end{Highlighting}
+\end{Shaded}
+
+\begin{table}[t]
+\caption*{
+{\fontsize{20}{25}\selectfont  Characteristics of Orbital Cellulitis Adult Cohort\small }
+} 
+\begin{tabular*}{0.7\linewidth}{@{\extracolsep{\fill}}lcccc}
+\toprule
+ &  &  & \multicolumn{2}{c}{\textbf{SPA}} \\ 
+\cmidrule(lr){4-5}
+\textbf{Characteristic} & \textbf{N} & \textbf{Overall}  N = 330\textsuperscript{\textit{1}} & \textbf{No}  N = 262\textsuperscript{\textit{1}} & \textbf{Yes}  N = 68\textsuperscript{\textit{1}} \\ 
+\midrule\addlinespace[2.5pt]
+{\bfseries Age} & 330 &  &  &  \\ 
+{\itshape     Mean (SD)} &  & 49 (19) & 51 (19) & 42 (19) \\ 
+{\itshape     Median {[}Q1, Q3{]}} &  & 49 {[}34, 64{]} & 52 {[}35, 66{]} & 38 {[}24, 57{]} \\ 
+{\itshape     Min - Max} &  & 18 - 94 & 19 - 94 & 18 - 80 \\ 
+{\bfseries Sex} & 329 &  &  &  \\ 
+{\itshape     Female} &  & 122 (37\%) & 103 (39\%) & 19 (28\%) \\ 
+{\itshape     Male} &  & 207 (63\%) & 159 (61\%) & 48 (72\%) \\ 
+{\itshape     NA} &  & 1 (0.3\%) & 0 (0\%) & 1 (1.5\%) \\ 
+{\bfseries Race/Ethnicity} & 298 &  &  &  \\ 
+{\itshape     Black non-Hispanic} &  & 19 (6.4\%) & 14 (5.9\%) & 5 (8.1\%) \\ 
+{\itshape     Hispanic} &  & 47 (16\%) & 36 (15\%) & 11 (18\%) \\ 
+{\itshape     White non-Hispanic} &  & 232 (78\%) & 186 (79\%) & 46 (74\%) \\ 
+{\itshape     NA} &  & 32 (9.7\%) & 26 (9.9\%) & 6 (8.8\%) \\ 
+{\bfseries Sinusitis} & 330 &  &  &  \\ 
+{\itshape     No} &  & 145 (44\%) & 140 (53\%) & 5 (7.4\%) \\ 
+{\itshape     Yes} &  & 185 (56\%) & 122 (47\%) & 63 (93\%) \\ 
+{\bfseries Diabetes} & 330 &  &  &  \\ 
+{\itshape     No} &  & 272 (82\%) & 209 (80\%) & 63 (93\%) \\ 
+{\itshape     Yes} &  & 58 (18\%) & 53 (20\%) & 5 (7.4\%) \\ 
+{\bfseries Immunocompromise} & 330 &  &  &  \\ 
+{\itshape     No} &  & 280 (85\%) & 216 (82\%) & 64 (94\%) \\ 
+{\itshape     Yes} &  & 50 (15\%) & 46 (18\%) & 4 (5.9\%) \\ 
+{\bfseries Drug/Alcohol} & 330 &  &  &  \\ 
+{\itshape     No} &  & 280 (85\%) & 222 (85\%) & 58 (85\%) \\ 
+{\itshape     Yes} &  & 50 (15\%) & 40 (15\%) & 10 (15\%) \\ 
+{\bfseries Asthma} & 330 &  &  &  \\ 
+{\itshape     No} &  & 311 (94\%) & 247 (94\%) & 64 (94\%) \\ 
+{\itshape     Yes} &  & 19 (5.8\%) & 15 (5.7\%) & 4 (5.9\%) \\ 
+{\bfseries Trauma} & 330 &  &  &  \\ 
+{\itshape     No} &  & 283 (86\%) & 219 (84\%) & 64 (94\%) \\ 
+{\itshape     Yes} &  & 47 (14\%) & 43 (16\%) & 4 (5.9\%) \\ 
+{\bfseries Prior Surgery} & 330 &  &  &  \\ 
+{\itshape     No} &  & 297 (90\%) & 233 (89\%) & 64 (94\%) \\ 
+{\itshape     Yes} &  & 33 (10\%) & 29 (11\%) & 4 (5.9\%) \\ 
+{\bfseries Dental} & 330 &  &  &  \\ 
+{\itshape     No} &  & 308 (93\%) & 247 (94\%) & 61 (90\%) \\ 
+{\itshape     Yes} &  & 22 (6.7\%) & 15 (5.7\%) & 7 (10\%) \\ 
+{\bfseries NLDO} & 330 &  &  &  \\ 
+{\itshape     No} &  & 323 (98\%) & 255 (97\%) & 68 (100\%) \\ 
+{\itshape     Yes} &  & 7 (2.1\%) & 7 (2.7\%) & 0 (0\%) \\ 
+{\bfseries OA} & 330 &  &  &  \\ 
+{\itshape     No} &  & 278 (84\%) & 210 (80\%) & 68 (100\%) \\ 
+{\itshape     Yes} &  & 52 (16\%) & 52 (20\%) & 0 (0\%) \\ 
+{\bfseries ICE} & 330 &  &  &  \\ 
+{\itshape     No} &  & 315 (95\%) & 251 (96\%) & 64 (94\%) \\ 
+{\itshape     Yes} &  & 15 (4.5\%) & 11 (4.2\%) & 4 (5.9\%) \\ 
+{\bfseries Length of Stay} & 327 &  &  &  \\ 
+{\itshape     Mean (SD)} &  & 7 (8) & 7 (8) & 7 (6) \\ 
+{\itshape     Median {[}Q1, Q3{]}} &  & 5 {[}3, 9{]} & 5 {[}3, 9{]} & 6 {[}4, 9{]} \\ 
+{\itshape     Min - Max} &  & 0 - 56 & 0 - 56 & 2 - 40 \\ 
+{\itshape     NA} &  & 3 (0.9\%) & 3 (1.1\%) & 0 (0\%) \\ 
+{\bfseries Surgery during admission} & 330 &  &  &  \\ 
+{\itshape     No} &  & 137 (42\%) & 134 (51\%) & 3 (4.4\%) \\ 
+{\itshape     Yes} &  & 193 (58\%) & 128 (49\%) & 65 (96\%) \\ 
+\bottomrule
+\end{tabular*}
+\begin{minipage}{\linewidth}
+\textsuperscript{\textit{1}}n (\%)\\
+Percentages are calculated within levels of the stratifying 
+    variable\\
+\end{minipage}
+\end{table}
+
+\begin{Shaded}
+\begin{Highlighting}[]
+\NormalTok{tbl3 }\OtherTok{\textless{}{-}}\NormalTok{ oc\_cleaned }\SpecialCharTok{\%\textgreater{}\%}
+  \FunctionTok{tbl\_summary}\NormalTok{(}
+    \AttributeTok{by =}\NormalTok{ oa,}
+    \AttributeTok{include =} \FunctionTok{c}\NormalTok{(}
+\NormalTok{      age, sex, race\_eth, sinusitis, diabetes, immunocompromise, }\StringTok{\textasciigrave{}}\AttributeTok{drug/alc}\StringTok{\textasciigrave{}}\NormalTok{,}
+\NormalTok{      asthma, trauma, prior\_surgery, dental\_infection, }\StringTok{\textasciigrave{}}\AttributeTok{nldo/infection}\StringTok{\textasciigrave{}}\NormalTok{, }
+\NormalTok{      spa, ice, los, surgery\_adm),}
+    \AttributeTok{type =} \FunctionTok{list}\NormalTok{(}
+      \FunctionTok{all\_continuous}\NormalTok{() }\SpecialCharTok{\textasciitilde{}} \StringTok{"continuous2"}\NormalTok{,}
+      \FunctionTok{all\_categorical}\NormalTok{() }\SpecialCharTok{\textasciitilde{}} \StringTok{"categorical"}\NormalTok{),}
+    \AttributeTok{statistic =} \FunctionTok{list}\NormalTok{(}
+      \FunctionTok{all\_continuous}\NormalTok{() }\SpecialCharTok{\textasciitilde{}} \FunctionTok{c}\NormalTok{(}
+        \StringTok{"\{mean\} (\{sd\})"}\NormalTok{,}
+        \StringTok{"\{median\} [\{p25\}, \{p75\}]"}\NormalTok{,}
+        \StringTok{"\{min\} {-} \{max\}"}\NormalTok{),}
+      \FunctionTok{all\_categorical}\NormalTok{() }\SpecialCharTok{\textasciitilde{}} \StringTok{"\{n\} (\{p\}\%)"}\NormalTok{),}
+    \CommentTok{\#igits = list(AGE \textasciitilde{} 0, SYSBP \textasciitilde{} 0),}
+    \AttributeTok{missing =} \StringTok{"ifany"}\NormalTok{,}
+    \AttributeTok{missing\_text =} \StringTok{"NA"}\NormalTok{,}
+    \AttributeTok{missing\_stat =} \StringTok{"\{N\_miss\} (\{p\_miss\}\%)"}\NormalTok{,}
+    \AttributeTok{label =} \FunctionTok{list}\NormalTok{(}
+\NormalTok{      age }\SpecialCharTok{\textasciitilde{}} \StringTok{"Age"}\NormalTok{,}
+\NormalTok{      sex }\SpecialCharTok{\textasciitilde{}} \StringTok{"Sex"}\NormalTok{,}
+\NormalTok{      race\_eth }\SpecialCharTok{\textasciitilde{}} \StringTok{"Race/Ethnicity"}\NormalTok{,}
+\NormalTok{      sinusitis }\SpecialCharTok{\textasciitilde{}} \StringTok{"Sinusitis"}\NormalTok{,}
+\NormalTok{      diabetes }\SpecialCharTok{\textasciitilde{}} \StringTok{"Diabetes"}\NormalTok{,}
+\NormalTok{      immunocompromise }\SpecialCharTok{\textasciitilde{}} \StringTok{"Immunocompromise"}\NormalTok{,}
+      \StringTok{\textasciigrave{}}\AttributeTok{drug/alc}\StringTok{\textasciigrave{}} \SpecialCharTok{\textasciitilde{}} \StringTok{"Drug/Alcohol"}\NormalTok{,}
+\NormalTok{      asthma }\SpecialCharTok{\textasciitilde{}} \StringTok{"Asthma"}\NormalTok{,}
+\NormalTok{      trauma }\SpecialCharTok{\textasciitilde{}} \StringTok{"Trauma"}\NormalTok{,}
+\NormalTok{      prior\_surgery }\SpecialCharTok{\textasciitilde{}} \StringTok{"Prior Surgery"}\NormalTok{,}
+\NormalTok{      dental\_infection }\SpecialCharTok{\textasciitilde{}} \StringTok{"Dental"}\NormalTok{,}
+      \StringTok{\textasciigrave{}}\AttributeTok{nldo/infection}\StringTok{\textasciigrave{}}\SpecialCharTok{\textasciitilde{}} \StringTok{"NLDO"}\NormalTok{,}
+\NormalTok{      surgery\_adm }\SpecialCharTok{\textasciitilde{}} \StringTok{"Surgery during admission"}\NormalTok{,}
+\NormalTok{      spa }\SpecialCharTok{\textasciitilde{}} \StringTok{"SPA"}\NormalTok{,}
+\NormalTok{      ice }\SpecialCharTok{\textasciitilde{}} \StringTok{"ICE"}\NormalTok{,}
+\NormalTok{      los }\SpecialCharTok{\textasciitilde{}} \StringTok{"Length of Stay"}
+\NormalTok{      )) }\SpecialCharTok{\%\textgreater{}\%}
+  \FunctionTok{add\_overall}\NormalTok{() }\SpecialCharTok{\%\textgreater{}\%} \FunctionTok{bold\_labels}\NormalTok{() }\SpecialCharTok{\%\textgreater{}\%} \FunctionTok{italicize\_levels}\NormalTok{() }\SpecialCharTok{\%\textgreater{}\%} \FunctionTok{add\_n}\NormalTok{() }\SpecialCharTok{\%\textgreater{}\%}
+  \FunctionTok{modify\_spanning\_header}\NormalTok{(}
+    \FunctionTok{c}\NormalTok{(}\StringTok{"stat\_1"}\NormalTok{, }\StringTok{"stat\_2"}\NormalTok{) }\SpecialCharTok{\textasciitilde{}} \StringTok{"**OA**"}\NormalTok{) }\SpecialCharTok{\%\textgreater{}\%}
+  \FunctionTok{as\_gt}\NormalTok{() }\SpecialCharTok{\%\textgreater{}\%}
+\NormalTok{  gt}\SpecialCharTok{::}\FunctionTok{fmt\_markdown}\NormalTok{(}\AttributeTok{columns =} \FunctionTok{everything}\NormalTok{()) }\SpecialCharTok{\%\textgreater{}\%}
+  \FunctionTok{tab\_header}\NormalTok{(}
+    \AttributeTok{title =} \StringTok{"Characteristics of Orbital Cellulitis Adult Cohort"}\NormalTok{) }\SpecialCharTok{\%\textgreater{}\%} 
+    \FunctionTok{tab\_source\_note}\NormalTok{(}
+    \AttributeTok{source\_note =} \StringTok{"Percentages are calculated within levels of the stratifying }
+\StringTok{    variable"}\NormalTok{) }\SpecialCharTok{\%\textgreater{}\%}
+  \FunctionTok{tab\_options}\NormalTok{(}
+    \AttributeTok{table.width =} \FunctionTok{pct}\NormalTok{(}\DecValTok{70}\NormalTok{),}
+    \AttributeTok{table.font.size =} \StringTok{"small"}\NormalTok{,}
+    \AttributeTok{heading.align =} \StringTok{"left"}\NormalTok{,}
+    \AttributeTok{data\_row.padding =} \FunctionTok{px}\NormalTok{(}\DecValTok{3}\NormalTok{),}
+    \AttributeTok{table.border.top.width =} \FunctionTok{px}\NormalTok{(}\DecValTok{2}\NormalTok{),}
+    \AttributeTok{table.border.bottom.width =} \FunctionTok{px}\NormalTok{(}\DecValTok{2}\NormalTok{))}
+
+\NormalTok{tbl3}
+\end{Highlighting}
+\end{Shaded}
+
+\begin{table}[t]
+\caption*{
+{\fontsize{20}{25}\selectfont  Characteristics of Orbital Cellulitis Adult Cohort\small }
+} 
+\begin{tabular*}{0.7\linewidth}{@{\extracolsep{\fill}}lcccc}
+\toprule
+ &  &  & \multicolumn{2}{c}{\textbf{OA}} \\ 
+\cmidrule(lr){4-5}
+\textbf{Characteristic} & \textbf{N} & \textbf{Overall}  N = 330\textsuperscript{\textit{1}} & \textbf{No}  N = 278\textsuperscript{\textit{1}} & \textbf{Yes}  N = 52\textsuperscript{\textit{1}} \\ 
+\midrule\addlinespace[2.5pt]
+{\bfseries Age} & 330 &  &  &  \\ 
+{\itshape     Mean (SD)} &  & 49 (19) & 49 (19) & 54 (20) \\ 
+{\itshape     Median {[}Q1, Q3{]}} &  & 49 {[}34, 64{]} & 49 {[}33, 64{]} & 55 {[}39, 68{]} \\ 
+{\itshape     Min - Max} &  & 18 - 94 & 18 - 90 & 19 - 94 \\ 
+{\bfseries Sex} & 329 &  &  &  \\ 
+{\itshape     Female} &  & 122 (37\%) & 94 (34\%) & 28 (54\%) \\ 
+{\itshape     Male} &  & 207 (63\%) & 183 (66\%) & 24 (46\%) \\ 
+{\itshape     NA} &  & 1 (0.3\%) & 1 (0.4\%) & 0 (0\%) \\ 
+{\bfseries Race/Ethnicity} & 298 &  &  &  \\ 
+{\itshape     Black non-Hispanic} &  & 19 (6.4\%) & 18 (7.1\%) & 1 (2.2\%) \\ 
+{\itshape     Hispanic} &  & 47 (16\%) & 39 (15\%) & 8 (17\%) \\ 
+{\itshape     White non-Hispanic} &  & 232 (78\%) & 195 (77\%) & 37 (80\%) \\ 
+{\itshape     NA} &  & 32 (9.7\%) & 26 (9.4\%) & 6 (12\%) \\ 
+{\bfseries Sinusitis} & 330 &  &  &  \\ 
+{\itshape     No} &  & 145 (44\%) & 107 (38\%) & 38 (73\%) \\ 
+{\itshape     Yes} &  & 185 (56\%) & 171 (62\%) & 14 (27\%) \\ 
+{\bfseries Diabetes} & 330 &  &  &  \\ 
+{\itshape     No} &  & 272 (82\%) & 226 (81\%) & 46 (88\%) \\ 
+{\itshape     Yes} &  & 58 (18\%) & 52 (19\%) & 6 (12\%) \\ 
+{\bfseries Immunocompromise} & 330 &  &  &  \\ 
+{\itshape     No} &  & 280 (85\%) & 233 (84\%) & 47 (90\%) \\ 
+{\itshape     Yes} &  & 50 (15\%) & 45 (16\%) & 5 (9.6\%) \\ 
+{\bfseries Drug/Alcohol} & 330 &  &  &  \\ 
+{\itshape     No} &  & 280 (85\%) & 235 (85\%) & 45 (87\%) \\ 
+{\itshape     Yes} &  & 50 (15\%) & 43 (15\%) & 7 (13\%) \\ 
+{\bfseries Asthma} & 330 &  &  &  \\ 
+{\itshape     No} &  & 311 (94\%) & 262 (94\%) & 49 (94\%) \\ 
+{\itshape     Yes} &  & 19 (5.8\%) & 16 (5.8\%) & 3 (5.8\%) \\ 
+{\bfseries Trauma} & 330 &  &  &  \\ 
+{\itshape     No} &  & 283 (86\%) & 242 (87\%) & 41 (79\%) \\ 
+{\itshape     Yes} &  & 47 (14\%) & 36 (13\%) & 11 (21\%) \\ 
+{\bfseries Prior Surgery} & 330 &  &  &  \\ 
+{\itshape     No} &  & 297 (90\%) & 251 (90\%) & 46 (88\%) \\ 
+{\itshape     Yes} &  & 33 (10\%) & 27 (9.7\%) & 6 (12\%) \\ 
+{\bfseries Dental} & 330 &  &  &  \\ 
+{\itshape     No} &  & 308 (93\%) & 258 (93\%) & 50 (96\%) \\ 
+{\itshape     Yes} &  & 22 (6.7\%) & 20 (7.2\%) & 2 (3.8\%) \\ 
+{\bfseries NLDO} & 330 &  &  &  \\ 
+{\itshape     No} &  & 323 (98\%) & 271 (97\%) & 52 (100\%) \\ 
+{\itshape     Yes} &  & 7 (2.1\%) & 7 (2.5\%) & 0 (0\%) \\ 
+{\bfseries SPA} & 330 &  &  &  \\ 
+{\itshape     No} &  & 262 (79\%) & 210 (76\%) & 52 (100\%) \\ 
+{\itshape     Yes} &  & 68 (21\%) & 68 (24\%) & 0 (0\%) \\ 
+{\bfseries ICE} & 330 &  &  &  \\ 
+{\itshape     No} &  & 315 (95\%) & 265 (95\%) & 50 (96\%) \\ 
+{\itshape     Yes} &  & 15 (4.5\%) & 13 (4.7\%) & 2 (3.8\%) \\ 
+{\bfseries Length of Stay} & 327 &  &  &  \\ 
+{\itshape     Mean (SD)} &  & 7 (8) & 7 (7) & 8 (10) \\ 
+{\itshape     Median {[}Q1, Q3{]}} &  & 5 {[}3, 9{]} & 5 {[}3, 9{]} & 5 {[}4, 7{]} \\ 
+{\itshape     Min - Max} &  & 0 - 56 & 0 - 47 & 1 - 56 \\ 
+{\itshape     NA} &  & 3 (0.9\%) & 3 (1.1\%) & 0 (0\%) \\ 
+{\bfseries Surgery during admission} & 330 &  &  &  \\ 
+{\itshape     No} &  & 137 (42\%) & 125 (45\%) & 12 (23\%) \\ 
+{\itshape     Yes} &  & 193 (58\%) & 153 (55\%) & 40 (77\%) \\ 
+\bottomrule
+\end{tabular*}
+\begin{minipage}{\linewidth}
+\textsuperscript{\textit{1}}n (\%)\\
+Percentages are calculated within levels of the stratifying 
+    variable\\
+\end{minipage}
+\end{table}
+
+\begin{Shaded}
+\begin{Highlighting}[]
+\NormalTok{tbl4 }\OtherTok{\textless{}{-}}\NormalTok{ oc\_cleaned }\SpecialCharTok{\%\textgreater{}\%}
+  \FunctionTok{tbl\_summary}\NormalTok{(}
+    \AttributeTok{by =}\NormalTok{ ice,}
+    \AttributeTok{include =} \FunctionTok{c}\NormalTok{(}
+\NormalTok{      age, sex, race\_eth, sinusitis, diabetes, immunocompromise, }\StringTok{\textasciigrave{}}\AttributeTok{drug/alc}\StringTok{\textasciigrave{}}\NormalTok{,}
+\NormalTok{      asthma, trauma, prior\_surgery, dental\_infection, }\StringTok{\textasciigrave{}}\AttributeTok{nldo/infection}\StringTok{\textasciigrave{}}\NormalTok{, }
+\NormalTok{      oa, spa, los, surgery\_adm),}
+    \AttributeTok{type =} \FunctionTok{list}\NormalTok{(}
+      \FunctionTok{all\_continuous}\NormalTok{() }\SpecialCharTok{\textasciitilde{}} \StringTok{"continuous2"}\NormalTok{,}
+      \FunctionTok{all\_categorical}\NormalTok{() }\SpecialCharTok{\textasciitilde{}} \StringTok{"categorical"}\NormalTok{),}
+    \AttributeTok{statistic =} \FunctionTok{list}\NormalTok{(}
+      \FunctionTok{all\_continuous}\NormalTok{() }\SpecialCharTok{\textasciitilde{}} \FunctionTok{c}\NormalTok{(}
+        \StringTok{"\{mean\} (\{sd\})"}\NormalTok{,}
+        \StringTok{"\{median\} [\{p25\}, \{p75\}]"}\NormalTok{,}
+        \StringTok{"\{min\} {-} \{max\}"}\NormalTok{),}
+      \FunctionTok{all\_categorical}\NormalTok{() }\SpecialCharTok{\textasciitilde{}} \StringTok{"\{n\} (\{p\}\%)"}\NormalTok{),}
+    \CommentTok{\#igits = list(AGE \textasciitilde{} 0, SYSBP \textasciitilde{} 0),}
+    \AttributeTok{missing =} \StringTok{"ifany"}\NormalTok{,}
+    \AttributeTok{missing\_text =} \StringTok{"NA"}\NormalTok{,}
+    \AttributeTok{missing\_stat =} \StringTok{"\{N\_miss\} (\{p\_miss\}\%)"}\NormalTok{,}
+    \AttributeTok{label =} \FunctionTok{list}\NormalTok{(}
+\NormalTok{      age }\SpecialCharTok{\textasciitilde{}} \StringTok{"Age"}\NormalTok{,}
+\NormalTok{      sex }\SpecialCharTok{\textasciitilde{}} \StringTok{"Sex"}\NormalTok{,}
+\NormalTok{      race\_eth }\SpecialCharTok{\textasciitilde{}} \StringTok{"Race/Ethnicity"}\NormalTok{,}
+\NormalTok{      sinusitis }\SpecialCharTok{\textasciitilde{}} \StringTok{"Sinusitis"}\NormalTok{,}
+\NormalTok{      diabetes }\SpecialCharTok{\textasciitilde{}} \StringTok{"Diabetes"}\NormalTok{,}
+\NormalTok{      immunocompromise }\SpecialCharTok{\textasciitilde{}} \StringTok{"Immunocompromise"}\NormalTok{,}
+      \StringTok{\textasciigrave{}}\AttributeTok{drug/alc}\StringTok{\textasciigrave{}} \SpecialCharTok{\textasciitilde{}} \StringTok{"Drug/Alcohol"}\NormalTok{,}
+\NormalTok{      asthma }\SpecialCharTok{\textasciitilde{}} \StringTok{"Asthma"}\NormalTok{,}
+\NormalTok{      trauma }\SpecialCharTok{\textasciitilde{}} \StringTok{"Trauma"}\NormalTok{,}
+\NormalTok{      prior\_surgery }\SpecialCharTok{\textasciitilde{}} \StringTok{"Prior Surgery"}\NormalTok{,}
+\NormalTok{      dental\_infection }\SpecialCharTok{\textasciitilde{}} \StringTok{"Dental"}\NormalTok{,}
+      \StringTok{\textasciigrave{}}\AttributeTok{nldo/infection}\StringTok{\textasciigrave{}}\SpecialCharTok{\textasciitilde{}} \StringTok{"NLDO"}\NormalTok{,}
+\NormalTok{      surgery\_adm }\SpecialCharTok{\textasciitilde{}} \StringTok{"Surgery during admission"}\NormalTok{,}
+\NormalTok{      oa }\SpecialCharTok{\textasciitilde{}} \StringTok{"OA"}\NormalTok{,}
+\NormalTok{      spa }\SpecialCharTok{\textasciitilde{}} \StringTok{"SPA"}\NormalTok{,}
+\NormalTok{      los }\SpecialCharTok{\textasciitilde{}} \StringTok{"Length of Stay"}
+\NormalTok{      )) }\SpecialCharTok{\%\textgreater{}\%}
+  \FunctionTok{add\_overall}\NormalTok{() }\SpecialCharTok{\%\textgreater{}\%} \FunctionTok{bold\_labels}\NormalTok{() }\SpecialCharTok{\%\textgreater{}\%} \FunctionTok{italicize\_levels}\NormalTok{() }\SpecialCharTok{\%\textgreater{}\%} \FunctionTok{add\_n}\NormalTok{() }\SpecialCharTok{\%\textgreater{}\%}
+  \FunctionTok{modify\_spanning\_header}\NormalTok{(}
+    \FunctionTok{c}\NormalTok{(}\StringTok{"stat\_1"}\NormalTok{, }\StringTok{"stat\_2"}\NormalTok{) }\SpecialCharTok{\textasciitilde{}} \StringTok{"**ICE**"}\NormalTok{) }\SpecialCharTok{\%\textgreater{}\%}
+  \FunctionTok{as\_gt}\NormalTok{() }\SpecialCharTok{\%\textgreater{}\%}
+\NormalTok{  gt}\SpecialCharTok{::}\FunctionTok{fmt\_markdown}\NormalTok{(}\AttributeTok{columns =} \FunctionTok{everything}\NormalTok{()) }\SpecialCharTok{\%\textgreater{}\%}
+  \FunctionTok{tab\_header}\NormalTok{(}
+    \AttributeTok{title =} \StringTok{"Characteristics of Orbital Cellulitis Adult Cohort"}\NormalTok{) }\SpecialCharTok{\%\textgreater{}\%} 
+    \FunctionTok{tab\_source\_note}\NormalTok{(}
+    \AttributeTok{source\_note =} \StringTok{"Percentages are calculated within levels of the stratifying }
+\StringTok{    variable"}\NormalTok{) }\SpecialCharTok{\%\textgreater{}\%}
+  \FunctionTok{tab\_options}\NormalTok{(}
+    \AttributeTok{table.width =} \FunctionTok{pct}\NormalTok{(}\DecValTok{70}\NormalTok{),}
+    \AttributeTok{table.font.size =} \StringTok{"small"}\NormalTok{,}
+    \AttributeTok{heading.align =} \StringTok{"left"}\NormalTok{,}
+    \AttributeTok{data\_row.padding =} \FunctionTok{px}\NormalTok{(}\DecValTok{3}\NormalTok{),}
+    \AttributeTok{table.border.top.width =} \FunctionTok{px}\NormalTok{(}\DecValTok{2}\NormalTok{),}
+    \AttributeTok{table.border.bottom.width =} \FunctionTok{px}\NormalTok{(}\DecValTok{2}\NormalTok{))}
+
+\NormalTok{tbl4}
+\end{Highlighting}
+\end{Shaded}
+
+\begin{table}[t]
+\caption*{
+{\fontsize{20}{25}\selectfont  Characteristics of Orbital Cellulitis Adult Cohort\small }
+} 
+\begin{tabular*}{0.7\linewidth}{@{\extracolsep{\fill}}lcccc}
+\toprule
+ &  &  & \multicolumn{2}{c}{\textbf{ICE}} \\ 
+\cmidrule(lr){4-5}
+\textbf{Characteristic} & \textbf{N} & \textbf{Overall}  N = 330\textsuperscript{\textit{1}} & \textbf{No}  N = 315\textsuperscript{\textit{1}} & \textbf{Yes}  N = 15\textsuperscript{\textit{1}} \\ 
+\midrule\addlinespace[2.5pt]
+{\bfseries Age} & 330 &  &  &  \\ 
+{\itshape     Mean (SD)} &  & 49 (19) & 50 (19) & 41 (16) \\ 
+{\itshape     Median {[}Q1, Q3{]}} &  & 49 {[}34, 64{]} & 50 {[}34, 65{]} & 41 {[}24, 57{]} \\ 
+{\itshape     Min - Max} &  & 18 - 94 & 18 - 94 & 20 - 62 \\ 
+{\bfseries Sex} & 329 &  &  &  \\ 
+{\itshape     Female} &  & 122 (37\%) & 117 (37\%) & 5 (33\%) \\ 
+{\itshape     Male} &  & 207 (63\%) & 197 (63\%) & 10 (67\%) \\ 
+{\itshape     NA} &  & 1 (0.3\%) & 1 (0.3\%) & 0 (0\%) \\ 
+{\bfseries Race/Ethnicity} & 298 &  &  &  \\ 
+{\itshape     Black non-Hispanic} &  & 19 (6.4\%) & 19 (6.6\%) & 0 (0\%) \\ 
+{\itshape     Hispanic} &  & 47 (16\%) & 46 (16\%) & 1 (9.1\%) \\ 
+{\itshape     White non-Hispanic} &  & 232 (78\%) & 222 (77\%) & 10 (91\%) \\ 
+{\itshape     NA} &  & 32 (9.7\%) & 28 (8.9\%) & 4 (27\%) \\ 
+{\bfseries Sinusitis} & 330 &  &  &  \\ 
+{\itshape     No} &  & 145 (44\%) & 143 (45\%) & 2 (13\%) \\ 
+{\itshape     Yes} &  & 185 (56\%) & 172 (55\%) & 13 (87\%) \\ 
+{\bfseries Diabetes} & 330 &  &  &  \\ 
+{\itshape     No} &  & 272 (82\%) & 261 (83\%) & 11 (73\%) \\ 
+{\itshape     Yes} &  & 58 (18\%) & 54 (17\%) & 4 (27\%) \\ 
+{\bfseries Immunocompromise} & 330 &  &  &  \\ 
+{\itshape     No} &  & 280 (85\%) & 265 (84\%) & 15 (100\%) \\ 
+{\itshape     Yes} &  & 50 (15\%) & 50 (16\%) & 0 (0\%) \\ 
+{\bfseries Drug/Alcohol} & 330 &  &  &  \\ 
+{\itshape     No} &  & 280 (85\%) & 270 (86\%) & 10 (67\%) \\ 
+{\itshape     Yes} &  & 50 (15\%) & 45 (14\%) & 5 (33\%) \\ 
+{\bfseries Asthma} & 330 &  &  &  \\ 
+{\itshape     No} &  & 311 (94\%) & 296 (94\%) & 15 (100\%) \\ 
+{\itshape     Yes} &  & 19 (5.8\%) & 19 (6.0\%) & 0 (0\%) \\ 
+{\bfseries Trauma} & 330 &  &  &  \\ 
+{\itshape     No} &  & 283 (86\%) & 269 (85\%) & 14 (93\%) \\ 
+{\itshape     Yes} &  & 47 (14\%) & 46 (15\%) & 1 (6.7\%) \\ 
+{\bfseries Prior Surgery} & 330 &  &  &  \\ 
+{\itshape     No} &  & 297 (90\%) & 282 (90\%) & 15 (100\%) \\ 
+{\itshape     Yes} &  & 33 (10\%) & 33 (10\%) & 0 (0\%) \\ 
+{\bfseries Dental} & 330 &  &  &  \\ 
+{\itshape     No} &  & 308 (93\%) & 294 (93\%) & 14 (93\%) \\ 
+{\itshape     Yes} &  & 22 (6.7\%) & 21 (6.7\%) & 1 (6.7\%) \\ 
+{\bfseries NLDO} & 330 &  &  &  \\ 
+{\itshape     No} &  & 323 (98\%) & 308 (98\%) & 15 (100\%) \\ 
+{\itshape     Yes} &  & 7 (2.1\%) & 7 (2.2\%) & 0 (0\%) \\ 
+{\bfseries OA} & 330 &  &  &  \\ 
+{\itshape     No} &  & 278 (84\%) & 265 (84\%) & 13 (87\%) \\ 
+{\itshape     Yes} &  & 52 (16\%) & 50 (16\%) & 2 (13\%) \\ 
+{\bfseries SPA} & 330 &  &  &  \\ 
+{\itshape     No} &  & 262 (79\%) & 251 (80\%) & 11 (73\%) \\ 
+{\itshape     Yes} &  & 68 (21\%) & 64 (20\%) & 4 (27\%) \\ 
+{\bfseries Length of Stay} & 327 &  &  &  \\ 
+{\itshape     Mean (SD)} &  & 7 (8) & 7 (7) & 16 (11) \\ 
+{\itshape     Median {[}Q1, Q3{]}} &  & 5 {[}3, 9{]} & 5 {[}3, 8{]} & 13 {[}6, 24{]} \\ 
+{\itshape     Min - Max} &  & 0 - 56 & 0 - 56 & 6 - 40 \\ 
+{\itshape     NA} &  & 3 (0.9\%) & 3 (1.0\%) & 0 (0\%) \\ 
+{\bfseries Surgery during admission} & 330 &  &  &  \\ 
+{\itshape     No} &  & 137 (42\%) & 134 (43\%) & 3 (20\%) \\ 
+{\itshape     Yes} &  & 193 (58\%) & 181 (57\%) & 12 (80\%) \\ 
+\bottomrule
+\end{tabular*}
+\begin{minipage}{\linewidth}
+\textsuperscript{\textit{1}}n (\%)\\
+Percentages are calculated within levels of the stratifying 
+    variable\\
+\end{minipage}
+\end{table}
+
+\begin{Shaded}
+\begin{Highlighting}[]
+\NormalTok{tbl1 }\OtherTok{\textless{}{-}}\NormalTok{ oc\_cleaned }\SpecialCharTok{\%\textgreater{}\%}
+  \FunctionTok{tbl\_summary}\NormalTok{(}
+    \AttributeTok{by =}\NormalTok{ surgery\_adm,}
+    \AttributeTok{include =} \FunctionTok{c}\NormalTok{(}
+\NormalTok{      age, sex, race\_eth, sinusitis, diabetes, immunocompromise, }\StringTok{\textasciigrave{}}\AttributeTok{drug/alc}\StringTok{\textasciigrave{}}\NormalTok{,}
+\NormalTok{      asthma, trauma, prior\_surgery, dental\_infection, }\StringTok{\textasciigrave{}}\AttributeTok{nldo/infection}\StringTok{\textasciigrave{}}\NormalTok{,}
+\NormalTok{      spa, oa, ice, los),}
+    \AttributeTok{type =} \FunctionTok{list}\NormalTok{(}
+\NormalTok{      age }\SpecialCharTok{\textasciitilde{}} \StringTok{"continuous"}\NormalTok{,}
+\NormalTok{      los }\SpecialCharTok{\textasciitilde{}} \StringTok{"continuous"}\NormalTok{,}
+      \FunctionTok{c}\NormalTok{(sinusitis, diabetes, immunocompromise, }\StringTok{\textasciigrave{}}\AttributeTok{drug/alc}\StringTok{\textasciigrave{}}\NormalTok{,}
+\NormalTok{        asthma, trauma, prior\_surgery, dental\_infection,}
+        \StringTok{\textasciigrave{}}\AttributeTok{nldo/infection}\StringTok{\textasciigrave{}}\NormalTok{, spa, oa, ice) }\SpecialCharTok{\textasciitilde{}} \StringTok{"dichotomous"}\NormalTok{,}
+      \FunctionTok{c}\NormalTok{(race\_eth, sex) }\SpecialCharTok{\textasciitilde{}} \StringTok{"categorical"}\NormalTok{),}
+    \AttributeTok{value =} \FunctionTok{list}\NormalTok{(}
+\NormalTok{      sex }\SpecialCharTok{\textasciitilde{}} \StringTok{"Male"}\NormalTok{,}
+\NormalTok{      sinusitis }\SpecialCharTok{\textasciitilde{}} \StringTok{"Yes"}\NormalTok{,}
+\NormalTok{      diabetes }\SpecialCharTok{\textasciitilde{}} \StringTok{"Yes"}\NormalTok{,}
+\NormalTok{      immunocompromise }\SpecialCharTok{\textasciitilde{}} \StringTok{"Yes"}\NormalTok{,}
+      \StringTok{\textasciigrave{}}\AttributeTok{drug/alc}\StringTok{\textasciigrave{}} \SpecialCharTok{\textasciitilde{}} \StringTok{"Yes"}\NormalTok{,}
+\NormalTok{      asthma }\SpecialCharTok{\textasciitilde{}} \StringTok{"Yes"}\NormalTok{,}
+\NormalTok{      trauma }\SpecialCharTok{\textasciitilde{}} \StringTok{"Yes"}\NormalTok{,}
+\NormalTok{      prior\_surgery }\SpecialCharTok{\textasciitilde{}} \StringTok{"Yes"}\NormalTok{,}
+\NormalTok{      dental\_infection }\SpecialCharTok{\textasciitilde{}} \StringTok{"Yes"}\NormalTok{,}
+      \StringTok{\textasciigrave{}}\AttributeTok{nldo/infection}\StringTok{\textasciigrave{}} \SpecialCharTok{\textasciitilde{}} \StringTok{"Yes"}\NormalTok{,}
+\NormalTok{      spa }\SpecialCharTok{\textasciitilde{}} \StringTok{"Yes"}\NormalTok{,}
+\NormalTok{      oa }\SpecialCharTok{\textasciitilde{}} \StringTok{"Yes"}\NormalTok{,}
+\NormalTok{      ice }\SpecialCharTok{\textasciitilde{}} \StringTok{"Yes"}\NormalTok{),}
+    \AttributeTok{statistic =} \FunctionTok{list}\NormalTok{(}
+      \FunctionTok{all\_continuous}\NormalTok{() }\SpecialCharTok{\textasciitilde{}} \StringTok{"\{median\} (\{p25\}, \{p75\})"}\NormalTok{,}
+      \FunctionTok{all\_categorical}\NormalTok{() }\SpecialCharTok{\textasciitilde{}} \StringTok{"\{n\} (\{p\}\%)"}\NormalTok{,}
+      \FunctionTok{all\_dichotomous}\NormalTok{() }\SpecialCharTok{\textasciitilde{}} \StringTok{"\{n\} (\{p\}\%)"}\NormalTok{),}
+    \AttributeTok{missing =} \StringTok{"no"}\NormalTok{,}
+    \AttributeTok{label =} \FunctionTok{list}\NormalTok{(}
+\NormalTok{      age }\SpecialCharTok{\textasciitilde{}} \StringTok{"Age"}\NormalTok{,}
+\NormalTok{      sex }\SpecialCharTok{\textasciitilde{}} \StringTok{"Sex"}\NormalTok{,}
+\NormalTok{      race\_eth }\SpecialCharTok{\textasciitilde{}} \StringTok{"Race/Ethnicity"}\NormalTok{,}
+\NormalTok{      sinusitis }\SpecialCharTok{\textasciitilde{}} \StringTok{"Sinusitis"}\NormalTok{,}
+\NormalTok{      diabetes }\SpecialCharTok{\textasciitilde{}} \StringTok{"Diabetes"}\NormalTok{,}
+\NormalTok{      immunocompromise }\SpecialCharTok{\textasciitilde{}} \StringTok{"Immunocompromised"}\NormalTok{,}
+      \StringTok{\textasciigrave{}}\AttributeTok{drug/alc}\StringTok{\textasciigrave{}} \SpecialCharTok{\textasciitilde{}} \StringTok{"Drug/Alcohol use"}\NormalTok{,}
+\NormalTok{      asthma }\SpecialCharTok{\textasciitilde{}} \StringTok{"Asthma"}\NormalTok{,}
+\NormalTok{      trauma }\SpecialCharTok{\textasciitilde{}} \StringTok{"Trauma"}\NormalTok{,}
+\NormalTok{      prior\_surgery }\SpecialCharTok{\textasciitilde{}} \StringTok{"Prior surgery"}\NormalTok{,}
+\NormalTok{      dental\_infection }\SpecialCharTok{\textasciitilde{}} \StringTok{"Dental infection"}\NormalTok{,}
+      \StringTok{\textasciigrave{}}\AttributeTok{nldo/infection}\StringTok{\textasciigrave{}} \SpecialCharTok{\textasciitilde{}} \StringTok{"NLDO"}\NormalTok{,}
+\NormalTok{      spa }\SpecialCharTok{\textasciitilde{}} \StringTok{"SPA"}\NormalTok{,}
+\NormalTok{      oa }\SpecialCharTok{\textasciitilde{}} \StringTok{"OA"}\NormalTok{,}
+\NormalTok{      ice }\SpecialCharTok{\textasciitilde{}} \StringTok{"ICE"}\NormalTok{,}
+\NormalTok{      los }\SpecialCharTok{\textasciitilde{}} \StringTok{"Length of stay"}\NormalTok{)) }\SpecialCharTok{\%\textgreater{}\%}
+  \FunctionTok{add\_overall}\NormalTok{() }\SpecialCharTok{\%\textgreater{}\%} \FunctionTok{add\_n}\NormalTok{() }\SpecialCharTok{\%\textgreater{}\%} \FunctionTok{bold\_labels}\NormalTok{() }\SpecialCharTok{\%\textgreater{}\%} 
+  \FunctionTok{modify\_spanning\_header}\NormalTok{(}\FunctionTok{c}\NormalTok{(}\StringTok{"stat\_1"}\NormalTok{, }\StringTok{"stat\_2"}\NormalTok{) }\SpecialCharTok{\textasciitilde{}} \StringTok{"**Surgery Needed**"}\NormalTok{) }\SpecialCharTok{\%\textgreater{}\%}
+  \FunctionTok{as\_gt}\NormalTok{() }\SpecialCharTok{\%\textgreater{}\%}
+\NormalTok{  gt}\SpecialCharTok{::}\FunctionTok{fmt\_markdown}\NormalTok{(}\AttributeTok{columns =} \FunctionTok{everything}\NormalTok{()) }\SpecialCharTok{\%\textgreater{}\%}
+  \FunctionTok{tab\_header}\NormalTok{(}\AttributeTok{title =} \StringTok{"Characteristics of Adult Orbital Cellulitis Admissions"}\NormalTok{) }\SpecialCharTok{\%\textgreater{}\%}
+  \FunctionTok{tab\_options}\NormalTok{(}
+    \AttributeTok{table.width =} \FunctionTok{pct}\NormalTok{(}\DecValTok{70}\NormalTok{),}
+    \AttributeTok{table.font.size =} \StringTok{"small"}\NormalTok{,}
+    \AttributeTok{heading.align =} \StringTok{"left"}\NormalTok{,}
+    \AttributeTok{data\_row.padding =} \FunctionTok{px}\NormalTok{(}\DecValTok{3}\NormalTok{),}
+    \AttributeTok{table.border.top.width =} \FunctionTok{px}\NormalTok{(}\DecValTok{2}\NormalTok{),}
+    \AttributeTok{table.border.bottom.width =} \FunctionTok{px}\NormalTok{(}\DecValTok{2}\NormalTok{))}
+
+\NormalTok{tbl1}
+\end{Highlighting}
+\end{Shaded}
+
+\begin{table}[t]
+\caption*{
+{\fontsize{20}{25}\selectfont  Characteristics of Adult Orbital Cellulitis Admissions\small }
+} 
+\begin{tabular*}{0.7\linewidth}{@{\extracolsep{\fill}}lcccc}
+\toprule
+ &  &  & \multicolumn{2}{c}{\textbf{Surgery Needed}} \\ 
+\cmidrule(lr){4-5}
+\textbf{Characteristic} & \textbf{N} & \textbf{Overall}  N = 330\textsuperscript{\textit{1}} & \textbf{No}  N = 137\textsuperscript{\textit{1}} & \textbf{Yes}  N = 193\textsuperscript{\textit{1}} \\ 
+\midrule\addlinespace[2.5pt]
+{\bfseries Age} & 330 & 49 (34, 64) & 48 (32, 65) & 51 (35, 64) \\ 
+{\bfseries Sex} & 329 &  &  &  \\ 
+    Female &  & 122 (37\%) & 54 (39\%) & 68 (35\%) \\ 
+    Male &  & 207 (63\%) & 83 (61\%) & 124 (65\%) \\ 
+{\bfseries Race/Ethnicity} & 298 &  &  &  \\ 
+    Black non-Hispanic &  & 19 (6.4\%) & 9 (7.3\%) & 10 (5.7\%) \\ 
+    Hispanic &  & 47 (16\%) & 18 (15\%) & 29 (17\%) \\ 
+    White non-Hispanic &  & 232 (78\%) & 96 (78\%) & 136 (78\%) \\ 
+{\bfseries Sinusitis} & 330 & 185 (56\%) & 61 (45\%) & 124 (64\%) \\ 
+{\bfseries Diabetes} & 330 & 58 (18\%) & 18 (13\%) & 40 (21\%) \\ 
+{\bfseries Immunocompromised} & 330 & 50 (15\%) & 22 (16\%) & 28 (15\%) \\ 
+{\bfseries Drug/Alcohol use} & 330 & 50 (15\%) & 21 (15\%) & 29 (15\%) \\ 
+{\bfseries Asthma} & 330 & 19 (5.8\%) & 9 (6.6\%) & 10 (5.2\%) \\ 
+{\bfseries Trauma} & 330 & 47 (14\%) & 21 (15\%) & 26 (13\%) \\ 
+{\bfseries Prior surgery} & 330 & 33 (10\%) & 14 (10\%) & 19 (9.8\%) \\ 
+{\bfseries Dental infection} & 330 & 22 (6.7\%) & 9 (6.6\%) & 13 (6.7\%) \\ 
+{\bfseries NLDO} & 330 & 7 (2.1\%) & 4 (2.9\%) & 3 (1.6\%) \\ 
+{\bfseries SPA} & 330 & 68 (21\%) & 3 (2.2\%) & 65 (34\%) \\ 
+{\bfseries OA} & 330 & 52 (16\%) & 12 (8.8\%) & 40 (21\%) \\ 
+{\bfseries ICE} & 330 & 15 (4.5\%) & 3 (2.2\%) & 12 (6.2\%) \\ 
+{\bfseries Length of stay} & 327 & 5 (3, 9) & 3 (2, 5) & 7 (4, 11) \\ 
+\bottomrule
+\end{tabular*}
+\begin{minipage}{\linewidth}
+\textsuperscript{\textit{1}}Median (Q1, Q3); n (\%)\\
+\end{minipage}
+\end{table}
+
+\begin{Shaded}
+\begin{Highlighting}[]
+\CommentTok{\# change label names for hospitals}
+\FunctionTok{unique}\NormalTok{(oc\_cleaned}\SpecialCharTok{$}\NormalTok{hospital)}
+\end{Highlighting}
+\end{Shaded}
+
+\begin{verbatim}
+## [1] "dh"   "ohsu" "uch"
+\end{verbatim}
+
+Number of patients
+
+\begin{Shaded}
+\begin{Highlighting}[]
+\FunctionTok{cat}\NormalTok{(}\StringTok{"Number of patients:"}\NormalTok{,}
+  \FunctionTok{length}\NormalTok{(}\FunctionTok{unique}\NormalTok{(oc\_cleaned}\SpecialCharTok{$}\NormalTok{record\_id)),}\StringTok{"}\SpecialCharTok{\textbackslash{}n\textbackslash{}n}\StringTok{"}\NormalTok{)}
+\end{Highlighting}
+\end{Shaded}
+
+\begin{verbatim}
+## Number of patients: 330
+\end{verbatim}
+
+Missing values
+
+\begin{Shaded}
+\begin{Highlighting}[]
+\NormalTok{oc\_cleaned }\SpecialCharTok{\%\textgreater{}\%} \FunctionTok{ungroup}\NormalTok{() }\SpecialCharTok{\%\textgreater{}\%} \FunctionTok{miss\_var\_summary}\NormalTok{()}
+\end{Highlighting}
+\end{Shaded}
+
+\begin{verbatim}
+## # A tibble: 120 x 3
+##    variable                          n_miss pct_miss
+##    <chr>                              <int>    <num>
+##  1 anticoagulation_initiated?           324     98.2
+##  2 type_of_anticoagulation_initiated    324     98.2
+##  3 type_of_intracranial_extension       315     95.5
+##  4 new_findings_on_repeat_imaging       303     91.8
+##  5 date_of_prior_surgery                298     90.3
+##  6 drsx                                 298     90.3
+##  7 type_of_prior_surgery                297     90  
+##  8 other_on_imaging_-_explanation       294     89.1
+##  9 post_va_(20/***)                     292     88.5
+## 10 date_of_trauma                       286     86.7
+## # i 110 more rows
+\end{verbatim}
+
+\begin{Shaded}
+\begin{Highlighting}[]
+\CommentTok{\# missing values for predictors of interest}
+\NormalTok{oc\_cleaned[, priori] }\SpecialCharTok{\%\textgreater{}\%} \FunctionTok{ungroup}\NormalTok{() }\SpecialCharTok{\%\textgreater{}\%} \FunctionTok{miss\_var\_summary}\NormalTok{()}
+\end{Highlighting}
+\end{Shaded}
+
+\begin{verbatim}
+## # A tibble: 14 x 3
+##    variable         n_miss pct_miss
+##    <chr>             <int>    <num>
+##  1 age                   0        0
+##  2 sinusitis             0        0
+##  3 diabetes              0        0
+##  4 immunocompromise      0        0
+##  5 drug/alc              0        0
+##  6 asthma                0        0
+##  7 trauma                0        0
+##  8 prior_surgery         0        0
+##  9 surgery_adm           0        0
+## 10 dental_infection      0        0
+## 11 nldo/infection        0        0
+## 12 spa                   0        0
+## 13 oa                    0        0
+## 14 ice                   0        0
+\end{verbatim}
+
+\textbf{NLDO} = Nasolacrimal duct infection:
+a tear duct inflammation and/or infection, can happen in newborn infants and in
+adults. Treatment usually includes antibiotics. Surgery is a possible option to
+stop recurrences.
+
+\textbf{Dacryocystitis} is an infection of the tear sac (lacrimal sac) caused by a
+blockage in the tear duct (nasolacrimal duct), leading to pain, redness, and
+swelling around the eye. Treatment typically involves antibiotics, and in some
+cases, surgery may be necessary to relieve the blockage.
+
+Neutrophils = innate, acute inflammation
+Lymphocytes (T,B,NK) = adaptive, regulated immunity
+* Neutrophils ↑ = acute inflammation, stress, infection
+* Lymphocytes ↓ = stress response, immune suppression, chronic disease
+* So high NLR = More inflammation + relatively weaker adaptive immune response
+
+Physiological meaning of high vs low NLR
+
+High NLR:
+* Acute stress or infection
+* Chronic inflammation
+* Poor prognosis in some diseases
+
+Low NLR:
+* Lower inflammation
+* Stronger relative adaptive immunity (context-dependent)
+
+Get group counts
+
+\begin{Shaded}
+\begin{Highlighting}[]
+\FunctionTok{count\_grp\_obs}\NormalTok{(oc\_cleaned, }\AttributeTok{vars =}\NormalTok{ priori[priori }\SpecialCharTok{!=} \StringTok{"age"}\NormalTok{], }
+              \AttributeTok{mode =} \StringTok{"separate"}\NormalTok{)}
+\end{Highlighting}
+\end{Shaded}
+
+\begin{verbatim}
+## # A tibble: 26 x 4
+##    variable         category     n   pct
+##    <chr>            <chr>    <int> <dbl>
+##  1 asthma           No         311 0.942
+##  2 asthma           Yes         19 0.058
+##  3 dental_infection No         308 0.933
+##  4 dental_infection Yes         22 0.067
+##  5 diabetes         No         272 0.824
+##  6 diabetes         Yes         58 0.176
+##  7 drug/alc         No         280 0.848
+##  8 drug/alc         Yes         50 0.152
+##  9 ice              No         315 0.955
+## 10 ice              Yes         15 0.045
+## # i 16 more rows
+\end{verbatim}
+
+\begin{Shaded}
+\begin{Highlighting}[]
+\FunctionTok{sapply}\NormalTok{(oc\_cleaned[priori[priori }\SpecialCharTok{!=} \StringTok{"age"}\NormalTok{]], table) }
+\end{Highlighting}
+\end{Shaded}
+
+\begin{verbatim}
+##     sinusitis diabetes immunocompromise drug/alc asthma trauma prior_surgery
+## No        145      272              280      280    311    283           297
+## Yes       185       58               50       50     19     47            33
+##     surgery_adm dental_infection nldo/infection spa  oa ice
+## No          137              308            323 262 278 315
+## Yes         193               22              7  68  52  15
+\end{verbatim}
+
+Correlations
+
+\begin{Shaded}
+\begin{Highlighting}[]
+\CommentTok{\# need to convert back to numeric}
+\NormalTok{X\_bin }\OtherTok{\textless{}{-}}\NormalTok{ oc\_cleaned }\SpecialCharTok{\%\textgreater{}\%}
+\NormalTok{  dplyr}\SpecialCharTok{::}\FunctionTok{select}\NormalTok{(}\FunctionTok{all\_of}\NormalTok{(priori[priori }\SpecialCharTok{!=} \StringTok{"age"}\NormalTok{])) }\SpecialCharTok{\%\textgreater{}\%}
+  \FunctionTok{mutate}\NormalTok{(}\FunctionTok{across}\NormalTok{(}\FunctionTok{everything}\NormalTok{(), }\SpecialCharTok{\textasciitilde{}} \FunctionTok{as.numeric}\NormalTok{(.x) }\SpecialCharTok{{-}} \DecValTok{1}\NormalTok{))}
+
+\NormalTok{clean\_names }\OtherTok{\textless{}{-}} \FunctionTok{c}\NormalTok{(}
+  \StringTok{"Sinusitis"}\NormalTok{, }\StringTok{"Diabetes"}\NormalTok{, }\StringTok{"Immunocompromise"}\NormalTok{, }\StringTok{"Drug/Alc"}\NormalTok{,}
+  \StringTok{"Asthma"}\NormalTok{, }\StringTok{"Trauma"}\NormalTok{, }\StringTok{"Prior Surgery"}\NormalTok{, }\StringTok{"Surgery Needed"}\NormalTok{,}
+  \StringTok{"Dental Infection"}\NormalTok{, }\StringTok{"NLDO Infection"}\NormalTok{, }\StringTok{"SPA"}\NormalTok{, }\StringTok{"OA"}\NormalTok{, }\StringTok{"ICE"}\NormalTok{)}
+
+\NormalTok{cor\_matrix }\OtherTok{\textless{}{-}} \FunctionTok{cor}\NormalTok{(X\_bin, }\AttributeTok{use =} \StringTok{"pairwise.complete.obs"}\NormalTok{, }\AttributeTok{method =} \StringTok{"pearson"}\NormalTok{)}
+\FunctionTok{colnames}\NormalTok{(cor\_matrix) }\OtherTok{\textless{}{-}}\NormalTok{ clean\_names}
+\FunctionTok{rownames}\NormalTok{(cor\_matrix) }\OtherTok{\textless{}{-}}\NormalTok{ clean\_names}
+
+\FunctionTok{ggcorrplot}\NormalTok{(cor\_matrix, }\AttributeTok{type =} \StringTok{"lower"}\NormalTok{,}\AttributeTok{lab =}\NormalTok{ T)}
+\end{Highlighting}
+\end{Shaded}
+
+\begin{verbatim}
+## Warning: `aes_string()` was deprecated in ggplot2 3.0.0.
+## i Please use tidy evaluation idioms with `aes()`.
+## i See also `vignette("ggplot2-in-packages")` for more information.
+## i The deprecated feature was likely used in the ggcorrplot package.
+##   Please report the issue at <https://github.com/kassambara/ggcorrplot/issues>.
+## This warning is displayed once every 8 hours.
+## Call `lifecycle::last_lifecycle_warnings()` to see where this warning was
+## generated.
+\end{verbatim}
+
+\pandocbounded{\includegraphics[keepaspectratio]{Adult_OC_files/figure-latex/Correlations-1.pdf}}
+
+Per Frank Harrell - Events per varialbe (EPV) ≈ 10 EPV rule
+\(EPV = \frac{\text{Events}}{\text{Predictors}}\)
+
+Variable Selection
+
+\begin{Shaded}
+\begin{Highlighting}[]
+\CommentTok{\# form \textless{}{-} surgery\_adm \textasciitilde{} .}
+\CommentTok{\# }
+\CommentTok{\# step.fit \textless{}{-} stepwise(formula = form,}
+\CommentTok{\#                 data = oc\_cleaned,}
+\CommentTok{\#                 type = "logit",}
+\CommentTok{\#                 include = c("age", "sex", "race\_eth", "sinusitis", "diabetes",}
+\CommentTok{\#                             "immunocompromise", "drug/alc", "asthma", "trauma", }
+\CommentTok{\#                             "prior\_surgery", "dental\_infection", "nldo/infection", }
+\CommentTok{\#                             "spa", "oa", "ice"),}
+\CommentTok{\#                 strategy = "backward",}
+\CommentTok{\#                 metric = c("AICc", "SBC"))}
+\CommentTok{\# }
+\CommentTok{\# summary(step.fit$backward$AICc)}
+\CommentTok{\# summary(step.fit$backward$SBC)}
+\CommentTok{\# performance(step.fit)}
+\end{Highlighting}
+\end{Shaded}
+
+\begin{Shaded}
+\begin{Highlighting}[]
+\CommentTok{\# Check unique values and class of each predictor}
+\NormalTok{vars\_to\_check }\OtherTok{\textless{}{-}} \FunctionTok{c}\NormalTok{(}\StringTok{"age"}\NormalTok{, }\StringTok{"sex"}\NormalTok{, }\StringTok{"race\_eth"}\NormalTok{, }\StringTok{"sinusitis"}\NormalTok{, }\StringTok{"diabetes"}\NormalTok{,}
+                   \StringTok{"immunocompromise"}\NormalTok{, }\StringTok{"drug/alc"}\NormalTok{, }\StringTok{"asthma"}\NormalTok{, }\StringTok{"trauma"}\NormalTok{, }
+                   \StringTok{"prior\_surgery"}\NormalTok{, }\StringTok{"dental\_infection"}\NormalTok{, }\StringTok{"nldo/infection"}\NormalTok{, }
+                   \StringTok{"spa"}\NormalTok{, }\StringTok{"oa"}\NormalTok{, }\StringTok{"ice"}\NormalTok{)}
+
+\ControlFlowTok{for}\NormalTok{ (v }\ControlFlowTok{in}\NormalTok{ vars\_to\_check) \{}
+  \ControlFlowTok{if}\NormalTok{ (v }\SpecialCharTok{\%in\%} \FunctionTok{names}\NormalTok{(oc\_cleaned)) \{}
+    \FunctionTok{cat}\NormalTok{(v, }\StringTok{":"}\NormalTok{, }
+        \StringTok{"class ="}\NormalTok{, }\FunctionTok{class}\NormalTok{(oc\_cleaned[[v]]), }
+        \StringTok{"unique values ="}\NormalTok{, }\FunctionTok{length}\NormalTok{(}\FunctionTok{unique}\NormalTok{(}\FunctionTok{na.omit}\NormalTok{(oc\_cleaned[[v]]))), }
+        \StringTok{"}\SpecialCharTok{\textbackslash{}n}\StringTok{"}\NormalTok{)}
+\NormalTok{  \} }\ControlFlowTok{else}\NormalTok{ \{}
+    \FunctionTok{cat}\NormalTok{(v, }\StringTok{"NOT FOUND in data}\SpecialCharTok{\textbackslash{}n}\StringTok{"}\NormalTok{)}
+\NormalTok{  \}}
+\NormalTok{\}}
+\end{Highlighting}
+\end{Shaded}
+
+\begin{verbatim}
+## age : class = numeric unique values = 319 
+## sex : class = factor unique values = 2 
+## race_eth : class = character unique values = 3 
+## sinusitis : class = factor unique values = 2 
+## diabetes : class = factor unique values = 2 
+## immunocompromise : class = factor unique values = 2 
+## drug/alc : class = factor unique values = 2 
+## asthma : class = factor unique values = 2 
+## trauma : class = factor unique values = 2 
+## prior_surgery : class = factor unique values = 2 
+## dental_infection : class = factor unique values = 2 
+## nldo/infection : class = factor unique values = 2 
+## spa : class = factor unique values = 2 
+## oa : class = factor unique values = 2 
+## ice : class = factor unique values = 2
+\end{verbatim}
+
+\subsubsection{Primary Analysis}\label{primary-analysis}
+
+\paragraph{Need for Surgery}\label{need-for-surgery}
+
+\textbf{logistf}
+logistic regression model using Firth's bias reduction method, equivalent to
+penalization of the log-likelihood by the Jeffreys prior
+* Profile likelihood = method used in statistics to estimate the likelihood
+of a parameter by fixing other parameters and optimizing the remaining ones
+* Penalized likelihood = method that incorporates a penalty term into the
+likelihood function to prevent overfitting and improve model estimation,
+especially in cases with complex models or limited data.
+
+\begin{quote}
+Variables were selected using penalized regression and then entered into a
+Firth logistic model for estimation.
+\end{quote}
+
+\begin{quote}
+Candidate predictors were screened using cross-validated penalized logistic
+regression. Variables selected by glmnet were then entered into a Firth penalized
+logistic regression model along with prespecified adjustment covariates: age,
+sex, and race/ethnicity.
+\end{quote}
+
+\subparagraph{logistf}\label{logistf}
+
+\begin{Shaded}
+\begin{Highlighting}[]
+\NormalTok{vars\_quoted }\OtherTok{\textless{}{-}} \FunctionTok{ifelse}\NormalTok{(}\FunctionTok{grepl}\NormalTok{(}\StringTok{"/"}\NormalTok{, vars\_to\_check), }
+                      \FunctionTok{paste0}\NormalTok{(}\StringTok{"\textasciigrave{}"}\NormalTok{, vars\_to\_check, }\StringTok{"\textasciigrave{}"}\NormalTok{), vars\_to\_check)}
+\NormalTok{form }\OtherTok{\textless{}{-}} \FunctionTok{as.formula}\NormalTok{(}\FunctionTok{paste}\NormalTok{(}\StringTok{"surgery\_adm \textasciitilde{}"}\NormalTok{, }\FunctionTok{paste}\NormalTok{(vars\_quoted, }\AttributeTok{collapse =} \StringTok{" + "}\NormalTok{)))}
+\NormalTok{nfs.model.fbm }\OtherTok{\textless{}{-}} \FunctionTok{logistf}\NormalTok{(form,}\AttributeTok{data=}\NormalTok{oc\_cleaned)}
+
+\FunctionTok{summary}\NormalTok{(nfs.model.fbm)}
+\end{Highlighting}
+\end{Shaded}
+
+\begin{verbatim}
+## logistf(formula = form, data = oc_cleaned)
+## 
+## Model fitted by Penalized ML
+## Coefficients:
+##                                   coef    se(coef)   lower 0.95 upper 0.95
+## (Intercept)                -1.82466501 0.843434664 -3.562557251 -0.1731918
+## age                         0.01078096 0.008253342 -0.005478982  0.0273286
+## sexMale                     0.19723674 0.298664542 -0.392566205  0.7961698
+## race_ethHispanic            0.23016279 0.649873413 -1.067261339  1.5640024
+## race_ethWhite non-Hispanic  0.31407517 0.575354573 -0.832097090  1.5101939
+## sinusitisYes                0.38671973 0.306197091 -0.213998384  1.0018644
+## diabetesYes                 1.08807292 0.364643952  0.380244156  1.8259868
+## immunocompromiseYes         0.06784564 0.368713839 -0.666965829  0.7978649
+## `drug/alc`Yes              -0.22108031 0.409141861 -1.048178464  0.5931474
+## asthmaYes                  -0.31242264 0.580099808 -1.509626675  0.8471985
+## traumaYes                   0.49686346 0.394768881 -0.285225603  1.2882058
+## prior_surgeryYes           -0.11867116 0.446299160 -1.015475530  0.7662760
+## dental_infectionYes        -0.10366688 0.544968696 -1.217414128  0.9887550
+## `nldo/infection`Yes         1.47143298 1.093655148 -0.663646699  3.9591872
+## spaYes                      3.64921709 0.655984320  2.492946847  5.2689235
+## oaYes                       1.84769810 0.402298893  1.084019280  2.6887640
+## iceYes                      0.63467374 0.749188632 -0.833866292  2.2293912
+##                                  Chisq            p method
+## (Intercept)                 4.70212707 3.012531e-02      2
+## age                         1.68487972 1.942773e-01      2
+## sexMale                     0.42743913 5.132482e-01      2
+## race_ethHispanic            0.12000214 7.290322e-01      2
+## race_ethWhite non-Hispanic  0.28540328 5.931814e-01      2
+## sinusitisYes                1.58372804 2.082245e-01      2
+## diabetesYes                 9.17354413 2.455386e-03      2
+## immunocompromiseYes         0.03320074 8.554174e-01      2
+## `drug/alc`Yes               0.28254222 5.950398e-01      2
+## asthmaYes                   0.27808994 5.979559e-01      2
+## traumaYes                   1.55253449 2.127617e-01      2
+## prior_surgeryYes            0.06921110 7.924889e-01      2
+## dental_infectionYes         0.03484058 8.519301e-01      2
+## `nldo/infection`Yes         1.86352044 1.722190e-01      2
+## spaYes                     63.17912627 1.887379e-15      2
+## oaYes                      24.53078754 7.313191e-07      2
+## iceYes                      0.71014276 3.993964e-01      2
+## 
+## Method: 1-Wald, 2-Profile penalized log-likelihood, 3-None
+## 
+## Likelihood ratio test=92.99648 on 16 df, p=6.993295e-13, n=297
+## Wald test = 56.28274 on 16 df, p = 2.185285e-06
+\end{verbatim}
+
+\subparagraph{GLM}\label{glm}
+
+\begin{Shaded}
+\begin{Highlighting}[]
+\NormalTok{nfs.model.glm }\OtherTok{\textless{}{-}} \FunctionTok{glm}\NormalTok{(form,}\AttributeTok{family=}\StringTok{"binomial"}\NormalTok{,}\AttributeTok{data=}\NormalTok{oc\_cleaned)}
+
+\FunctionTok{summary}\NormalTok{(nfs.model.glm)}
+\end{Highlighting}
+\end{Shaded}
+
+\begin{verbatim}
+## 
+## Call:
+## glm(formula = form, family = "binomial", data = oc_cleaned)
+## 
+## Coefficients:
+##                             Estimate Std. Error z value Pr(>|z|)    
+## (Intercept)                -1.944433   0.895438  -2.171  0.02989 *  
+## age                         0.011361   0.008637   1.315  0.18836    
+## sexMale                     0.202924   0.312822   0.649  0.51654    
+## race_ethHispanic            0.256791   0.697738   0.368  0.71285    
+## race_ethWhite non-Hispanic  0.351929   0.619310   0.568  0.56986    
+## sinusitisYes                0.405991   0.319411   1.271  0.20371    
+## diabetesYes                 1.171806   0.382389   3.064  0.00218 ** 
+## immunocompromiseYes         0.070665   0.383691   0.184  0.85388    
+## `drug/alc`Yes              -0.244574   0.434172  -0.563  0.57322    
+## asthmaYes                  -0.353732   0.622628  -0.568  0.56995    
+## traumaYes                   0.538343   0.414882   1.298  0.19443    
+## prior_surgeryYes           -0.128809   0.469823  -0.274  0.78396    
+## dental_infectionYes        -0.119736   0.582449  -0.206  0.83712    
+## `nldo/infection`Yes         1.723104   1.295508   1.330  0.18350    
+## spaYes                      4.010564   0.759657   5.279 1.30e-07 ***
+## oaYes                       1.976049   0.422962   4.672 2.98e-06 ***
+## iceYes                      0.726127   0.816879   0.889  0.37405    
+## ---
+## Signif. codes:  0 '***' 0.001 '**' 0.01 '*' 0.05 '.' 0.1 ' ' 1
+## 
+## (Dispersion parameter for binomial family taken to be 1)
+## 
+##     Null deviance: 402.93  on 296  degrees of freedom
+## Residual deviance: 303.54  on 280  degrees of freedom
+##   (33 observations deleted due to missingness)
+## AIC: 337.54
+## 
+## Number of Fisher Scoring iterations: 6
+\end{verbatim}
+
+\subparagraph{GLMnet}\label{glmnet}
+
+\url{https://stackoverflow.com/questions/12937331/why-is-it-inadvisable-to-get-statistical-summary-information-for-regression-coef/17725220\#17725220}
+
+``It is a very natural question to ask for standard errors of regression
+coefficients or other estimated quantities. In principle such standard errors
+can easily be calculated, e.g.~using the bootstrap.
+
+Still, this package deliberately does not provide them. The reason for this is
+that standard errors are not very meaningful for strongly biased estimates such
+as arise from penalized estimation methods. Penalized estimation is a procedure
+that reduces the variance of estimators by introducing substantial bias. The
+bias of each estimator is therefore a major component of its mean squared error,
+whereas its variance may contribute only a small part.
+
+Unfortunately, in most applications of penalized regression it is impossible to
+obtain a sufficiently precise estimate of the bias. Any bootstrap-based
+calculations can only give an assessment of the variance of the estimates.
+Reliable estimates of the bias are only available if reliable unbiased estimates
+are available, which is typically not the case in situations in which penalized
+estimates are used.
+
+Reporting a standard error of a penalized estimate therefore tells only part of
+the story. It can give a mistaken impression of great precision, completely
+ignoring the inaccuracy caused by the bias. It is certainly a mistake to make
+confidence statements that are only based on an assessment of the variance of
+the estimates, such as bootstrap-based confidence intervals do.''
+
+\begin{Shaded}
+\begin{Highlighting}[]
+\CommentTok{\# handles NA removal to be consistent with dimensions of outcome}
+\NormalTok{mf }\OtherTok{\textless{}{-}} \FunctionTok{model.frame}\NormalTok{(form, }\AttributeTok{data =}\NormalTok{ oc\_cleaned)}
+
+\NormalTok{X }\OtherTok{\textless{}{-}} \FunctionTok{model.matrix}\NormalTok{(form, }\AttributeTok{data =}\NormalTok{ mf)[, }\SpecialCharTok{{-}}\DecValTok{1}\NormalTok{] }\CommentTok{\# remove y vector}
+\NormalTok{y }\OtherTok{\textless{}{-}}\NormalTok{ mf}\SpecialCharTok{$}\NormalTok{surgery\_adm}
+\end{Highlighting}
+\end{Shaded}
+
+\begin{Shaded}
+\begin{Highlighting}[]
+\CommentTok{\# set so that covariates have a penalty factor of 0 so theyre always retained}
+\NormalTok{penalty\_factor }\OtherTok{\textless{}{-}} \FunctionTok{rep}\NormalTok{(}\DecValTok{1}\NormalTok{, }\FunctionTok{ncol}\NormalTok{(X))}
+\NormalTok{penalty\_factor[}
+  \FunctionTok{colnames}\NormalTok{(X) }\SpecialCharTok{\%in\%} \FunctionTok{c}\NormalTok{(}\StringTok{"age"}\NormalTok{, }\StringTok{"sexMale"}\NormalTok{, }\StringTok{"race\_ethWhite non{-}Hispanic"}\NormalTok{, }
+                     \StringTok{"race\_ethHispanic"}\NormalTok{)] }\OtherTok{\textless{}{-}} \DecValTok{0}
+\NormalTok{cvfit }\OtherTok{\textless{}{-}} \FunctionTok{cv.glmnet}\NormalTok{(}
+\NormalTok{  X, y,}
+  \AttributeTok{family =} \StringTok{"binomial"}\NormalTok{,}
+  \AttributeTok{alpha =} \DecValTok{1}\NormalTok{,}
+  \AttributeTok{type.measure =} \StringTok{"class"}\NormalTok{,}
+  \AttributeTok{penalty.factor =}\NormalTok{ penalty\_factor)}
+
+\FunctionTok{plot}\NormalTok{(cvfit)}
+\end{Highlighting}
+\end{Shaded}
+
+\pandocbounded{\includegraphics[keepaspectratio]{Adult_OC_files/figure-latex/unnamed-chunk-19-1.pdf}}
+
+extract best model
+
+\begin{Shaded}
+\begin{Highlighting}[]
+\CommentTok{\#coef(cvfit, s = "lambda.min")}
+\FunctionTok{coef}\NormalTok{(cvfit, }\AttributeTok{s =} \StringTok{"lambda.1se"}\NormalTok{)}
+\end{Highlighting}
+\end{Shaded}
+
+\begin{verbatim}
+## 17 x 1 sparse Matrix of class "dgCMatrix"
+##                             lambda.1se
+## (Intercept)                -1.10300806
+## age                         0.00820614
+## sexMale                     0.09396347
+## race_ethHispanic            0.31670781
+## race_ethWhite non-Hispanic  0.27942689
+## sinusitisYes                0.02279315
+## diabetesYes                 0.60825465
+## immunocompromiseYes         .         
+## `drug/alc`Yes               .         
+## asthmaYes                   .         
+## traumaYes                   .         
+## prior_surgeryYes            .         
+## dental_infectionYes         .         
+## `nldo/infection`Yes         0.01127649
+## spaYes                      2.72500462
+## oaYes                       1.20542609
+## iceYes                      .
+\end{verbatim}
+
+\begin{Shaded}
+\begin{Highlighting}[]
+\CommentTok{\# variables selected per cross{-}validation results}
+\FunctionTok{rownames}\NormalTok{(}\FunctionTok{coef}\NormalTok{(cvfit, }\AttributeTok{s =} \StringTok{"lambda.1se"}\NormalTok{))[}
+  \FunctionTok{as.numeric}\NormalTok{(}\FunctionTok{coef}\NormalTok{(cvfit, }\AttributeTok{s =} \StringTok{"lambda.1se"}\NormalTok{)) }\SpecialCharTok{!=} \DecValTok{0}\NormalTok{]}
+\end{Highlighting}
+\end{Shaded}
+
+\begin{verbatim}
+##  [1] "(Intercept)"                "age"                       
+##  [3] "sexMale"                    "race_ethHispanic"          
+##  [5] "race_ethWhite non-Hispanic" "sinusitisYes"              
+##  [7] "diabetesYes"                "`nldo/infection`Yes"       
+##  [9] "spaYes"                     "oaYes"
+\end{verbatim}
+
+Predictions and model performance
+
+\begin{Shaded}
+\begin{Highlighting}[]
+\NormalTok{pred\_prob }\OtherTok{\textless{}{-}} \FunctionTok{predict}\NormalTok{(cvfit, }\AttributeTok{newx =}\NormalTok{ X, }\AttributeTok{s =} \StringTok{"lambda.min"}\NormalTok{, }\AttributeTok{type =} \StringTok{"response"}\NormalTok{)}
+\NormalTok{pred\_class }\OtherTok{\textless{}{-}} \FunctionTok{ifelse}\NormalTok{(pred\_prob }\SpecialCharTok{\textgreater{}} \FloatTok{0.5}\NormalTok{, }\DecValTok{1}\NormalTok{, }\DecValTok{0}\NormalTok{)}
+
+\CommentTok{\# ROC curve {-} evaluate PC1 as a predictor of malignancy on test set}
+\NormalTok{roc\_obj }\OtherTok{=} \FunctionTok{roc}\NormalTok{(y, pred\_prob)}
+\end{Highlighting}
+\end{Shaded}
+
+\begin{verbatim}
+## Setting levels: control = No, case = Yes
+\end{verbatim}
+
+\begin{verbatim}
+## Warning in roc.default(y, pred_prob): Deprecated use a matrix as predictor.
+## Unexpected results may be produced, please pass a numeric vector.
+\end{verbatim}
+
+\begin{verbatim}
+## Setting direction: controls < cases
+\end{verbatim}
+
+\begin{Shaded}
+\begin{Highlighting}[]
+\CommentTok{\# Find optimal sensitivity, specificity, and threshold using Youden\textquotesingle{}s method}
+\NormalTok{opt\_coords }\OtherTok{\textless{}{-}} \FunctionTok{coords}\NormalTok{(roc\_obj, }\StringTok{"best"}\NormalTok{, }
+                     \AttributeTok{ret =} \FunctionTok{c}\NormalTok{(}\StringTok{"threshold"}\NormalTok{, }\StringTok{"sensitivity"}\NormalTok{, }\StringTok{"specificity"}\NormalTok{), }
+                     \AttributeTok{best.method =} \StringTok{"youden"}\NormalTok{)}
+
+\CommentTok{\# Plot the ROC curve and display the AUC}
+\FunctionTok{plot}\NormalTok{(roc\_obj, }\AttributeTok{print.auc =} \ConstantTok{TRUE}\NormalTok{, }\AttributeTok{xlim =} \FunctionTok{c}\NormalTok{(}\DecValTok{1}\NormalTok{, }\DecValTok{0}\NormalTok{), }\AttributeTok{ylim =} \FunctionTok{c}\NormalTok{(}\DecValTok{0}\NormalTok{, }\DecValTok{1}\NormalTok{))}
+\FunctionTok{text}\NormalTok{(}\FloatTok{0.4}\NormalTok{, }\FloatTok{0.20}\NormalTok{, }\FunctionTok{paste}\NormalTok{(}\StringTok{"Optimal Threshold:"}\NormalTok{, }\FunctionTok{round}\NormalTok{(opt\_coords}\SpecialCharTok{$}\NormalTok{threshold, }\DecValTok{3}\NormalTok{)), }
+     \AttributeTok{cex =} \FloatTok{0.9}\NormalTok{, }\AttributeTok{col =} \StringTok{"steelblue"}\NormalTok{)}
+\FunctionTok{text}\NormalTok{(}\FloatTok{0.4}\NormalTok{, }\FloatTok{0.15}\NormalTok{, }\FunctionTok{paste}\NormalTok{(}\StringTok{"Sensitivity:"}\NormalTok{, }\FunctionTok{round}\NormalTok{(opt\_coords}\SpecialCharTok{$}\NormalTok{sensitivity, }\DecValTok{3}\NormalTok{)), }
+     \AttributeTok{cex =} \FloatTok{0.9}\NormalTok{, }\AttributeTok{col =} \StringTok{"steelblue"}\NormalTok{)}
+\FunctionTok{text}\NormalTok{(}\FloatTok{0.4}\NormalTok{, }\FloatTok{0.10}\NormalTok{, }\FunctionTok{paste}\NormalTok{(}\StringTok{"Specificity:"}\NormalTok{, }\FunctionTok{round}\NormalTok{(opt\_coords}\SpecialCharTok{$}\NormalTok{specificity, }\DecValTok{3}\NormalTok{)), }
+     \AttributeTok{cex =} \FloatTok{0.9}\NormalTok{, }\AttributeTok{col =} \StringTok{"steelblue"}\NormalTok{)}
+\end{Highlighting}
+\end{Shaded}
+
+\pandocbounded{\includegraphics[keepaspectratio]{Adult_OC_files/figure-latex/unnamed-chunk-21-1.pdf}}
+
+\begin{Shaded}
+\begin{Highlighting}[]
+\FunctionTok{auc}\NormalTok{(roc\_obj)}
+\end{Highlighting}
+\end{Shaded}
+
+\begin{verbatim}
+## Area under the curve: 0.8099
+\end{verbatim}
+
+\paragraph{Final Model}\label{final-model}
+
+\begin{Shaded}
+\begin{Highlighting}[]
+\CommentTok{\# OR \& 95\% CI}
+\NormalTok{fbm\_tbl }\OtherTok{\textless{}{-}} \FunctionTok{data.frame}\NormalTok{(}
+  \CommentTok{\#term = names(nfs.model.fbm$coefficients),}
+  \AttributeTok{OR =} \FunctionTok{exp}\NormalTok{(nfs.model.fbm}\SpecialCharTok{$}\NormalTok{coefficients),}
+  \AttributeTok{LL =} \FunctionTok{exp}\NormalTok{(nfs.model.fbm}\SpecialCharTok{$}\NormalTok{ci.lower),}
+  \AttributeTok{UL =} \FunctionTok{exp}\NormalTok{(nfs.model.fbm}\SpecialCharTok{$}\NormalTok{ci.upper),}
+  \AttributeTok{p\_value =}\NormalTok{ nfs.model.fbm}\SpecialCharTok{$}\NormalTok{prob) }\SpecialCharTok{\%\textgreater{}\%} 
+  \FunctionTok{mutate}\NormalTok{(}
+    \CommentTok{\# \% change in odds (per unit increase)}
+    \AttributeTok{pct\_chg =}\NormalTok{ (OR  }\SpecialCharTok{{-}} \DecValTok{1}\NormalTok{) }\SpecialCharTok{*} \DecValTok{100}\NormalTok{,}
+    \AttributeTok{pct\_LL =}\NormalTok{ (LL }\SpecialCharTok{{-}} \DecValTok{1}\NormalTok{) }\SpecialCharTok{*} \DecValTok{100}\NormalTok{,}
+    \AttributeTok{pct\_UL =}\NormalTok{ (UL }\SpecialCharTok{{-}} \DecValTok{1}\NormalTok{) }\SpecialCharTok{*} \DecValTok{100}\NormalTok{) }\SpecialCharTok{\%\textgreater{}\%} 
+  \FunctionTok{mutate}\NormalTok{(}\AttributeTok{pct\_ci =} \FunctionTok{sprintf}\NormalTok{(}\StringTok{"(\%.2f, \%.2f)"}\NormalTok{, pct\_LL, pct\_UL),}
+         \AttributeTok{OR\_ci =} \FunctionTok{sprintf}\NormalTok{(}\StringTok{"(\%.2f, \%.2f)"}\NormalTok{, LL, UL)) }
+
+\NormalTok{fbm\_tbl}
+\end{Highlighting}
+\end{Shaded}
+
+\begin{verbatim}
+##                                    OR          LL          UL      p_value
+## (Intercept)                 0.1612717  0.02836619   0.8409763 3.012531e-02
+## age                         1.0108393  0.99453600   1.0277055 1.942773e-01
+## sexMale                     1.2180324  0.67532164   2.2170330 5.132482e-01
+## race_ethHispanic            1.2588049  0.34394919   4.7779059 7.290322e-01
+## race_ethWhite non-Hispanic  1.3689926  0.43513581   4.5276086 5.931814e-01
+## sinusitisYes                1.4721438  0.80734969   2.7233545 2.082245e-01
+## diabetesYes                 2.9685479  1.46264166   6.2089190 2.455386e-03
+## immunocompromiseYes         1.0702001  0.51326355   2.2207943 8.554174e-01
+## `drug/alc`Yes               0.8016523  0.35057575   1.8096752 5.950398e-01
+## asthmaYes                   0.7316722  0.22099246   2.3331015 5.979559e-01
+## traumaYes                   1.6435581  0.75184462   3.6262744 2.127617e-01
+## prior_surgeryYes            0.8880998  0.36223014   2.1517382 7.924889e-01
+## dental_infectionYes         0.9015256  0.29599458   2.6878860 8.519301e-01
+## `nldo/infection`Yes         4.3554720  0.51496997  52.4147081 1.722190e-01
+## spaYes                     38.4445556 12.09687127 194.2067822 1.887379e-15
+## oaYes                       6.3451967  2.95653886  14.7134786 7.313191e-07
+## iceYes                      1.8864066  0.43436665   9.2942063 3.993964e-01
+##                                pct_chg     pct_LL       pct_UL
+## (Intercept)                 -83.872834  -97.16338   -15.902371
+## age                           1.083929   -0.54640     2.770545
+## sexMale                      21.803237  -32.46784   121.703300
+## race_ethHispanic             25.880492  -65.60508   377.790591
+## race_ethWhite non-Hispanic   36.899263  -56.48642   352.760862
+## sinusitisYes                 47.214383  -19.26503   172.335451
+## diabetesYes                 196.854792   46.26417   520.891904
+## immunocompromiseYes           7.020010  -48.67365   122.079434
+## `drug/alc`Yes               -19.834770  -64.94242    80.967518
+## asthmaYes                   -26.832777  -77.90075   133.310148
+## traumaYes                    64.355809  -24.81554   262.627443
+## prior_surgeryYes            -11.190020  -63.77699   115.173817
+## dental_infectionYes          -9.847444  -70.40054   168.788599
+## `nldo/infection`Yes         335.547197  -48.50300  5141.470811
+## spaYes                     3744.455564 1109.68713 19320.678220
+## oaYes                       534.519666  195.65389  1371.347858
+## iceYes                       88.640657  -56.56334   829.420626
+##                                         pct_ci           OR_ci
+## (Intercept)                   (-97.16, -15.90)    (0.03, 0.84)
+## age                              (-0.55, 2.77)    (0.99, 1.03)
+## sexMale                       (-32.47, 121.70)    (0.68, 2.22)
+## race_ethHispanic              (-65.61, 377.79)    (0.34, 4.78)
+## race_ethWhite non-Hispanic    (-56.49, 352.76)    (0.44, 4.53)
+## sinusitisYes                  (-19.27, 172.34)    (0.81, 2.72)
+## diabetesYes                    (46.26, 520.89)    (1.46, 6.21)
+## immunocompromiseYes           (-48.67, 122.08)    (0.51, 2.22)
+## `drug/alc`Yes                  (-64.94, 80.97)    (0.35, 1.81)
+## asthmaYes                     (-77.90, 133.31)    (0.22, 2.33)
+## traumaYes                     (-24.82, 262.63)    (0.75, 3.63)
+## prior_surgeryYes              (-63.78, 115.17)    (0.36, 2.15)
+## dental_infectionYes           (-70.40, 168.79)    (0.30, 2.69)
+## `nldo/infection`Yes          (-48.50, 5141.47)   (0.51, 52.41)
+## spaYes                     (1109.69, 19320.68) (12.10, 194.21)
+## oaYes                        (195.65, 1371.35)   (2.96, 14.71)
+## iceYes                        (-56.56, 829.42)    (0.43, 9.29)
+\end{verbatim}
+
+\begin{Shaded}
+\begin{Highlighting}[]
+\NormalTok{nfs\_tbl }\OtherTok{\textless{}{-}}\NormalTok{ fbm\_tbl }\SpecialCharTok{\%\textgreater{}\%}
+  \FunctionTok{rownames\_to\_column}\NormalTok{(}\StringTok{"Predictor"}\NormalTok{) }\SpecialCharTok{\%\textgreater{}\%} 
+  \FunctionTok{mutate}\NormalTok{(}\AttributeTok{n\_fbm=} \FunctionTok{nrow}\NormalTok{(}\FunctionTok{model.frame}\NormalTok{(nfs.model.fbm)),}
+      \AttributeTok{Predictor =} \FunctionTok{recode}\NormalTok{(}
+\NormalTok{        Predictor,}
+        \StringTok{"age"} \OtherTok{=} \StringTok{"Age (per 1yr)"}\NormalTok{,}
+        \StringTok{"sexMale"} \OtherTok{=} \StringTok{"Sex (Male vs Female)"}\NormalTok{,}
+        \StringTok{"race\_ethHispanic"} \OtherTok{=} \StringTok{"HL vs Blk non{-}HL"}\NormalTok{,}
+        \StringTok{"race\_ethWhite non{-}Hispanic"} \OtherTok{=} \StringTok{"White non{-}HL vs Blk non{-}HL)"}\NormalTok{,}
+        \StringTok{"sinusitisYes"} \OtherTok{=} \StringTok{"Sinusitis (Yes vs No)"}\NormalTok{,}
+        \StringTok{"diabetesYes"} \OtherTok{=} \StringTok{"Diabetes (Yes vs No)"}\NormalTok{,}
+        \StringTok{"immunocompromiseYes"} \OtherTok{=} \StringTok{"Immuno (Yes vs No)"}\NormalTok{,}
+        \StringTok{"\textasciigrave{}drug/alc\textasciigrave{}Yes"} \OtherTok{=} \StringTok{"Drugs/Alcohol (Yes vs No)"}\NormalTok{,}
+        \StringTok{"asthmaYes"} \OtherTok{=} \StringTok{"Asthma (Yes vs No)"}\NormalTok{,}
+        \StringTok{"traumaYes"} \OtherTok{=} \StringTok{"Trauma (Yes vs No)"}\NormalTok{,}
+        \StringTok{"prior\_surgeryYes"} \OtherTok{=} \StringTok{"Prior Surgery (Yes vs No)"}\NormalTok{,}
+        \StringTok{"dental\_infectionYes"} \OtherTok{=} \StringTok{"Dental (Yes vs No)"}\NormalTok{,}
+        \StringTok{"\textasciigrave{}nldo/infection\textasciigrave{}Yes"} \OtherTok{=} \StringTok{"NLDO (Yes vs No)"}\NormalTok{,}
+        \StringTok{"spaYes"} \OtherTok{=} \StringTok{"SPA (Yes vs No)"}\NormalTok{,}
+        \StringTok{"oaYes"} \OtherTok{=} \StringTok{"OA (Yes vs No)"}\NormalTok{,}
+        \StringTok{"iceYes"} \OtherTok{=} \StringTok{"ICE (Yes vs No)"}\NormalTok{)) }\SpecialCharTok{\%\textgreater{}\%} 
+  \FunctionTok{select}\NormalTok{(Predictor, n\_fbm, OR, OR\_ci, pct\_chg, p\_value) }\SpecialCharTok{\%\textgreater{}\%}
+  \FunctionTok{filter}\NormalTok{(Predictor }\SpecialCharTok{!=} \StringTok{"(Intercept)"}\NormalTok{) }\SpecialCharTok{\%\textgreater{}\%} 
+  \FunctionTok{gt}\NormalTok{() }\SpecialCharTok{\%\textgreater{}\%}
+  \FunctionTok{cols\_label}\NormalTok{(}
+    \AttributeTok{n\_fbm =} \StringTok{"N"}\NormalTok{, }
+    \AttributeTok{OR =} \StringTok{"OR"}\NormalTok{,}
+    \AttributeTok{pct\_chg =} \StringTok{"\%Δ in Odds"}\NormalTok{,}
+    \AttributeTok{OR\_ci =} \StringTok{"95\% CI"}\NormalTok{,}
+    \AttributeTok{p\_value  =} \StringTok{"P{-}value"}\NormalTok{) }\SpecialCharTok{\%\textgreater{}\%}
+  \CommentTok{\# tab\_spanner(}
+  \CommentTok{\#   label = "Bayesian",}
+  \CommentTok{\#   columns = c(n\_brm, bay\_pct, bay\_ci)) \%\textgreater{}\%}
+  \FunctionTok{fmt\_number}\NormalTok{(}\AttributeTok{columns =} \FunctionTok{c}\NormalTok{(OR), }\AttributeTok{decimals =} \DecValTok{2}\NormalTok{) }\SpecialCharTok{\%\textgreater{}\%}
+  \FunctionTok{fmt\_number}\NormalTok{(}\AttributeTok{columns =}\NormalTok{ pct\_chg, }\AttributeTok{decimals =} \DecValTok{1}\NormalTok{) }\SpecialCharTok{\%\textgreater{}\%} 
+  \FunctionTok{fmt\_number}\NormalTok{(}\AttributeTok{columns =}\NormalTok{ p\_value, }\AttributeTok{decimals =} \DecValTok{3}\NormalTok{) }\SpecialCharTok{\%\textgreater{}\%}
+    \CommentTok{\# bold specific text}
+  \FunctionTok{tab\_style}\NormalTok{(}\AttributeTok{style =} \FunctionTok{cell\_text}\NormalTok{(}\AttributeTok{weight =} \StringTok{"bold"}\NormalTok{),}
+    \AttributeTok{locations =} \FunctionTok{cells\_stub}\NormalTok{(}\AttributeTok{rows =} \FunctionTok{everything}\NormalTok{())) }\SpecialCharTok{\%\textgreater{}\%}
+  \FunctionTok{tab\_style}\NormalTok{(}\AttributeTok{style =} \FunctionTok{cell\_text}\NormalTok{(}\AttributeTok{weight =} \StringTok{"bold"}\NormalTok{),}
+    \AttributeTok{locations =} \FunctionTok{cells\_column\_labels}\NormalTok{()) }\SpecialCharTok{\%\textgreater{}\%}
+    \CommentTok{\# highlight significant predictors \textless{}0.05}
+  \FunctionTok{tab\_style}\NormalTok{(}\AttributeTok{style =} \FunctionTok{cell\_fill}\NormalTok{(}\AttributeTok{color =} \StringTok{"\#FFF3CD"}\NormalTok{),}
+            \AttributeTok{locations =} \FunctionTok{list}\NormalTok{(}
+              \FunctionTok{cells\_body}\NormalTok{(}\AttributeTok{rows =}\NormalTok{ p\_value }\SpecialCharTok{\textless{}} \FloatTok{0.05}\NormalTok{),}
+              \FunctionTok{cells\_stub}\NormalTok{(}\AttributeTok{rows =}\NormalTok{ p\_value }\SpecialCharTok{\textless{}} \FloatTok{0.05}\NormalTok{))) }\SpecialCharTok{\%\textgreater{}\%} 
+  \CommentTok{\# p{-}value formatting like your other tables}
+  \FunctionTok{text\_transform}\NormalTok{(}
+    \AttributeTok{locations =} \FunctionTok{cells\_body}\NormalTok{(}\AttributeTok{columns =}\NormalTok{ p\_value),}
+    \AttributeTok{fn =} \ControlFlowTok{function}\NormalTok{(x) }\FunctionTok{ifelse}\NormalTok{(}\FunctionTok{as.numeric}\NormalTok{(x) }\SpecialCharTok{\textless{}} \FloatTok{0.001}\NormalTok{, }\StringTok{"\textless{}0.001"}\NormalTok{,}
+                            \FunctionTok{format}\NormalTok{(}\FunctionTok{round}\NormalTok{(}\FunctionTok{as.numeric}\NormalTok{(x), }\DecValTok{3}\NormalTok{), }\AttributeTok{nsmall =} \DecValTok{3}\NormalTok{))) }\SpecialCharTok{\%\textgreater{}\%}
+  \FunctionTok{tab\_options}\NormalTok{(}\AttributeTok{table.font.size =} \StringTok{"small"}\NormalTok{) }\SpecialCharTok{\%\textgreater{}\%}
+  \FunctionTok{tab\_source\_note}\NormalTok{(}
+    \AttributeTok{source\_note =} \StringTok{"\%Δ in Odds represents percent change in the odds of needing surgery}
+\StringTok{    in the predictor (computed as (OR − 1) × 100). Negative values indicate lower}
+\StringTok{    odds of surgical need."}\NormalTok{) }\SpecialCharTok{\%\textgreater{}\%} 
+  \FunctionTok{tab\_source\_note}\NormalTok{(}
+    \AttributeTok{source\_note =} \StringTok{"Variables with very large odds ratios (e.g., SPA) reflect}
+\StringTok{    near{-}complete separation; effect sizes should be interpreted clinically }
+\StringTok{    rather than numerically."}\NormalTok{) }\SpecialCharTok{\%\textgreater{}\%} 
+    \FunctionTok{tab\_header}\NormalTok{(}
+    \AttributeTok{title =} \StringTok{"Factors Associated with Need for Surgery Among Adults Admitted for OC"}\NormalTok{,}
+    \AttributeTok{subtitle =} \StringTok{"Firth Logistic Regression Analysis"}\NormalTok{) }\SpecialCharTok{\%\textgreater{}\%} 
+  \FunctionTok{tab\_options}\NormalTok{(}
+    \AttributeTok{table.font.size =} \StringTok{"small"}\NormalTok{,}
+    \CommentTok{\#heading.align = "left",}
+    \AttributeTok{data\_row.padding =} \FunctionTok{px}\NormalTok{(}\DecValTok{3}\NormalTok{),}
+    \AttributeTok{table.width =} \FunctionTok{pct}\NormalTok{(}\DecValTok{85}\NormalTok{),}
+    \AttributeTok{table.border.top.width =} \FunctionTok{px}\NormalTok{(}\DecValTok{2}\NormalTok{),}
+    \AttributeTok{table.border.bottom.width =} \FunctionTok{px}\NormalTok{(}\DecValTok{2}\NormalTok{))}
+
+\NormalTok{nfs\_tbl}
+\end{Highlighting}
+\end{Shaded}
+
+\begin{table}[t]
+\caption*{
+{\fontsize{20}{25}\selectfont  Factors Associated with Need for Surgery Among Adults Admitted for OC\small } \\ 
+{\fontsize{14}{17}\selectfont  Firth Logistic Regression Analysis\small }
+} 
+\begin{tabular*}{0.85\linewidth}{@{\extracolsep{\fill}}lrrrrr}
+\toprule
+{\bfseries Predictor} & N & {\bfseries OR} & 95\% CI & \%\ensuremath{\Delta} in Odds & P-value \\ 
+\midrule\addlinespace[2.5pt]
+Age (per 1yr) & 297 & 1.01 & (0.99, 1.03) & 1.1 & 0.194 \\ 
+Sex (Male vs Female) & 297 & 1.22 & (0.68, 2.22) & 21.8 & 0.513 \\ 
+HL vs Blk non-HL & 297 & 1.26 & (0.34, 4.78) & 25.9 & 0.729 \\ 
+White non-HL vs Blk non-HL) & 297 & 1.37 & (0.44, 4.53) & 36.9 & 0.593 \\ 
+Sinusitis (Yes vs No) & 297 & 1.47 & (0.81, 2.72) & 47.2 & 0.208 \\ 
+{\cellcolor[HTML]{FFF3CD}{Diabetes (Yes vs No)}} & {\cellcolor[HTML]{FFF3CD}{297}} & {\cellcolor[HTML]{FFF3CD}{2.97}} & {\cellcolor[HTML]{FFF3CD}{(1.46, 6.21)}} & {\cellcolor[HTML]{FFF3CD}{196.9}} & {\cellcolor[HTML]{FFF3CD}{0.002}} \\ 
+Immuno (Yes vs No) & 297 & 1.07 & (0.51, 2.22) & 7.0 & 0.855 \\ 
+Drugs/Alcohol (Yes vs No) & 297 & 0.80 & (0.35, 1.81) & -19.8 & 0.595 \\ 
+Asthma (Yes vs No) & 297 & 0.73 & (0.22, 2.33) & -26.8 & 0.598 \\ 
+Trauma (Yes vs No) & 297 & 1.64 & (0.75, 3.63) & 64.4 & 0.213 \\ 
+Prior Surgery (Yes vs No) & 297 & 0.89 & (0.36, 2.15) & -11.2 & 0.792 \\ 
+Dental (Yes vs No) & 297 & 0.90 & (0.30, 2.69) & -9.8 & 0.852 \\ 
+NLDO (Yes vs No) & 297 & 4.36 & (0.51, 52.41) & 335.5 & 0.172 \\ 
+{\cellcolor[HTML]{FFF3CD}{SPA (Yes vs No)}} & {\cellcolor[HTML]{FFF3CD}{297}} & {\cellcolor[HTML]{FFF3CD}{38.44}} & {\cellcolor[HTML]{FFF3CD}{(12.10, 194.21)}} & {\cellcolor[HTML]{FFF3CD}{3,744.5}} & {\cellcolor[HTML]{FFF3CD}{<0.001}} \\ 
+{\cellcolor[HTML]{FFF3CD}{OA (Yes vs No)}} & {\cellcolor[HTML]{FFF3CD}{297}} & {\cellcolor[HTML]{FFF3CD}{6.35}} & {\cellcolor[HTML]{FFF3CD}{(2.96, 14.71)}} & {\cellcolor[HTML]{FFF3CD}{534.5}} & {\cellcolor[HTML]{FFF3CD}{<0.001}} \\ 
+ICE (Yes vs No) & 297 & 1.89 & (0.43, 9.29) & 88.6 & 0.399 \\ 
+\bottomrule
+\end{tabular*}
+\begin{minipage}{\linewidth}
+\%\ensuremath{\Delta} in Odds represents percent change in the odds of needing surgery
+    in the predictor (computed as (OR \ensuremath{-} 1) \texttimes 100). Negative values indicate lower
+    odds of surgical need.\\
+Variables with very large odds ratios (e.g., SPA) reflect
+    near-complete separation; effect sizes should be interpreted clinically 
+    rather than numerically.\\
+\end{minipage}
+\end{table}
+
+\begin{quote}
+SPA was strongly associated with surgery, with very high rates of surgery
+among affected patients
+\end{quote}
+
+\paragraph{Length of Stay}\label{length-of-stay}
+
+\begin{Shaded}
+\begin{Highlighting}[]
+\FunctionTok{summary}\NormalTok{(oc\_cleaned}\SpecialCharTok{$}\NormalTok{los)}
+\end{Highlighting}
+\end{Shaded}
+
+\begin{verbatim}
+##    Min. 1st Qu.  Median    Mean 3rd Qu.    Max.    NA's 
+##   0.000   3.000   5.000   7.459   9.000  56.000       3
+\end{verbatim}
+
+\begin{Shaded}
+\begin{Highlighting}[]
+\FunctionTok{hist}\NormalTok{(oc\_cleaned}\SpecialCharTok{$}\NormalTok{los)}
+\end{Highlighting}
+\end{Shaded}
+
+\pandocbounded{\includegraphics[keepaspectratio]{Adult_OC_files/figure-latex/unnamed-chunk-23-1.pdf}}
+
+\subparagraph{Negative Binomial}\label{negative-binomial}
+
+\begin{Shaded}
+\begin{Highlighting}[]
+\NormalTok{los.nb.model }\OtherTok{\textless{}{-}} \FunctionTok{glm.nb}\NormalTok{(}
+\NormalTok{  los }\SpecialCharTok{\textasciitilde{}}\NormalTok{ age }\SpecialCharTok{+}\NormalTok{ sex }\SpecialCharTok{+}\NormalTok{ race\_eth }\SpecialCharTok{+}
+\NormalTok{    sinusitis }\SpecialCharTok{+}\NormalTok{ diabetes }\SpecialCharTok{+}\NormalTok{ immunocompromise }\SpecialCharTok{+} \StringTok{\textasciigrave{}}\AttributeTok{drug/alc}\StringTok{\textasciigrave{}} \SpecialCharTok{+}
+\NormalTok{    asthma }\SpecialCharTok{+}\NormalTok{ trauma }\SpecialCharTok{+}\NormalTok{ prior\_surgery }\SpecialCharTok{+}\NormalTok{ surgery\_adm }\SpecialCharTok{+}\NormalTok{ dental\_infection }\SpecialCharTok{+}
+    \StringTok{\textasciigrave{}}\AttributeTok{nldo/infection}\StringTok{\textasciigrave{}} \SpecialCharTok{+}\NormalTok{ spa }\SpecialCharTok{+}\NormalTok{ oa }\SpecialCharTok{+}\NormalTok{ ice,}
+  \AttributeTok{data =}\NormalTok{ oc\_cleaned)}
+
+\FunctionTok{summary}\NormalTok{(los.nb.model)}
+\end{Highlighting}
+\end{Shaded}
+
+\begin{verbatim}
+## 
+## Call:
+## glm.nb(formula = los ~ age + sex + race_eth + sinusitis + diabetes + 
+##     immunocompromise + `drug/alc` + asthma + trauma + prior_surgery + 
+##     surgery_adm + dental_infection + `nldo/infection` + spa + 
+##     oa + ice, data = oc_cleaned, init.theta = 3.452362311, link = log)
+## 
+## Coefficients:
+##                             Estimate Std. Error z value Pr(>|z|)    
+## (Intercept)                 0.857431   0.253523   3.382 0.000719 ***
+## age                         0.005234   0.002481   2.110 0.034871 *  
+## sexMale                    -0.136745   0.087780  -1.558 0.119276    
+## race_ethHispanic            0.458455   0.195911   2.340 0.019278 *  
+## race_ethWhite non-Hispanic  0.126368   0.176549   0.716 0.474134    
+## sinusitisYes                0.150436   0.096284   1.562 0.118188    
+## diabetesYes                 0.370597   0.108881   3.404 0.000665 ***
+## immunocompromiseYes         0.587948   0.107037   5.493 3.95e-08 ***
+## `drug/alc`Yes               0.214991   0.117329   1.832 0.066896 .  
+## asthmaYes                  -0.141157   0.176418  -0.800 0.423639    
+## traumaYes                   0.258291   0.125853   2.052 0.040138 *  
+## prior_surgeryYes           -0.317197   0.150296  -2.110 0.034816 *  
+## surgery_admYes              0.645287   0.094901   6.800 1.05e-11 ***
+## dental_infectionYes         0.046876   0.157000   0.299 0.765267    
+## `nldo/infection`Yes        -0.207417   0.426781  -0.486 0.626964    
+## spaYes                     -0.152666   0.119547  -1.277 0.201589    
+## oaYes                      -0.014262   0.123294  -0.116 0.907911    
+## iceYes                      0.738985   0.198812   3.717 0.000202 ***
+## ---
+## Signif. codes:  0 '***' 0.001 '**' 0.01 '*' 0.05 '.' 0.1 ' ' 1
+## 
+## (Dispersion parameter for Negative Binomial(3.4524) family taken to be 1)
+## 
+##     Null deviance: 476.15  on 293  degrees of freedom
+## Residual deviance: 283.76  on 276  degrees of freedom
+##   (36 observations deleted due to missingness)
+## AIC: 1649.1
+## 
+## Number of Fisher Scoring iterations: 1
+## 
+## 
+##               Theta:  3.452 
+##           Std. Err.:  0.410 
+## 
+##  2 x log-likelihood:  -1611.063
+\end{verbatim}
+
+\begin{Shaded}
+\begin{Highlighting}[]
+\NormalTok{nb\_tbl }\OtherTok{\textless{}{-}}\NormalTok{ broom}\SpecialCharTok{::}\FunctionTok{tidy}\NormalTok{(los.nb.model, }\AttributeTok{exponentiate =}\NormalTok{ T, }\AttributeTok{conf.int =}\NormalTok{ T) }\SpecialCharTok{\%\textgreater{}\%}
+  \FunctionTok{filter}\NormalTok{(term }\SpecialCharTok{!=} \StringTok{"(Intercept)"}\NormalTok{) }\SpecialCharTok{\%\textgreater{}\%}
+  \FunctionTok{mutate}\NormalTok{(}
+    \AttributeTok{pct\_chg =}\NormalTok{ (estimate  }\SpecialCharTok{{-}} \DecValTok{1}\NormalTok{) }\SpecialCharTok{*} \DecValTok{100}\NormalTok{,}
+    \AttributeTok{pct\_LL =}\NormalTok{ (conf.low }\SpecialCharTok{{-}} \DecValTok{1}\NormalTok{) }\SpecialCharTok{*} \DecValTok{100}\NormalTok{,}
+    \AttributeTok{pct\_UL =}\NormalTok{ (conf.high }\SpecialCharTok{{-}} \DecValTok{1}\NormalTok{) }\SpecialCharTok{*} \DecValTok{100}\NormalTok{) }\SpecialCharTok{\%\textgreater{}\%} 
+  \FunctionTok{mutate}\NormalTok{(}\AttributeTok{pct\_ci =} \FunctionTok{sprintf}\NormalTok{(}\StringTok{"(\%.2f, \%.2f)"}\NormalTok{, pct\_LL, pct\_UL),}
+         \AttributeTok{RR\_ci =} \FunctionTok{sprintf}\NormalTok{(}\StringTok{"(\%.2f, \%.2f)"}\NormalTok{, conf.low, conf.high))}
+
+\NormalTok{nb\_tbl}
+\end{Highlighting}
+\end{Shaded}
+
+\begin{verbatim}
+## # A tibble: 17 x 12
+##    term         estimate std.error statistic  p.value conf.low conf.high pct_chg
+##    <chr>           <dbl>     <dbl>     <dbl>    <dbl>    <dbl>     <dbl>   <dbl>
+##  1 age             1.01    0.00248     2.11  3.49e- 2    1.00      1.01    0.525
+##  2 sexMale         0.872   0.0878     -1.56  1.19e- 1    0.735     1.03  -12.8  
+##  3 race_ethHis~    1.58    0.196       2.34  1.93e- 2    1.07      2.34   58.2  
+##  4 race_ethWhi~    1.13    0.177       0.716 4.74e- 1    0.795     1.61   13.5  
+##  5 sinusitisYes    1.16    0.0963      1.56  1.18e- 1    0.962     1.40   16.2  
+##  6 diabetesYes     1.45    0.109       3.40  6.65e- 4    1.16      1.81   44.9  
+##  7 immunocompr~    1.80    0.107       5.49  3.95e- 8    1.46      2.23   80.0  
+##  8 `drug/alc`Y~    1.24    0.117       1.83  6.69e- 2    0.988     1.56   24.0  
+##  9 asthmaYes       0.868   0.176      -0.800 4.24e- 1    0.614     1.24  -13.2  
+## 10 traumaYes       1.29    0.126       2.05  4.01e- 2    1.01      1.66   29.5  
+## 11 prior_surge~    0.728   0.150      -2.11  3.48e- 2    0.543     0.980 -27.2  
+## 12 surgery_adm~    1.91    0.0949      6.80  1.05e-11    1.58      2.31   90.7  
+## 13 dental_infe~    1.05    0.157       0.299 7.65e- 1    0.770     1.44    4.80 
+## 14 `nldo/infec~    0.813   0.427      -0.486 6.27e- 1    0.354     1.93  -18.7  
+## 15 spaYes          0.858   0.120      -1.28  2.02e- 1    0.676     1.09  -14.2  
+## 16 oaYes           0.986   0.123      -0.116 9.08e- 1    0.771     1.26   -1.42 
+## 17 iceYes          2.09    0.199       3.72  2.02e- 4    1.42      3.14  109.   
+## # i 4 more variables: pct_LL <dbl>, pct_UL <dbl>, pct_ci <chr>, RR_ci <chr>
+\end{verbatim}
+
+\begin{Shaded}
+\begin{Highlighting}[]
+\NormalTok{los\_tbl }\OtherTok{\textless{}{-}}\NormalTok{ nb\_tbl }\SpecialCharTok{\%\textgreater{}\%}
+  \FunctionTok{mutate}\NormalTok{(}\AttributeTok{n\_los=} \FunctionTok{nrow}\NormalTok{(}\FunctionTok{model.frame}\NormalTok{(los.nb.model)),}
+      \AttributeTok{term =} \FunctionTok{recode}\NormalTok{(}
+\NormalTok{        term,}
+        \StringTok{"age"} \OtherTok{=} \StringTok{"Age (per 1yr)"}\NormalTok{,}
+        \StringTok{"sexMale"} \OtherTok{=} \StringTok{"Sex (Male vs Female)"}\NormalTok{,}
+        \StringTok{"race\_ethHispanic"} \OtherTok{=} \StringTok{"HL vs Blk non{-}HL"}\NormalTok{,}
+        \StringTok{"race\_ethWhite non{-}Hispanic"} \OtherTok{=} \StringTok{"White non{-}HL vs Blk non{-}HL"}\NormalTok{,}
+        \StringTok{"sinusitisYes"} \OtherTok{=} \StringTok{"Sinusitis (Yes vs No)"}\NormalTok{,}
+        \StringTok{"diabetesYes"} \OtherTok{=} \StringTok{"Diabetes (Yes vs No)"}\NormalTok{,}
+        \StringTok{"immunocompromiseYes"} \OtherTok{=} \StringTok{"Immuno (Yes vs No)"}\NormalTok{,}
+        \StringTok{"\textasciigrave{}drug/alc\textasciigrave{}Yes"} \OtherTok{=} \StringTok{"Drugs/Alcohol (Yes vs No)"}\NormalTok{,}
+        \StringTok{"asthmaYes"} \OtherTok{=} \StringTok{"Asthma (Yes vs No)"}\NormalTok{,}
+        \StringTok{"traumaYes"} \OtherTok{=} \StringTok{"Trauma (Yes vs No)"}\NormalTok{,}
+        \StringTok{"prior\_surgeryYes"} \OtherTok{=} \StringTok{"Prior Surgery (Yes vs No)"}\NormalTok{,}
+        \StringTok{"surgery\_admYes"} \OtherTok{=} \StringTok{"Surgery During Admission (Yes vs No)"}\NormalTok{,}
+        \StringTok{"dental\_infectionYes"} \OtherTok{=} \StringTok{"Dental (Yes vs No)"}\NormalTok{,}
+        \StringTok{"\textasciigrave{}nldo/infection\textasciigrave{}Yes"} \OtherTok{=} \StringTok{"NLDO (Yes vs No)"}\NormalTok{,}
+        \StringTok{"spaYes"} \OtherTok{=} \StringTok{"SPA (Yes vs No)"}\NormalTok{,}
+        \StringTok{"oaYes"} \OtherTok{=} \StringTok{"OA (Yes vs No)"}\NormalTok{,}
+        \StringTok{"iceYes"} \OtherTok{=} \StringTok{"ICE (Yes vs No)"}\NormalTok{)) }\SpecialCharTok{\%\textgreater{}\%} 
+  \FunctionTok{select}\NormalTok{(term, n\_los, estimate, RR\_ci, pct\_chg, p.value) }\SpecialCharTok{\%\textgreater{}\%}
+  \FunctionTok{filter}\NormalTok{(term }\SpecialCharTok{!=} \StringTok{"(Intercept)"}\NormalTok{) }\SpecialCharTok{\%\textgreater{}\%} 
+  \FunctionTok{gt}\NormalTok{() }\SpecialCharTok{\%\textgreater{}\%}
+  \FunctionTok{cols\_label}\NormalTok{(}
+    \AttributeTok{term =} \StringTok{"Predictor"}\NormalTok{,}
+    \AttributeTok{n\_los =} \StringTok{"N"}\NormalTok{, }
+    \AttributeTok{estimate =} \StringTok{"RR"}\NormalTok{,}
+    \AttributeTok{pct\_chg =} \StringTok{"\%Δ in LOS"}\NormalTok{,}
+    \AttributeTok{RR\_ci =} \StringTok{"95\% CI"}\NormalTok{,}
+    \AttributeTok{p.value  =} \StringTok{"P{-}value"}\NormalTok{) }\SpecialCharTok{\%\textgreater{}\%}
+  \FunctionTok{fmt\_number}\NormalTok{(}\AttributeTok{columns =} \FunctionTok{c}\NormalTok{(estimate), }\AttributeTok{decimals =} \DecValTok{2}\NormalTok{) }\SpecialCharTok{\%\textgreater{}\%}
+  \FunctionTok{fmt\_number}\NormalTok{(}\AttributeTok{columns =}\NormalTok{ pct\_chg, }\AttributeTok{decimals =}\DecValTok{1}\NormalTok{) }\SpecialCharTok{\%\textgreater{}\%} 
+  \FunctionTok{fmt\_number}\NormalTok{(}\AttributeTok{columns =}\NormalTok{ p.value, }\AttributeTok{decimals =} \DecValTok{3}\NormalTok{) }\SpecialCharTok{\%\textgreater{}\%}
+    \CommentTok{\# bold specific text}
+  \FunctionTok{tab\_style}\NormalTok{(}\AttributeTok{style =} \FunctionTok{cell\_text}\NormalTok{(}\AttributeTok{weight =} \StringTok{"bold"}\NormalTok{),}
+    \AttributeTok{locations =} \FunctionTok{cells\_stub}\NormalTok{(}\AttributeTok{rows =} \FunctionTok{everything}\NormalTok{())) }\SpecialCharTok{\%\textgreater{}\%}
+  \FunctionTok{tab\_style}\NormalTok{(}\AttributeTok{style =} \FunctionTok{cell\_text}\NormalTok{(}\AttributeTok{weight =} \StringTok{"bold"}\NormalTok{),}
+    \AttributeTok{locations =} \FunctionTok{cells\_column\_labels}\NormalTok{()) }\SpecialCharTok{\%\textgreater{}\%}
+  \FunctionTok{tab\_style}\NormalTok{(}
+  \AttributeTok{style =} \FunctionTok{cell\_fill}\NormalTok{(}\AttributeTok{color =} \StringTok{"\#FFF3CD"}\NormalTok{),}
+  \AttributeTok{locations =} \FunctionTok{cells\_body}\NormalTok{(}\AttributeTok{rows =}\NormalTok{ p.value }\SpecialCharTok{\textless{}} \FloatTok{0.05}\NormalTok{)) }\SpecialCharTok{\%\textgreater{}\%} 
+  \CommentTok{\# p{-}value formatting like your other tables}
+  \FunctionTok{text\_transform}\NormalTok{(}
+    \AttributeTok{locations =} \FunctionTok{cells\_body}\NormalTok{(}\AttributeTok{columns =}\NormalTok{ p.value),}
+    \AttributeTok{fn =} \ControlFlowTok{function}\NormalTok{(x) }\FunctionTok{ifelse}\NormalTok{(}\FunctionTok{as.numeric}\NormalTok{(x) }\SpecialCharTok{\textless{}} \FloatTok{0.001}\NormalTok{, }\StringTok{"\textless{}0.001"}\NormalTok{,}
+                            \FunctionTok{format}\NormalTok{(}\FunctionTok{round}\NormalTok{(}\FunctionTok{as.numeric}\NormalTok{(x), }\DecValTok{3}\NormalTok{), }\AttributeTok{nsmall =} \DecValTok{3}\NormalTok{))) }\SpecialCharTok{\%\textgreater{}\%}
+  \FunctionTok{tab\_options}\NormalTok{(}\AttributeTok{table.font.size =} \StringTok{"small"}\NormalTok{) }\SpecialCharTok{\%\textgreater{}\%}
+  \FunctionTok{tab\_source\_note}\NormalTok{(}
+    \AttributeTok{source\_note =} \StringTok{"RR (rate ratio) represents the relative change in expected}
+\StringTok{    length of stay associated with each predictor. Values \textgreater{}1 indicate longer }
+\StringTok{    LOS and values \textless{}1 indicate shorter LOS. Percent change in LOS is calculated}
+\StringTok{    as (RR − 1) × 100"}\NormalTok{) }\SpecialCharTok{\%\textgreater{}\%} 
+  \FunctionTok{tab\_header}\NormalTok{(}
+    \AttributeTok{title =} \StringTok{"Factors Associated with Length of Stay Among Adults Admitted for OC"}\NormalTok{,}
+    \AttributeTok{subtitle =} \StringTok{"Negative Binomial Regression Analysis"}\NormalTok{) }\SpecialCharTok{\%\textgreater{}\%} 
+  \FunctionTok{tab\_options}\NormalTok{(}
+    \AttributeTok{table.font.size =} \StringTok{"small"}\NormalTok{,}
+    \CommentTok{\#heading.align = "left",}
+    \AttributeTok{data\_row.padding =} \FunctionTok{px}\NormalTok{(}\DecValTok{3}\NormalTok{),}
+    \AttributeTok{table.width =} \FunctionTok{pct}\NormalTok{(}\DecValTok{85}\NormalTok{),}
+    \AttributeTok{table.border.top.width =} \FunctionTok{px}\NormalTok{(}\DecValTok{2}\NormalTok{),}
+    \AttributeTok{table.border.bottom.width =} \FunctionTok{px}\NormalTok{(}\DecValTok{2}\NormalTok{))}
+
+\NormalTok{los\_tbl}
+\end{Highlighting}
+\end{Shaded}
+
+\begin{table}[t]
+\caption*{
+{\fontsize{20}{25}\selectfont  Factors Associated with Length of Stay Among Adults Admitted for OC\small } \\ 
+{\fontsize{14}{17}\selectfont  Negative Binomial Regression Analysis\small }
+} 
+\begin{tabular*}{0.85\linewidth}{@{\extracolsep{\fill}}lrrrrr}
+\toprule
+Predictor & N & RR & 95\% CI & \%\ensuremath{\Delta} in LOS & P-value \\ 
+\midrule\addlinespace[2.5pt]
+{\cellcolor[HTML]{FFF3CD}{Age (per 1yr)}} & {\cellcolor[HTML]{FFF3CD}{294}} & {\cellcolor[HTML]{FFF3CD}{1.01}} & {\cellcolor[HTML]{FFF3CD}{(1.00, 1.01)}} & {\cellcolor[HTML]{FFF3CD}{0.5}} & {\cellcolor[HTML]{FFF3CD}{0.035}} \\ 
+Sex (Male vs Female) & 294 & 0.87 & (0.73, 1.03) & -12.8 & 0.119 \\ 
+{\cellcolor[HTML]{FFF3CD}{HL vs Blk non-HL}} & {\cellcolor[HTML]{FFF3CD}{294}} & {\cellcolor[HTML]{FFF3CD}{1.58}} & {\cellcolor[HTML]{FFF3CD}{(1.07, 2.34)}} & {\cellcolor[HTML]{FFF3CD}{58.2}} & {\cellcolor[HTML]{FFF3CD}{0.019}} \\ 
+White non-HL vs Blk non-HL & 294 & 1.13 & (0.79, 1.61) & 13.5 & 0.474 \\ 
+Sinusitis (Yes vs No) & 294 & 1.16 & (0.96, 1.40) & 16.2 & 0.118 \\ 
+{\cellcolor[HTML]{FFF3CD}{Diabetes (Yes vs No)}} & {\cellcolor[HTML]{FFF3CD}{294}} & {\cellcolor[HTML]{FFF3CD}{1.45}} & {\cellcolor[HTML]{FFF3CD}{(1.16, 1.81)}} & {\cellcolor[HTML]{FFF3CD}{44.9}} & {\cellcolor[HTML]{FFF3CD}{0.001}} \\ 
+{\cellcolor[HTML]{FFF3CD}{Immuno (Yes vs No)}} & {\cellcolor[HTML]{FFF3CD}{294}} & {\cellcolor[HTML]{FFF3CD}{1.80}} & {\cellcolor[HTML]{FFF3CD}{(1.46, 2.23)}} & {\cellcolor[HTML]{FFF3CD}{80.0}} & {\cellcolor[HTML]{FFF3CD}{<0.001}} \\ 
+Drugs/Alcohol (Yes vs No) & 294 & 1.24 & (0.99, 1.56) & 24.0 & 0.067 \\ 
+Asthma (Yes vs No) & 294 & 0.87 & (0.61, 1.24) & -13.2 & 0.424 \\ 
+{\cellcolor[HTML]{FFF3CD}{Trauma (Yes vs No)}} & {\cellcolor[HTML]{FFF3CD}{294}} & {\cellcolor[HTML]{FFF3CD}{1.29}} & {\cellcolor[HTML]{FFF3CD}{(1.01, 1.66)}} & {\cellcolor[HTML]{FFF3CD}{29.5}} & {\cellcolor[HTML]{FFF3CD}{0.040}} \\ 
+{\cellcolor[HTML]{FFF3CD}{Prior Surgery (Yes vs No)}} & {\cellcolor[HTML]{FFF3CD}{294}} & {\cellcolor[HTML]{FFF3CD}{0.73}} & {\cellcolor[HTML]{FFF3CD}{(0.54, 0.98)}} & {\cellcolor[HTML]{FFF3CD}{-27.2}} & {\cellcolor[HTML]{FFF3CD}{0.035}} \\ 
+{\cellcolor[HTML]{FFF3CD}{Surgery During Admission (Yes vs No)}} & {\cellcolor[HTML]{FFF3CD}{294}} & {\cellcolor[HTML]{FFF3CD}{1.91}} & {\cellcolor[HTML]{FFF3CD}{(1.58, 2.31)}} & {\cellcolor[HTML]{FFF3CD}{90.7}} & {\cellcolor[HTML]{FFF3CD}{<0.001}} \\ 
+Dental (Yes vs No) & 294 & 1.05 & (0.77, 1.44) & 4.8 & 0.765 \\ 
+NLDO (Yes vs No) & 294 & 0.81 & (0.35, 1.93) & -18.7 & 0.627 \\ 
+SPA (Yes vs No) & 294 & 0.86 & (0.68, 1.09) & -14.2 & 0.202 \\ 
+OA (Yes vs No) & 294 & 0.99 & (0.77, 1.26) & -1.4 & 0.908 \\ 
+{\cellcolor[HTML]{FFF3CD}{ICE (Yes vs No)}} & {\cellcolor[HTML]{FFF3CD}{294}} & {\cellcolor[HTML]{FFF3CD}{2.09}} & {\cellcolor[HTML]{FFF3CD}{(1.42, 3.14)}} & {\cellcolor[HTML]{FFF3CD}{109.4}} & {\cellcolor[HTML]{FFF3CD}{<0.001}} \\ 
+\bottomrule
+\end{tabular*}
+\begin{minipage}{\linewidth}
+RR (rate ratio) represents the relative change in expected
+    length of stay associated with each predictor. Values >1 indicate longer 
+    LOS and values <1 indicate shorter LOS. Percent change in LOS is calculated
+    as (RR \ensuremath{-} 1) \texttimes 100\\
+\end{minipage}
+\end{table}
+
+\begin{quote}
+Patients with XX had XX\% longer/shorter expected length of stay (mean LOS),
+adjusting for other factors.
+\end{quote}
+
+\paragraph{Subperiosteal abscess (SPA)}\label{subperiosteal-abscess-spa}
+
+\begin{Shaded}
+\begin{Highlighting}[]
+\NormalTok{spa\_vars }\OtherTok{\textless{}{-}} \FunctionTok{c}\NormalTok{(}\StringTok{"age"}\NormalTok{, }\StringTok{"sex"}\NormalTok{, }\StringTok{"race\_eth"}\NormalTok{, }\StringTok{"sinusitis"}\NormalTok{, }\StringTok{"diabetes"}\NormalTok{,}
+              \StringTok{"immunocompromise"}\NormalTok{, }\StringTok{"drug/alc"}\NormalTok{, }\StringTok{"asthma"}\NormalTok{, }\StringTok{"trauma"}\NormalTok{, }
+              \StringTok{"prior\_surgery"}\NormalTok{, }\StringTok{"surgery\_adm"}\NormalTok{,}\StringTok{"dental\_infection"}\NormalTok{,}
+              \StringTok{"nldo/infection"}\NormalTok{, }\StringTok{"oa"}\NormalTok{, }\StringTok{"ice"}\NormalTok{)}
+
+\NormalTok{spa\_vars\_qt }\OtherTok{\textless{}{-}} \FunctionTok{ifelse}\NormalTok{(}\FunctionTok{grepl}\NormalTok{(}\StringTok{"/"}\NormalTok{, spa\_vars), }
+                      \FunctionTok{paste0}\NormalTok{(}\StringTok{"\textasciigrave{}"}\NormalTok{, spa\_vars, }\StringTok{"\textasciigrave{}"}\NormalTok{), spa\_vars)}
+
+\NormalTok{spa\_form }\OtherTok{\textless{}{-}} \FunctionTok{as.formula}\NormalTok{(}\FunctionTok{paste}\NormalTok{(}\StringTok{"spa \textasciitilde{}"}\NormalTok{, }\FunctionTok{paste}\NormalTok{(spa\_vars\_qt, }\AttributeTok{collapse =} \StringTok{" + "}\NormalTok{)))}
+\NormalTok{spa.model }\OtherTok{\textless{}{-}} \FunctionTok{logistf}\NormalTok{(spa\_form, }\AttributeTok{data=}\NormalTok{oc\_cleaned)}
+
+\FunctionTok{summary}\NormalTok{(spa.model)}
+\end{Highlighting}
+\end{Shaded}
+
+\begin{verbatim}
+## logistf(formula = spa_form, data = oc_cleaned)
+## 
+## Model fitted by Penalized ML
+## Coefficients:
+##                                    coef   se(coef)  lower 0.95  upper 0.95
+## (Intercept)                -5.008781519 1.30953532 -7.95433033 -2.38888961
+## age                        -0.008627579 0.01124666 -0.03201657  0.01456384
+## sexMale                     0.354229735 0.42350567 -0.51121889  1.24990629
+## race_ethHispanic            0.654370371 0.88570607 -1.24692188  2.52013916
+## race_ethWhite non-Hispanic  0.157566854 0.79214299 -1.57411307  1.80346453
+## sinusitisYes                2.100087462 0.55197799  1.02203566  3.38744012
+## diabetesYes                -1.541464446 0.56681964 -2.80222470 -0.43822271
+## immunocompromiseYes        -1.415985267 0.59978526 -2.73818291 -0.25981366
+## `drug/alc`Yes               0.460527551 0.58035272 -0.75165519  1.69595941
+## asthmaYes                  -0.269742592 0.81928416 -2.07451479  1.42153511
+## traumaYes                  -0.685475018 0.77210189 -2.48443051  0.93907517
+## prior_surgeryYes            0.682209230 0.80365221 -1.14793002  2.40919017
+## surgery_admYes              3.622027246 0.62672747  2.46693989  5.23617860
+## dental_infectionYes         0.108614076 0.70863150 -1.33931503  1.66607190
+## `nldo/infection`Yes        -0.184884269 1.63651061 -5.23168484  2.70799197
+## oaYes                      -3.608841492 1.30911571 -8.46546058 -1.55681299
+## iceYes                     -0.847306746 0.78801214 -2.52016367  0.74901296
+##                                  Chisq            p method
+## (Intercept)                15.65125917 7.616185e-05      2
+## age                         0.53497214 4.645239e-01      2
+## sexMale                     0.63696375 4.248124e-01      2
+## race_ethHispanic            0.46684334 4.944430e-01      2
+## race_ethWhite non-Hispanic  0.03384104 8.540453e-01      2
+## sinusitisYes               16.25223776 5.544407e-05      2
+## diabetesYes                 7.72740457 5.438888e-03      2
+## immunocompromiseYes         5.86423747 1.545155e-02      2
+## `drug/alc`Yes               0.55720558 4.553884e-01      2
+## asthmaYes                   0.09581030 7.569166e-01      2
+## traumaYes                   0.66664039 4.142254e-01      2
+## prior_surgeryYes            0.56472254 4.523637e-01      2
+## surgery_admYes             61.26212102 4.996004e-15      2
+## dental_infectionYes         0.02062287 8.858111e-01      2
+## `nldo/infection`Yes         0.01219320 9.120741e-01      2
+## oaYes                      17.84426353 2.397409e-05      2
+## iceYes                      1.09526813 2.953069e-01      2
+## 
+## Method: 1-Wald, 2-Profile penalized log-likelihood, 3-None
+## 
+## Likelihood ratio test=132.4345 on 16 df, p=0, n=297
+## Wald test = 71.12068 on 16 df, p = 6.345197e-09
+\end{verbatim}
+
+\begin{Shaded}
+\begin{Highlighting}[]
+\CommentTok{\# OR \& 95\% CI}
+\NormalTok{fbm\_spa\_tbl }\OtherTok{\textless{}{-}} \FunctionTok{data.frame}\NormalTok{(}
+  \CommentTok{\#term = names(nfs.model.fbm$coefficients),}
+  \AttributeTok{RR =} \FunctionTok{exp}\NormalTok{(spa.model}\SpecialCharTok{$}\NormalTok{coefficients),}
+  \AttributeTok{LL =} \FunctionTok{exp}\NormalTok{(spa.model}\SpecialCharTok{$}\NormalTok{ci.lower),}
+  \AttributeTok{UL =} \FunctionTok{exp}\NormalTok{(spa.model}\SpecialCharTok{$}\NormalTok{ci.upper),}
+  \AttributeTok{p\_value =}\NormalTok{ spa.model}\SpecialCharTok{$}\NormalTok{prob) }\SpecialCharTok{\%\textgreater{}\%} 
+  \FunctionTok{mutate}\NormalTok{(}
+    \CommentTok{\# \% change in odds (per unit increase)}
+    \AttributeTok{pct\_chg =}\NormalTok{ (RR  }\SpecialCharTok{{-}} \DecValTok{1}\NormalTok{) }\SpecialCharTok{*} \DecValTok{100}\NormalTok{,}
+    \AttributeTok{pct\_LL =}\NormalTok{ (LL }\SpecialCharTok{{-}} \DecValTok{1}\NormalTok{) }\SpecialCharTok{*} \DecValTok{100}\NormalTok{,}
+    \AttributeTok{pct\_UL =}\NormalTok{ (UL }\SpecialCharTok{{-}} \DecValTok{1}\NormalTok{) }\SpecialCharTok{*} \DecValTok{100}\NormalTok{) }\SpecialCharTok{\%\textgreater{}\%} 
+  \FunctionTok{mutate}\NormalTok{(}\AttributeTok{pct\_ci =} \FunctionTok{sprintf}\NormalTok{(}\StringTok{"(\%.2f, \%.2f)"}\NormalTok{, pct\_LL, pct\_UL),}
+         \AttributeTok{RR\_ci =} \FunctionTok{sprintf}\NormalTok{(}\StringTok{"(\%.2f, \%.2f)"}\NormalTok{, LL, UL)) }
+
+\NormalTok{fbm\_spa\_tbl}
+\end{Highlighting}
+\end{Shaded}
+
+\begin{verbatim}
+##                                      RR           LL           UL      p_value
+## (Intercept)                 0.006679037 3.511383e-04   0.09173149 7.616185e-05
+## age                         0.991409532 9.684905e-01   1.01467041 4.645239e-01
+## sexMale                     1.425082541 5.997641e-01   3.49001589 4.248124e-01
+## race_ethHispanic            1.923930772 2.873881e-01  12.43032629 4.944430e-01
+## race_ethWhite non-Hispanic  1.170659018 2.071912e-01   6.07064300 8.540453e-01
+## sinusitisYes                8.166884174 2.778846e+00  29.59010807 5.544407e-05
+## diabetesYes                 0.214067382 6.067493e-02   0.64518208 5.438888e-03
+## immunocompromiseYes         0.242686385 6.468778e-02   0.77119527 1.545155e-02
+## `drug/alc`Yes               1.584909885 4.715853e-01   5.45187402 4.553884e-01
+## asthmaYes                   0.763576020 1.256174e-01   4.14347626 7.569166e-01
+## traumaYes                   0.503850834 8.337302e-02   2.55761496 4.142254e-01
+## prior_surgeryYes            1.978243302 3.172929e-01  11.12494823 4.523637e-01
+## surgery_admYes             37.413337042 1.178632e+01 187.95049340 4.996004e-15
+## dental_infectionYes         1.114732065 2.620251e-01   5.29134200 8.858111e-01
+## `nldo/infection`Yes         0.831200474 5.344513e-03  14.99912656 9.120741e-01
+## oaYes                       0.027083205 2.106188e-04   0.21080684 2.397409e-05
+## iceYes                      0.428567620 8.044644e-02   2.11491149 2.953069e-01
+##                                 pct_chg      pct_LL       pct_UL
+## (Intercept)                 -99.3320963  -99.964886   -90.826851
+## age                          -0.8590468   -3.150947     1.467041
+## sexMale                      42.5082541  -40.023591   249.001589
+## race_ethHispanic             92.3930772  -71.261195  1143.032629
+## race_ethWhite non-Hispanic   17.0659018  -79.280876   507.064300
+## sinusitisYes                716.6884174  177.884581  2859.010807
+## diabetesYes                 -78.5932618  -93.932507   -35.481792
+## immunocompromiseYes         -75.7313615  -93.531222   -22.880473
+## `drug/alc`Yes                58.4909885  -52.841466   445.187402
+## asthmaYes                   -23.6423980  -87.438264   314.347626
+## traumaYes                   -49.6149166  -91.662698   155.761496
+## prior_surgeryYes             97.8243302  -68.270712  1012.494823
+## surgery_admYes             3641.3337042 1078.632418 18695.049340
+## dental_infectionYes          11.4732065  -73.797491   429.134200
+## `nldo/infection`Yes         -16.8799526  -99.465549  1399.912656
+## oaYes                       -97.2916795  -99.978938   -78.919316
+## iceYes                      -57.1432380  -91.955356   111.491149
+##                                         pct_ci           RR_ci
+## (Intercept)                   (-99.96, -90.83)    (0.00, 0.09)
+## age                              (-3.15, 1.47)    (0.97, 1.01)
+## sexMale                       (-40.02, 249.00)    (0.60, 3.49)
+## race_ethHispanic             (-71.26, 1143.03)   (0.29, 12.43)
+## race_ethWhite non-Hispanic    (-79.28, 507.06)    (0.21, 6.07)
+## sinusitisYes                 (177.88, 2859.01)   (2.78, 29.59)
+## diabetesYes                   (-93.93, -35.48)    (0.06, 0.65)
+## immunocompromiseYes           (-93.53, -22.88)    (0.06, 0.77)
+## `drug/alc`Yes                 (-52.84, 445.19)    (0.47, 5.45)
+## asthmaYes                     (-87.44, 314.35)    (0.13, 4.14)
+## traumaYes                     (-91.66, 155.76)    (0.08, 2.56)
+## prior_surgeryYes             (-68.27, 1012.49)   (0.32, 11.12)
+## surgery_admYes             (1078.63, 18695.05) (11.79, 187.95)
+## dental_infectionYes           (-73.80, 429.13)    (0.26, 5.29)
+## `nldo/infection`Yes          (-99.47, 1399.91)   (0.01, 15.00)
+## oaYes                         (-99.98, -78.92)    (0.00, 0.21)
+## iceYes                        (-91.96, 111.49)    (0.08, 2.11)
+\end{verbatim}
+
+\begin{Shaded}
+\begin{Highlighting}[]
+\NormalTok{spa\_tbl }\OtherTok{\textless{}{-}}\NormalTok{ fbm\_spa\_tbl }\SpecialCharTok{\%\textgreater{}\%}
+  \FunctionTok{rownames\_to\_column}\NormalTok{(}\StringTok{"Predictor"}\NormalTok{) }\SpecialCharTok{\%\textgreater{}\%} 
+  \FunctionTok{mutate}\NormalTok{(}\AttributeTok{n\_fbm=} \FunctionTok{nrow}\NormalTok{(}\FunctionTok{model.frame}\NormalTok{(spa.model)),}
+      \AttributeTok{Predictor =} \FunctionTok{recode}\NormalTok{(}
+\NormalTok{        Predictor,}
+        \StringTok{"age"} \OtherTok{=} \StringTok{"Age (per 1yr)"}\NormalTok{,}
+        \StringTok{"sexMale"} \OtherTok{=} \StringTok{"Sex (Male vs Female)"}\NormalTok{,}
+        \StringTok{"race\_ethHispanic"} \OtherTok{=} \StringTok{"HL vs Blk non{-}HL"}\NormalTok{,}
+        \StringTok{"race\_ethWhite non{-}Hispanic"} \OtherTok{=} \StringTok{"White non{-}HL vs Blk non{-}HL)"}\NormalTok{,}
+        \StringTok{"sinusitisYes"} \OtherTok{=} \StringTok{"Sinusitis (Yes vs No)"}\NormalTok{,}
+        \StringTok{"diabetesYes"} \OtherTok{=} \StringTok{"Diabetes (Yes vs No)"}\NormalTok{,}
+        \StringTok{"immunocompromiseYes"} \OtherTok{=} \StringTok{"Immuno (Yes vs No)"}\NormalTok{,}
+        \StringTok{"\textasciigrave{}drug/alc\textasciigrave{}Yes"} \OtherTok{=} \StringTok{"Drugs/Alcohol (Yes vs No)"}\NormalTok{,}
+        \StringTok{"asthmaYes"} \OtherTok{=} \StringTok{"Asthma (Yes vs No)"}\NormalTok{,}
+        \StringTok{"traumaYes"} \OtherTok{=} \StringTok{"Trauma (Yes vs No)"}\NormalTok{,}
+        \StringTok{"prior\_surgeryYes"} \OtherTok{=} \StringTok{"Prior Surgery (Yes vs No)"}\NormalTok{,}
+        \StringTok{"surgery\_admYes"} \OtherTok{=} \StringTok{"Surgery in Admission (Yes vs No)"}\NormalTok{,}
+        \StringTok{"dental\_infectionYes"} \OtherTok{=} \StringTok{"Dental (Yes vs No)"}\NormalTok{,}
+        \StringTok{"\textasciigrave{}nldo/infection\textasciigrave{}Yes"} \OtherTok{=} \StringTok{"NLDO (Yes vs No)"}\NormalTok{,}
+        \StringTok{"oaYes"} \OtherTok{=} \StringTok{"OA (Yes vs No)"}\NormalTok{,}
+        \StringTok{"iceYes"} \OtherTok{=} \StringTok{"ICE (Yes vs No)"}\NormalTok{)) }\SpecialCharTok{\%\textgreater{}\%} 
+  \FunctionTok{select}\NormalTok{(Predictor, n\_fbm, RR, RR\_ci, pct\_chg, p\_value) }\SpecialCharTok{\%\textgreater{}\%}
+  \FunctionTok{filter}\NormalTok{(Predictor }\SpecialCharTok{!=} \StringTok{"(Intercept)"}\NormalTok{) }\SpecialCharTok{\%\textgreater{}\%} 
+  \FunctionTok{gt}\NormalTok{() }\SpecialCharTok{\%\textgreater{}\%}
+  \FunctionTok{cols\_label}\NormalTok{(}
+    \AttributeTok{n\_fbm =} \StringTok{"N"}\NormalTok{, }
+    \AttributeTok{RR =} \StringTok{"OR"}\NormalTok{,}
+    \AttributeTok{pct\_chg =} \StringTok{"\%Δ in Odds"}\NormalTok{,}
+    \AttributeTok{RR\_ci =} \StringTok{"95\% CI"}\NormalTok{,}
+    \AttributeTok{p\_value  =} \StringTok{"P{-}value"}\NormalTok{) }\SpecialCharTok{\%\textgreater{}\%}
+  \FunctionTok{fmt\_number}\NormalTok{(}\AttributeTok{columns =} \FunctionTok{c}\NormalTok{(RR), }\AttributeTok{decimals =} \DecValTok{2}\NormalTok{) }\SpecialCharTok{\%\textgreater{}\%}
+  \FunctionTok{fmt\_number}\NormalTok{(}\AttributeTok{columns =} \FunctionTok{c}\NormalTok{(pct\_chg), }\AttributeTok{decimals =} \DecValTok{1}\NormalTok{) }\SpecialCharTok{\%\textgreater{}\%}
+  \FunctionTok{fmt\_number}\NormalTok{(}\AttributeTok{columns =}\NormalTok{ p\_value, }\AttributeTok{decimals =} \DecValTok{3}\NormalTok{) }\SpecialCharTok{\%\textgreater{}\%}
+    \CommentTok{\# bold specific text}
+  \FunctionTok{tab\_style}\NormalTok{(}\AttributeTok{style =} \FunctionTok{cell\_text}\NormalTok{(}\AttributeTok{weight =} \StringTok{"bold"}\NormalTok{),}
+    \AttributeTok{locations =} \FunctionTok{cells\_stub}\NormalTok{(}\AttributeTok{rows =} \FunctionTok{everything}\NormalTok{())) }\SpecialCharTok{\%\textgreater{}\%}
+  \FunctionTok{tab\_style}\NormalTok{(}\AttributeTok{style =} \FunctionTok{cell\_text}\NormalTok{(}\AttributeTok{weight =} \StringTok{"bold"}\NormalTok{),}
+    \AttributeTok{locations =} \FunctionTok{cells\_column\_labels}\NormalTok{()) }\SpecialCharTok{\%\textgreater{}\%}
+  \CommentTok{\# highlight significant predictors \textless{}0.05}
+  \FunctionTok{tab\_style}\NormalTok{(}\AttributeTok{style =} \FunctionTok{cell\_fill}\NormalTok{(}\AttributeTok{color =} \StringTok{"\#FFF3CD"}\NormalTok{),}
+            \AttributeTok{locations =} \FunctionTok{list}\NormalTok{(}
+              \FunctionTok{cells\_body}\NormalTok{(}\AttributeTok{rows =}\NormalTok{ p\_value }\SpecialCharTok{\textless{}} \FloatTok{0.05}\NormalTok{),}
+              \FunctionTok{cells\_stub}\NormalTok{(}\AttributeTok{rows =}\NormalTok{ p\_value }\SpecialCharTok{\textless{}} \FloatTok{0.05}\NormalTok{))) }\SpecialCharTok{\%\textgreater{}\%} 
+  \CommentTok{\# p{-}value formatting like your other tables}
+  \FunctionTok{text\_transform}\NormalTok{(}
+    \AttributeTok{locations =} \FunctionTok{cells\_body}\NormalTok{(}\AttributeTok{columns =}\NormalTok{ p\_value),}
+    \AttributeTok{fn =} \ControlFlowTok{function}\NormalTok{(x) }\FunctionTok{ifelse}\NormalTok{(}\FunctionTok{as.numeric}\NormalTok{(x) }\SpecialCharTok{\textless{}} \FloatTok{0.001}\NormalTok{, }\StringTok{"\textless{}0.001"}\NormalTok{,}
+                            \FunctionTok{format}\NormalTok{(}\FunctionTok{round}\NormalTok{(}\FunctionTok{as.numeric}\NormalTok{(x), }\DecValTok{3}\NormalTok{), }\AttributeTok{nsmall =} \DecValTok{3}\NormalTok{))) }\SpecialCharTok{\%\textgreater{}\%}
+  \FunctionTok{tab\_options}\NormalTok{(}\AttributeTok{table.font.size =} \StringTok{"small"}\NormalTok{) }\SpecialCharTok{\%\textgreater{}\%}
+  \FunctionTok{tab\_source\_note}\NormalTok{(}
+    \AttributeTok{source\_note =} \StringTok{"\%Δ in Odds represents percent change in the odds of needing surgery}
+\StringTok{    in the predictor (computed as (OR − 1) × 100). Negative values indicate lower}
+\StringTok{    odds of having an SPA."}\NormalTok{) }\SpecialCharTok{\%\textgreater{}\%} 
+  \FunctionTok{tab\_header}\NormalTok{(}
+    \AttributeTok{title =} \StringTok{"Factors Associated with SPA Among Adults Admitted for OC"}\NormalTok{,}
+    \AttributeTok{subtitle =} \StringTok{"Firth Logistic Regression Analysis"}\NormalTok{) }\SpecialCharTok{\%\textgreater{}\%} 
+  \FunctionTok{tab\_options}\NormalTok{(}
+    \AttributeTok{table.font.size =} \StringTok{"small"}\NormalTok{,}
+    \CommentTok{\#heading.align = "left",}
+    \AttributeTok{data\_row.padding =} \FunctionTok{px}\NormalTok{(}\DecValTok{3}\NormalTok{),}
+    \AttributeTok{table.width =} \FunctionTok{pct}\NormalTok{(}\DecValTok{85}\NormalTok{),}
+    \AttributeTok{table.border.top.width =} \FunctionTok{px}\NormalTok{(}\DecValTok{2}\NormalTok{),}
+    \AttributeTok{table.border.bottom.width =} \FunctionTok{px}\NormalTok{(}\DecValTok{2}\NormalTok{))}
+
+\NormalTok{spa\_tbl}
+\end{Highlighting}
+\end{Shaded}
+
+\begin{table}[t]
+\caption*{
+{\fontsize{20}{25}\selectfont  Factors Associated with SPA Among Adults Admitted for OC\small } \\ 
+{\fontsize{14}{17}\selectfont  Firth Logistic Regression Analysis\small }
+} 
+\begin{tabular*}{0.85\linewidth}{@{\extracolsep{\fill}}lrrrrr}
+\toprule
+{\bfseries Predictor} & N & OR & 95\% CI & \%\ensuremath{\Delta} in Odds & P-value \\ 
+\midrule\addlinespace[2.5pt]
+Age (per 1yr) & 297 & 0.99 & (0.97, 1.01) & -0.9 & 0.465 \\ 
+Sex (Male vs Female) & 297 & 1.43 & (0.60, 3.49) & 42.5 & 0.425 \\ 
+HL vs Blk non-HL & 297 & 1.92 & (0.29, 12.43) & 92.4 & 0.494 \\ 
+White non-HL vs Blk non-HL) & 297 & 1.17 & (0.21, 6.07) & 17.1 & 0.854 \\ 
+{\cellcolor[HTML]{FFF3CD}{Sinusitis (Yes vs No)}} & {\cellcolor[HTML]{FFF3CD}{297}} & {\cellcolor[HTML]{FFF3CD}{8.17}} & {\cellcolor[HTML]{FFF3CD}{(2.78, 29.59)}} & {\cellcolor[HTML]{FFF3CD}{716.7}} & {\cellcolor[HTML]{FFF3CD}{<0.001}} \\ 
+{\cellcolor[HTML]{FFF3CD}{Diabetes (Yes vs No)}} & {\cellcolor[HTML]{FFF3CD}{297}} & {\cellcolor[HTML]{FFF3CD}{0.21}} & {\cellcolor[HTML]{FFF3CD}{(0.06, 0.65)}} & {\cellcolor[HTML]{FFF3CD}{-78.6}} & {\cellcolor[HTML]{FFF3CD}{0.005}} \\ 
+{\cellcolor[HTML]{FFF3CD}{Immuno (Yes vs No)}} & {\cellcolor[HTML]{FFF3CD}{297}} & {\cellcolor[HTML]{FFF3CD}{0.24}} & {\cellcolor[HTML]{FFF3CD}{(0.06, 0.77)}} & {\cellcolor[HTML]{FFF3CD}{-75.7}} & {\cellcolor[HTML]{FFF3CD}{0.015}} \\ 
+Drugs/Alcohol (Yes vs No) & 297 & 1.58 & (0.47, 5.45) & 58.5 & 0.455 \\ 
+Asthma (Yes vs No) & 297 & 0.76 & (0.13, 4.14) & -23.6 & 0.757 \\ 
+Trauma (Yes vs No) & 297 & 0.50 & (0.08, 2.56) & -49.6 & 0.414 \\ 
+Prior Surgery (Yes vs No) & 297 & 1.98 & (0.32, 11.12) & 97.8 & 0.452 \\ 
+{\cellcolor[HTML]{FFF3CD}{Surgery in Admission (Yes vs No)}} & {\cellcolor[HTML]{FFF3CD}{297}} & {\cellcolor[HTML]{FFF3CD}{37.41}} & {\cellcolor[HTML]{FFF3CD}{(11.79, 187.95)}} & {\cellcolor[HTML]{FFF3CD}{3,641.3}} & {\cellcolor[HTML]{FFF3CD}{<0.001}} \\ 
+Dental (Yes vs No) & 297 & 1.11 & (0.26, 5.29) & 11.5 & 0.886 \\ 
+NLDO (Yes vs No) & 297 & 0.83 & (0.01, 15.00) & -16.9 & 0.912 \\ 
+{\cellcolor[HTML]{FFF3CD}{OA (Yes vs No)}} & {\cellcolor[HTML]{FFF3CD}{297}} & {\cellcolor[HTML]{FFF3CD}{0.03}} & {\cellcolor[HTML]{FFF3CD}{(0.00, 0.21)}} & {\cellcolor[HTML]{FFF3CD}{-97.3}} & {\cellcolor[HTML]{FFF3CD}{<0.001}} \\ 
+ICE (Yes vs No) & 297 & 0.43 & (0.08, 2.11) & -57.1 & 0.295 \\ 
+\bottomrule
+\end{tabular*}
+\begin{minipage}{\linewidth}
+\%\ensuremath{\Delta} in Odds represents percent change in the odds of needing surgery
+    in the predictor (computed as (OR \ensuremath{-} 1) \texttimes 100). Negative values indicate lower
+    odds of having an SPA.\\
+\end{minipage}
+\end{table}
+
+\paragraph{Orbital Abscess (OA)}\label{orbital-abscess-oa}
+
+\begin{Shaded}
+\begin{Highlighting}[]
+\NormalTok{oa\_vars }\OtherTok{\textless{}{-}} \FunctionTok{c}\NormalTok{(}\StringTok{"age"}\NormalTok{, }\StringTok{"sex"}\NormalTok{, }\StringTok{"race\_eth"}\NormalTok{, }\StringTok{"sinusitis"}\NormalTok{, }\StringTok{"diabetes"}\NormalTok{,}
+              \StringTok{"immunocompromise"}\NormalTok{, }\StringTok{"drug/alc"}\NormalTok{, }\StringTok{"asthma"}\NormalTok{, }\StringTok{"trauma"}\NormalTok{, }
+              \StringTok{"prior\_surgery"}\NormalTok{, }\StringTok{"surgery\_adm"}\NormalTok{,}\StringTok{"dental\_infection"}\NormalTok{,}
+              \StringTok{"nldo/infection"}\NormalTok{, }\StringTok{"spa"}\NormalTok{, }\StringTok{"ice"}\NormalTok{)}
+
+\NormalTok{oa\_vars\_qt }\OtherTok{\textless{}{-}} \FunctionTok{ifelse}\NormalTok{(}\FunctionTok{grepl}\NormalTok{(}\StringTok{"/"}\NormalTok{, oa\_vars), }
+                      \FunctionTok{paste0}\NormalTok{(}\StringTok{"\textasciigrave{}"}\NormalTok{, oa\_vars, }\StringTok{"\textasciigrave{}"}\NormalTok{), oa\_vars)}
+
+\NormalTok{oa\_form }\OtherTok{\textless{}{-}} \FunctionTok{as.formula}\NormalTok{(}\FunctionTok{paste}\NormalTok{(}\StringTok{"oa \textasciitilde{}"}\NormalTok{, }\FunctionTok{paste}\NormalTok{(oa\_vars\_qt, }\AttributeTok{collapse =} \StringTok{" + "}\NormalTok{)))}
+\NormalTok{oa.model }\OtherTok{\textless{}{-}} \FunctionTok{logistf}\NormalTok{(oa\_form, }\AttributeTok{data=}\NormalTok{oc\_cleaned)}
+
+\FunctionTok{summary}\NormalTok{(oa.model)}
+\end{Highlighting}
+\end{Shaded}
+
+\begin{verbatim}
+## logistf(formula = oa_form, data = oc_cleaned)
+## 
+## Model fitted by Penalized ML
+## Coefficients:
+##                                   coef   se(coef)  lower 0.95  upper 0.95
+## (Intercept)                -1.56018836 1.14282292 -4.23829741  0.66076033
+## age                         0.00536201 0.01035761 -0.01585121  0.02677758
+## sexMale                    -0.85115177 0.36557316 -1.61272030 -0.10634673
+## race_ethHispanic            0.58493643 0.95286894 -1.23174339  2.98077878
+## race_ethWhite non-Hispanic  0.15607100 0.87262018 -1.44412635  2.45056397
+## sinusitisYes               -1.09172152 0.39480538 -1.93160131 -0.30686400
+## diabetesYes                -1.10275713 0.52196876 -2.28357565 -0.07913025
+## immunocompromiseYes        -0.60669776 0.50867756 -1.72926810  0.37321167
+## `drug/alc`Yes               0.06924961 0.52914468 -1.08155377  1.14270551
+## asthmaYes                   0.25088432 0.69322288 -1.31081570  1.62678453
+## traumaYes                  -0.07838027 0.47466096 -1.08099884  0.87263013
+## prior_surgeryYes           -0.27505067 0.56338257 -1.51569967  0.83618756
+## surgery_admYes              1.74496614 0.38511791  0.98954154  2.57787715
+## dental_infectionYes        -0.15637251 0.78232742 -2.01019422  1.35442465
+## `nldo/infection`Yes        -2.30768022 1.58372759 -7.30624600  0.38814089
+## spaYes                     -3.55553167 1.31722972 -8.41483008 -1.50267170
+## iceYes                     -0.99872812 1.44493333 -5.91922990  1.35081393
+##                                  Chisq            p method
+## (Intercept)                 1.83827480 1.751533e-01      2
+## age                         0.24631194 6.196840e-01      2
+## sexMale                     5.01610132 2.511265e-02      2
+## race_ethHispanic            0.35727157 5.500255e-01      2
+## race_ethWhite non-Hispanic  0.02900482 8.647679e-01      2
+## sinusitisYes                7.54951460 6.002624e-03      2
+## diabetesYes                 4.49476027 3.399888e-02      2
+## immunocompromiseYes         1.42079536 2.332725e-01      2
+## `drug/alc`Yes               0.01521002 9.018466e-01      2
+## asthmaYes                   0.11463560 7.349271e-01      2
+## traumaYes                   0.02524908 8.737480e-01      2
+## prior_surgeryYes            0.22156462 6.378503e-01      2
+## surgery_admYes             22.21722708 2.434794e-06      2
+## dental_infectionYes         0.03573061 8.500729e-01      2
+## `nldo/infection`Yes         2.73937611 9.790298e-02      2
+## spaYes                     17.49535161 2.880110e-05      2
+## iceYes                      0.53377953 4.650222e-01      2
+## 
+## Method: 1-Wald, 2-Profile penalized log-likelihood, 3-None
+## 
+## Likelihood ratio test=66.59115 on 16 df, p=3.914557e-08, n=297
+## Wald test = 84.49195 on 16 df, p = 2.554223e-11
+\end{verbatim}
+
+\begin{Shaded}
+\begin{Highlighting}[]
+\CommentTok{\# OR \& 95\% CI}
+\NormalTok{fbm\_oa\_tbl }\OtherTok{\textless{}{-}} \FunctionTok{data.frame}\NormalTok{(}
+  \CommentTok{\#term = names(nfs.model.fbm$coefficients),}
+  \AttributeTok{RR =} \FunctionTok{exp}\NormalTok{(oa.model}\SpecialCharTok{$}\NormalTok{coefficients),}
+  \AttributeTok{LL =} \FunctionTok{exp}\NormalTok{(oa.model}\SpecialCharTok{$}\NormalTok{ci.lower),}
+  \AttributeTok{UL =} \FunctionTok{exp}\NormalTok{(oa.model}\SpecialCharTok{$}\NormalTok{ci.upper),}
+  \AttributeTok{p\_value =}\NormalTok{ oa.model}\SpecialCharTok{$}\NormalTok{prob) }\SpecialCharTok{\%\textgreater{}\%} 
+  \FunctionTok{mutate}\NormalTok{(}
+    \CommentTok{\# \% change in odds (per unit increase)}
+    \AttributeTok{pct\_chg =}\NormalTok{ (RR  }\SpecialCharTok{{-}} \DecValTok{1}\NormalTok{) }\SpecialCharTok{*} \DecValTok{100}\NormalTok{,}
+    \AttributeTok{pct\_LL =}\NormalTok{ (LL }\SpecialCharTok{{-}} \DecValTok{1}\NormalTok{) }\SpecialCharTok{*} \DecValTok{100}\NormalTok{,}
+    \AttributeTok{pct\_UL =}\NormalTok{ (UL }\SpecialCharTok{{-}} \DecValTok{1}\NormalTok{) }\SpecialCharTok{*} \DecValTok{100}\NormalTok{) }\SpecialCharTok{\%\textgreater{}\%} 
+  \FunctionTok{mutate}\NormalTok{(}\AttributeTok{pct\_ci =} \FunctionTok{sprintf}\NormalTok{(}\StringTok{"(\%.2f, \%.2f)"}\NormalTok{, pct\_LL, pct\_UL),}
+         \AttributeTok{RR\_ci =} \FunctionTok{sprintf}\NormalTok{(}\StringTok{"(\%.2f, \%.2f)"}\NormalTok{, LL, UL)) }
+
+\NormalTok{fbm\_oa\_tbl}
+\end{Highlighting}
+\end{Shaded}
+
+\begin{verbatim}
+##                                    RR           LL         UL      p_value
+## (Intercept)                0.21009649 0.0144321430  1.9362640 1.751533e-01
+## age                        1.00537641 0.9842737558  1.0271393 6.196840e-01
+## sexMale                    0.42692293 0.1993445988  0.8991128 2.511265e-02
+## race_ethHispanic           1.79487688 0.2917834424 19.7031550 5.500255e-01
+## race_ethWhite non-Hispanic 1.16890919 0.2359521258 11.5948840 8.647679e-01
+## sinusitisYes               0.33563819 0.1449159572  0.7357507 6.002624e-03
+## diabetesYes                0.33195458 0.1019191275  0.9239196 3.399888e-02
+## immunocompromiseYes        0.54514811 0.1774142114  1.4523917 2.332725e-01
+## `drug/alc`Yes              1.07170368 0.3390682834  3.1352393 9.018466e-01
+## asthmaYes                  1.28516141 0.2696000538  5.0874897 7.349271e-01
+## traumaYes                  0.92461276 0.3392564932  2.3931970 8.737480e-01
+## prior_surgeryYes           0.75953364 0.2196544453  2.3075528 6.378503e-01
+## surgery_admYes             5.72570761 2.6900009414 13.1691523 2.434794e-06
+## dental_infectionYes        0.85524055 0.1339626540  3.8745311 8.500729e-01
+## `nldo/infection`Yes        0.09949178 0.0006713325  1.4742375 9.790298e-02
+## spaYes                     0.02856618 0.0002215571  0.2225348 2.880110e-05
+## iceYes                     0.36834764 0.0026872688  3.8605665 4.650222e-01
+##                                pct_chg     pct_LL      pct_UL            pct_ci
+## (Intercept)                -78.9903506 -98.556786   93.626398   (-98.56, 93.63)
+## age                          0.5376412  -1.572624    2.713932     (-1.57, 2.71)
+## sexMale                    -57.3077070 -80.065540  -10.088716  (-80.07, -10.09)
+## race_ethHispanic            79.4876883 -70.821656 1870.315500 (-70.82, 1870.32)
+## race_ethWhite non-Hispanic  16.8909193 -76.404787 1059.488404 (-76.40, 1059.49)
+## sinusitisYes               -66.4361813 -85.508404  -26.424934  (-85.51, -26.42)
+## diabetesYes                -66.8045421 -89.808087   -7.608043   (-89.81, -7.61)
+## immunocompromiseYes        -45.4851892 -82.258579   45.239173   (-82.26, 45.24)
+## `drug/alc`Yes                7.1703679 -66.093172  213.523932  (-66.09, 213.52)
+## asthmaYes                   28.5161409 -73.039995  408.748973  (-73.04, 408.75)
+## traumaYes                   -7.5387243 -66.074351  139.319700  (-66.07, 139.32)
+## prior_surgeryYes           -24.0466364 -78.034555  130.755278  (-78.03, 130.76)
+## surgery_admYes             472.5707614 169.000094 1216.915234 (169.00, 1216.92)
+## dental_infectionYes        -14.4759453 -86.603735  287.453110  (-86.60, 287.45)
+## `nldo/infection`Yes        -90.0508217 -99.932867   47.423748   (-99.93, 47.42)
+## spaYes                     -97.1433817 -99.977844  -77.746518  (-99.98, -77.75)
+## iceYes                     -63.1652363 -99.731273  286.056650  (-99.73, 286.06)
+##                                    RR_ci
+## (Intercept)                 (0.01, 1.94)
+## age                         (0.98, 1.03)
+## sexMale                     (0.20, 0.90)
+## race_ethHispanic           (0.29, 19.70)
+## race_ethWhite non-Hispanic (0.24, 11.59)
+## sinusitisYes                (0.14, 0.74)
+## diabetesYes                 (0.10, 0.92)
+## immunocompromiseYes         (0.18, 1.45)
+## `drug/alc`Yes               (0.34, 3.14)
+## asthmaYes                   (0.27, 5.09)
+## traumaYes                   (0.34, 2.39)
+## prior_surgeryYes            (0.22, 2.31)
+## surgery_admYes             (2.69, 13.17)
+## dental_infectionYes         (0.13, 3.87)
+## `nldo/infection`Yes         (0.00, 1.47)
+## spaYes                      (0.00, 0.22)
+## iceYes                      (0.00, 3.86)
+\end{verbatim}
+
+\begin{Shaded}
+\begin{Highlighting}[]
+\NormalTok{oa\_tbl }\OtherTok{\textless{}{-}}\NormalTok{ fbm\_oa\_tbl }\SpecialCharTok{\%\textgreater{}\%}
+  \FunctionTok{rownames\_to\_column}\NormalTok{(}\StringTok{"Predictor"}\NormalTok{) }\SpecialCharTok{\%\textgreater{}\%} 
+  \FunctionTok{mutate}\NormalTok{(}\AttributeTok{n\_fbm=} \FunctionTok{nrow}\NormalTok{(}\FunctionTok{model.frame}\NormalTok{(oa.model)),}
+      \AttributeTok{Predictor =} \FunctionTok{recode}\NormalTok{(}
+\NormalTok{        Predictor,}
+        \StringTok{"age"} \OtherTok{=} \StringTok{"Age (per 1yr)"}\NormalTok{,}
+        \StringTok{"sexMale"} \OtherTok{=} \StringTok{"Sex (Male vs Female)"}\NormalTok{,}
+        \StringTok{"race\_ethHispanic"} \OtherTok{=} \StringTok{"HL vs Blk non{-}HL"}\NormalTok{,}
+        \StringTok{"race\_ethWhite non{-}Hispanic"} \OtherTok{=} \StringTok{"White non{-}HL vs Blk non{-}HL)"}\NormalTok{,}
+        \StringTok{"sinusitisYes"} \OtherTok{=} \StringTok{"Sinusitis (Yes vs No)"}\NormalTok{,}
+        \StringTok{"diabetesYes"} \OtherTok{=} \StringTok{"Diabetes (Yes vs No)"}\NormalTok{,}
+        \StringTok{"immunocompromiseYes"} \OtherTok{=} \StringTok{"Immuno (Yes vs No)"}\NormalTok{,}
+        \StringTok{"\textasciigrave{}drug/alc\textasciigrave{}Yes"} \OtherTok{=} \StringTok{"Drugs/Alcohol (Yes vs No)"}\NormalTok{,}
+        \StringTok{"asthmaYes"} \OtherTok{=} \StringTok{"Asthma (Yes vs No)"}\NormalTok{,}
+        \StringTok{"traumaYes"} \OtherTok{=} \StringTok{"Trauma (Yes vs No)"}\NormalTok{,}
+        \StringTok{"prior\_surgeryYes"} \OtherTok{=} \StringTok{"Prior Surgery (Yes vs No)"}\NormalTok{,}
+        \StringTok{"surgery\_admYes"} \OtherTok{=} \StringTok{"Surgery in Admission (Yes vs No)"}\NormalTok{,}
+        \StringTok{"dental\_infectionYes"} \OtherTok{=} \StringTok{"Dental (Yes vs No)"}\NormalTok{,}
+        \StringTok{"\textasciigrave{}nldo/infection\textasciigrave{}Yes"} \OtherTok{=} \StringTok{"NLDO (Yes vs No)"}\NormalTok{,}
+        \StringTok{"spaYes"} \OtherTok{=} \StringTok{"SPA (Yes vs No)"}\NormalTok{,}
+        \StringTok{"iceYes"} \OtherTok{=} \StringTok{"ICE (Yes vs No)"}\NormalTok{)) }\SpecialCharTok{\%\textgreater{}\%} 
+  \FunctionTok{select}\NormalTok{(Predictor, n\_fbm, RR, RR\_ci, pct\_chg, p\_value) }\SpecialCharTok{\%\textgreater{}\%}
+  \FunctionTok{filter}\NormalTok{(Predictor }\SpecialCharTok{!=} \StringTok{"(Intercept)"}\NormalTok{) }\SpecialCharTok{\%\textgreater{}\%} 
+  \FunctionTok{gt}\NormalTok{() }\SpecialCharTok{\%\textgreater{}\%}
+  \FunctionTok{cols\_label}\NormalTok{(}
+    \AttributeTok{n\_fbm =} \StringTok{"N"}\NormalTok{, }
+    \AttributeTok{RR =} \StringTok{"OR"}\NormalTok{,}
+    \AttributeTok{pct\_chg =} \StringTok{"\%Δ in Odds"}\NormalTok{,}
+    \AttributeTok{RR\_ci =} \StringTok{"95\% CI"}\NormalTok{,}
+    \AttributeTok{p\_value  =} \StringTok{"P{-}value"}\NormalTok{) }\SpecialCharTok{\%\textgreater{}\%}
+  \FunctionTok{fmt\_number}\NormalTok{(}\AttributeTok{columns =} \FunctionTok{c}\NormalTok{(RR), }\AttributeTok{decimals =} \DecValTok{2}\NormalTok{) }\SpecialCharTok{\%\textgreater{}\%}
+   \FunctionTok{fmt\_number}\NormalTok{(}\AttributeTok{columns =} \FunctionTok{c}\NormalTok{(pct\_chg), }\AttributeTok{decimals =} \DecValTok{1}\NormalTok{) }\SpecialCharTok{\%\textgreater{}\%}
+  \FunctionTok{fmt\_number}\NormalTok{(}\AttributeTok{columns =}\NormalTok{ p\_value, }\AttributeTok{decimals =} \DecValTok{3}\NormalTok{) }\SpecialCharTok{\%\textgreater{}\%}
+    \CommentTok{\# bold specific text}
+  \FunctionTok{tab\_style}\NormalTok{(}\AttributeTok{style =} \FunctionTok{cell\_text}\NormalTok{(}\AttributeTok{weight =} \StringTok{"bold"}\NormalTok{),}
+    \AttributeTok{locations =} \FunctionTok{cells\_stub}\NormalTok{(}\AttributeTok{rows =} \FunctionTok{everything}\NormalTok{())) }\SpecialCharTok{\%\textgreater{}\%}
+  \FunctionTok{tab\_style}\NormalTok{(}\AttributeTok{style =} \FunctionTok{cell\_text}\NormalTok{(}\AttributeTok{weight =} \StringTok{"bold"}\NormalTok{),}
+    \AttributeTok{locations =} \FunctionTok{cells\_column\_labels}\NormalTok{()) }\SpecialCharTok{\%\textgreater{}\%}
+  \CommentTok{\# highlight significant predictors \textless{}0.05}
+  \FunctionTok{tab\_style}\NormalTok{(}\AttributeTok{style =} \FunctionTok{cell\_fill}\NormalTok{(}\AttributeTok{color =} \StringTok{"\#FFF3CD"}\NormalTok{),}
+            \AttributeTok{locations =} \FunctionTok{list}\NormalTok{(}
+              \FunctionTok{cells\_body}\NormalTok{(}\AttributeTok{rows =}\NormalTok{ p\_value }\SpecialCharTok{\textless{}} \FloatTok{0.05}\NormalTok{),}
+              \FunctionTok{cells\_stub}\NormalTok{(}\AttributeTok{rows =}\NormalTok{ p\_value }\SpecialCharTok{\textless{}} \FloatTok{0.05}\NormalTok{))) }\SpecialCharTok{\%\textgreater{}\%} 
+  \CommentTok{\# p{-}value formatting like your other tables}
+  \FunctionTok{text\_transform}\NormalTok{(}
+    \AttributeTok{locations =} \FunctionTok{cells\_body}\NormalTok{(}\AttributeTok{columns =}\NormalTok{ p\_value),}
+    \AttributeTok{fn =} \ControlFlowTok{function}\NormalTok{(x) }\FunctionTok{ifelse}\NormalTok{(}\FunctionTok{as.numeric}\NormalTok{(x) }\SpecialCharTok{\textless{}} \FloatTok{0.001}\NormalTok{, }\StringTok{"\textless{}0.001"}\NormalTok{,}
+                            \FunctionTok{format}\NormalTok{(}\FunctionTok{round}\NormalTok{(}\FunctionTok{as.numeric}\NormalTok{(x), }\DecValTok{3}\NormalTok{), }\AttributeTok{nsmall =} \DecValTok{3}\NormalTok{))) }\SpecialCharTok{\%\textgreater{}\%}
+  \FunctionTok{tab\_options}\NormalTok{(}\AttributeTok{table.font.size =} \StringTok{"small"}\NormalTok{) }\SpecialCharTok{\%\textgreater{}\%}
+  \FunctionTok{tab\_source\_note}\NormalTok{(}
+    \AttributeTok{source\_note =} \StringTok{"\%Δ in Odds represents percent change in the odds of needing surgery}
+\StringTok{    in the predictor (computed as (OR − 1) × 100). Negative values indicate lower}
+\StringTok{    odds of having an OA."}\NormalTok{) }\SpecialCharTok{\%\textgreater{}\%} 
+  \FunctionTok{tab\_header}\NormalTok{(}
+    \AttributeTok{title =} \StringTok{"Factors Associated with OA Among Adults Admitted for OC"}\NormalTok{,}
+    \AttributeTok{subtitle =} \StringTok{"Firth Logistic Regression Analysis"}\NormalTok{) }\SpecialCharTok{\%\textgreater{}\%} 
+  \FunctionTok{tab\_options}\NormalTok{(}
+    \AttributeTok{table.font.size =} \StringTok{"small"}\NormalTok{,}
+    \CommentTok{\#heading.align = "left",}
+    \AttributeTok{data\_row.padding =} \FunctionTok{px}\NormalTok{(}\DecValTok{3}\NormalTok{),}
+    \AttributeTok{table.width =} \FunctionTok{pct}\NormalTok{(}\DecValTok{85}\NormalTok{),}
+    \AttributeTok{table.border.top.width =} \FunctionTok{px}\NormalTok{(}\DecValTok{2}\NormalTok{),}
+    \AttributeTok{table.border.bottom.width =} \FunctionTok{px}\NormalTok{(}\DecValTok{2}\NormalTok{))}
+
+\NormalTok{oa\_tbl}
+\end{Highlighting}
+\end{Shaded}
+
+\begin{table}[t]
+\caption*{
+{\fontsize{20}{25}\selectfont  Factors Associated with OA Among Adults Admitted for OC\small } \\ 
+{\fontsize{14}{17}\selectfont  Firth Logistic Regression Analysis\small }
+} 
+\begin{tabular*}{0.85\linewidth}{@{\extracolsep{\fill}}lrrrrr}
+\toprule
+{\bfseries Predictor} & N & OR & 95\% CI & \%\ensuremath{\Delta} in Odds & P-value \\ 
+\midrule\addlinespace[2.5pt]
+Age (per 1yr) & 297 & 1.01 & (0.98, 1.03) & 0.5 & 0.620 \\ 
+{\cellcolor[HTML]{FFF3CD}{Sex (Male vs Female)}} & {\cellcolor[HTML]{FFF3CD}{297}} & {\cellcolor[HTML]{FFF3CD}{0.43}} & {\cellcolor[HTML]{FFF3CD}{(0.20, 0.90)}} & {\cellcolor[HTML]{FFF3CD}{-57.3}} & {\cellcolor[HTML]{FFF3CD}{0.025}} \\ 
+HL vs Blk non-HL & 297 & 1.79 & (0.29, 19.70) & 79.5 & 0.550 \\ 
+White non-HL vs Blk non-HL) & 297 & 1.17 & (0.24, 11.59) & 16.9 & 0.865 \\ 
+{\cellcolor[HTML]{FFF3CD}{Sinusitis (Yes vs No)}} & {\cellcolor[HTML]{FFF3CD}{297}} & {\cellcolor[HTML]{FFF3CD}{0.34}} & {\cellcolor[HTML]{FFF3CD}{(0.14, 0.74)}} & {\cellcolor[HTML]{FFF3CD}{-66.4}} & {\cellcolor[HTML]{FFF3CD}{0.006}} \\ 
+{\cellcolor[HTML]{FFF3CD}{Diabetes (Yes vs No)}} & {\cellcolor[HTML]{FFF3CD}{297}} & {\cellcolor[HTML]{FFF3CD}{0.33}} & {\cellcolor[HTML]{FFF3CD}{(0.10, 0.92)}} & {\cellcolor[HTML]{FFF3CD}{-66.8}} & {\cellcolor[HTML]{FFF3CD}{0.034}} \\ 
+Immuno (Yes vs No) & 297 & 0.55 & (0.18, 1.45) & -45.5 & 0.233 \\ 
+Drugs/Alcohol (Yes vs No) & 297 & 1.07 & (0.34, 3.14) & 7.2 & 0.902 \\ 
+Asthma (Yes vs No) & 297 & 1.29 & (0.27, 5.09) & 28.5 & 0.735 \\ 
+Trauma (Yes vs No) & 297 & 0.92 & (0.34, 2.39) & -7.5 & 0.874 \\ 
+Prior Surgery (Yes vs No) & 297 & 0.76 & (0.22, 2.31) & -24.0 & 0.638 \\ 
+{\cellcolor[HTML]{FFF3CD}{Surgery in Admission (Yes vs No)}} & {\cellcolor[HTML]{FFF3CD}{297}} & {\cellcolor[HTML]{FFF3CD}{5.73}} & {\cellcolor[HTML]{FFF3CD}{(2.69, 13.17)}} & {\cellcolor[HTML]{FFF3CD}{472.6}} & {\cellcolor[HTML]{FFF3CD}{<0.001}} \\ 
+Dental (Yes vs No) & 297 & 0.86 & (0.13, 3.87) & -14.5 & 0.850 \\ 
+NLDO (Yes vs No) & 297 & 0.10 & (0.00, 1.47) & -90.1 & 0.098 \\ 
+{\cellcolor[HTML]{FFF3CD}{SPA (Yes vs No)}} & {\cellcolor[HTML]{FFF3CD}{297}} & {\cellcolor[HTML]{FFF3CD}{0.03}} & {\cellcolor[HTML]{FFF3CD}{(0.00, 0.22)}} & {\cellcolor[HTML]{FFF3CD}{-97.1}} & {\cellcolor[HTML]{FFF3CD}{<0.001}} \\ 
+ICE (Yes vs No) & 297 & 0.37 & (0.00, 3.86) & -63.2 & 0.465 \\ 
+\bottomrule
+\end{tabular*}
+\begin{minipage}{\linewidth}
+\%\ensuremath{\Delta} in Odds represents percent change in the odds of needing surgery
+    in the predictor (computed as (OR \ensuremath{-} 1) \texttimes 100). Negative values indicate lower
+    odds of having an OA.\\
+\end{minipage}
+\end{table}
+
+\begin{Shaded}
+\begin{Highlighting}[]
+\NormalTok{ice\_vars }\OtherTok{\textless{}{-}} \FunctionTok{c}\NormalTok{(}\StringTok{"age"}\NormalTok{, }\StringTok{"sex"}\NormalTok{, }\StringTok{"race\_eth"}\NormalTok{, }\StringTok{"sinusitis"}\NormalTok{, }\StringTok{"diabetes"}\NormalTok{,}
+              \StringTok{"immunocompromise"}\NormalTok{, }\StringTok{"drug/alc"}\NormalTok{, }\StringTok{"asthma"}\NormalTok{, }\StringTok{"trauma"}\NormalTok{, }
+              \StringTok{"prior\_surgery"}\NormalTok{, }\StringTok{"surgery\_adm"}\NormalTok{,}\StringTok{"dental\_infection"}\NormalTok{,}
+              \StringTok{"nldo/infection"}\NormalTok{, }\StringTok{"spa"}\NormalTok{, }\StringTok{"oa"}\NormalTok{)}
+
+\NormalTok{ice\_vars\_qt }\OtherTok{\textless{}{-}} \FunctionTok{ifelse}\NormalTok{(}\FunctionTok{grepl}\NormalTok{(}\StringTok{"/"}\NormalTok{, ice\_vars), }
+                      \FunctionTok{paste0}\NormalTok{(}\StringTok{"\textasciigrave{}"}\NormalTok{, ice\_vars, }\StringTok{"\textasciigrave{}"}\NormalTok{), ice\_vars)}
+
+\NormalTok{ice\_form }\OtherTok{\textless{}{-}} \FunctionTok{as.formula}\NormalTok{(}\FunctionTok{paste}\NormalTok{(}\StringTok{"oa \textasciitilde{}"}\NormalTok{, }\FunctionTok{paste}\NormalTok{(ice\_vars\_qt, }\AttributeTok{collapse =} \StringTok{" + "}\NormalTok{)))}
+\NormalTok{ice.model }\OtherTok{\textless{}{-}} \FunctionTok{logistf}\NormalTok{(ice\_form, }\AttributeTok{data=}\NormalTok{oc\_cleaned)}
+\end{Highlighting}
+\end{Shaded}
+
+\begin{verbatim}
+## Warning in model.matrix.default(mt, mf): the response appeared on the
+## right-hand side and was dropped
+\end{verbatim}
+
+\begin{verbatim}
+## Warning in model.matrix.default(mt, mf): problem with term 15 in model.matrix:
+## no columns are assigned
+\end{verbatim}
+
+\begin{Shaded}
+\begin{Highlighting}[]
+\FunctionTok{summary}\NormalTok{(ice.model)}
+\end{Highlighting}
+\end{Shaded}
+
+\begin{verbatim}
+## logistf(formula = ice_form, data = oc_cleaned)
+## 
+## Model fitted by Penalized ML
+## Coefficients:
+##                                    coef   se(coef)  lower 0.95  upper 0.95
+## (Intercept)                -1.547307004 1.14751480 -4.23104824  0.68175716
+## age                         0.006015269 0.01038313 -0.01516732  0.02740416
+## sexMale                    -0.847700416 0.36701822 -1.60896672 -0.10280289
+## race_ethHispanic            0.576394273 0.95937421 -1.25406122  2.98129795
+## race_ethWhite non-Hispanic  0.124781325 0.87756672 -1.48742919  2.42683971
+## sinusitisYes               -1.173679712 0.39280340 -2.00910479 -0.39565269
+## diabetesYes                -1.218890694 0.52058934 -2.39093140 -0.21409918
+## immunocompromiseYes        -0.556405652 0.50949693 -1.68312910  0.42478850
+## `drug/alc`Yes              -0.037719213 0.52261351 -1.16883893  1.00065942
+## asthmaYes                   0.337429974 0.69287535 -1.22615999  1.71108181
+## traumaYes                  -0.091769660 0.47516877 -1.09196218  0.85636452
+## prior_surgeryYes           -0.247103785 0.56381269 -1.48902817  0.86486388
+## surgery_admYes              1.731793399 0.38603239  0.97685562  2.56417672
+## dental_infectionYes        -0.123720002 0.78416051 -1.97963623  1.38019720
+## `nldo/infection`Yes        -2.329387627 1.58474875 -7.32886620  0.36941537
+## spaYes                     -3.538141667 1.33266546 -8.39713940 -1.48657051
+##                                   Chisq            p method
+## (Intercept)                 1.793792753 1.804647e-01      2
+## age                         0.310858790 5.771537e-01      2
+## sexMale                     4.974094490 2.572967e-02      2
+## race_ethHispanic            0.341624159 5.588932e-01      2
+## race_ethWhite non-Hispanic  0.018198560 8.926893e-01      2
+## sinusitisYes                8.932944406 2.800725e-03      2
+## diabetesYes                 5.795312569 1.606896e-02      2
+## immunocompromiseYes         1.184012909 2.765406e-01      2
+## `drug/alc`Yes               0.004773499 9.449176e-01      2
+## asthmaYes                   0.205749836 6.501192e-01      2
+## traumaYes                   0.034816720 8.519802e-01      2
+## prior_surgeryYes            0.178091397 6.730186e-01      2
+## surgery_admYes             21.887029155 2.891820e-06      2
+## dental_infectionYes         0.022364489 8.811215e-01      2
+## `nldo/infection`Yes         2.789269824 9.489746e-02      2
+## spaYes                     17.290201961 3.208369e-05      2
+## 
+## Method: 1-Wald, 2-Profile penalized log-likelihood, 3-None
+## 
+## Likelihood ratio test=66.69617 on 15 df, p=1.719931e-08, n=297
+## Wald test = 84.27131 on 15 df, p = 1.146805e-11
+\end{verbatim}
+
+\begin{Shaded}
+\begin{Highlighting}[]
+\CommentTok{\# OR \& 95\% CI}
+\NormalTok{fbm\_ice\_tbl }\OtherTok{\textless{}{-}} \FunctionTok{data.frame}\NormalTok{(}
+  \CommentTok{\#term = names(nfs.model.fbm$coefficients),}
+  \AttributeTok{RR =} \FunctionTok{exp}\NormalTok{(ice.model}\SpecialCharTok{$}\NormalTok{coefficients),}
+  \AttributeTok{LL =} \FunctionTok{exp}\NormalTok{(ice.model}\SpecialCharTok{$}\NormalTok{ci.lower),}
+  \AttributeTok{UL =} \FunctionTok{exp}\NormalTok{(ice.model}\SpecialCharTok{$}\NormalTok{ci.upper),}
+  \AttributeTok{p\_value =}\NormalTok{ ice.model}\SpecialCharTok{$}\NormalTok{prob) }\SpecialCharTok{\%\textgreater{}\%} 
+  \FunctionTok{mutate}\NormalTok{(}
+    \CommentTok{\# \% change in odds (per unit increase)}
+    \AttributeTok{pct\_chg =}\NormalTok{ (RR  }\SpecialCharTok{{-}} \DecValTok{1}\NormalTok{) }\SpecialCharTok{*} \DecValTok{100}\NormalTok{,}
+    \AttributeTok{pct\_LL =}\NormalTok{ (LL }\SpecialCharTok{{-}} \DecValTok{1}\NormalTok{) }\SpecialCharTok{*} \DecValTok{100}\NormalTok{,}
+    \AttributeTok{pct\_UL =}\NormalTok{ (UL }\SpecialCharTok{{-}} \DecValTok{1}\NormalTok{) }\SpecialCharTok{*} \DecValTok{100}\NormalTok{) }\SpecialCharTok{\%\textgreater{}\%} 
+  \FunctionTok{mutate}\NormalTok{(}\AttributeTok{pct\_ci =} \FunctionTok{sprintf}\NormalTok{(}\StringTok{"(\%.2f, \%.2f)"}\NormalTok{, pct\_LL, pct\_UL),}
+         \AttributeTok{RR\_ci =} \FunctionTok{sprintf}\NormalTok{(}\StringTok{"(\%.2f, \%.2f)"}\NormalTok{, LL, UL)) }
+
+\NormalTok{fbm\_ice\_tbl}
+\end{Highlighting}
+\end{Shaded}
+
+\begin{verbatim}
+##                                    RR           LL         UL      p_value
+## (Intercept)                0.21282033 0.0145371441  1.9773492 1.804647e-01
+## age                        1.00603340 0.9849471208  1.0277831 5.771537e-01
+## sexMale                    0.42839894 0.2000942605  0.9023048 2.572967e-02
+## race_ethHispanic           1.77961006 0.2853435969 19.7133870 5.588932e-01
+## race_ethWhite non-Hispanic 1.13290069 0.2259527908 11.3230413 8.926893e-01
+## sinusitisYes               0.30922698 0.1341086759  0.6732405 2.800725e-03
+## diabetesYes                0.29555785 0.0915443799  0.8072683 1.606896e-02
+## immunocompromiseYes        0.57326588 0.1857917039  1.5292669 2.765406e-01
+## `drug/alc`Yes              0.96298330 0.3107275075  2.7200749 9.449176e-01
+## asthmaYes                  1.40134147 0.2934171406  5.5349460 6.501192e-01
+## traumaYes                  0.91231527 0.3355574229  2.3545851 8.519802e-01
+## prior_surgeryYes           0.78105963 0.2255917854  2.3746828 6.730186e-01
+## surgery_admYes             5.65077893 2.6560913492 12.9899596 2.891820e-06
+## dental_infectionYes        0.88362722 0.1381194722  3.9756855 8.811215e-01
+## `nldo/infection`Yes        0.09735535 0.0006563173  1.4468885 9.489746e-02
+## spaYes                     0.02906729 0.0002255115  0.2261469 3.208369e-05
+##                                pct_chg     pct_LL      pct_UL            pct_ci
+## (Intercept)                -78.7179673 -98.546286   97.734921   (-98.55, 97.73)
+## age                          0.6033397  -1.505288    2.778311     (-1.51, 2.78)
+## sexMale                    -57.1601060 -79.990574   -9.769519   (-79.99, -9.77)
+## race_ethHispanic            77.9610059 -71.465640 1871.338704 (-71.47, 1871.34)
+## race_ethWhite non-Hispanic  13.2900688 -77.404721 1032.304134 (-77.40, 1032.30)
+## sinusitisYes               -69.0773021 -86.589132  -32.675952  (-86.59, -32.68)
+## diabetesYes                -70.4442151 -90.845562  -19.273169  (-90.85, -19.27)
+## immunocompromiseYes        -42.6734118 -81.420830   52.926694   (-81.42, 52.93)
+## `drug/alc`Yes               -3.7016704 -68.927249  172.007491  (-68.93, 172.01)
+## asthmaYes                   40.1341474 -70.658286  453.494601  (-70.66, 453.49)
+## traumaYes                   -8.7684732 -66.444258  135.458506  (-66.44, 135.46)
+## prior_surgeryYes           -21.8940373 -77.440821  137.468283  (-77.44, 137.47)
+## surgery_admYes             465.0778929 165.609135 1198.995957 (165.61, 1199.00)
+## dental_infectionYes        -11.6372780 -86.188053  297.568555  (-86.19, 297.57)
+## `nldo/infection`Yes        -90.2644653 -99.934368   44.688847   (-99.93, 44.69)
+## spaYes                     -97.0932706 -99.977449  -77.385310  (-99.98, -77.39)
+##                                    RR_ci
+## (Intercept)                 (0.01, 1.98)
+## age                         (0.98, 1.03)
+## sexMale                     (0.20, 0.90)
+## race_ethHispanic           (0.29, 19.71)
+## race_ethWhite non-Hispanic (0.23, 11.32)
+## sinusitisYes                (0.13, 0.67)
+## diabetesYes                 (0.09, 0.81)
+## immunocompromiseYes         (0.19, 1.53)
+## `drug/alc`Yes               (0.31, 2.72)
+## asthmaYes                   (0.29, 5.53)
+## traumaYes                   (0.34, 2.35)
+## prior_surgeryYes            (0.23, 2.37)
+## surgery_admYes             (2.66, 12.99)
+## dental_infectionYes         (0.14, 3.98)
+## `nldo/infection`Yes         (0.00, 1.45)
+## spaYes                      (0.00, 0.23)
+\end{verbatim}
+
+\begin{Shaded}
+\begin{Highlighting}[]
+\NormalTok{ice\_tbl }\OtherTok{\textless{}{-}}\NormalTok{ fbm\_ice\_tbl }\SpecialCharTok{\%\textgreater{}\%}
+  \FunctionTok{rownames\_to\_column}\NormalTok{(}\StringTok{"Predictor"}\NormalTok{) }\SpecialCharTok{\%\textgreater{}\%} 
+  \FunctionTok{mutate}\NormalTok{(}\AttributeTok{n\_fbm=} \FunctionTok{nrow}\NormalTok{(}\FunctionTok{model.frame}\NormalTok{(ice.model)),}
+      \AttributeTok{Predictor =} \FunctionTok{recode}\NormalTok{(}
+\NormalTok{        Predictor,}
+        \StringTok{"age"} \OtherTok{=} \StringTok{"Age (per 1yr)"}\NormalTok{,}
+        \StringTok{"sexMale"} \OtherTok{=} \StringTok{"Sex (Male vs Female)"}\NormalTok{,}
+        \StringTok{"race\_ethHispanic"} \OtherTok{=} \StringTok{"HL vs Blk non{-}HL"}\NormalTok{,}
+        \StringTok{"race\_ethWhite non{-}Hispanic"} \OtherTok{=} \StringTok{"White non{-}HL vs Blk non{-}HL)"}\NormalTok{,}
+        \StringTok{"sinusitisYes"} \OtherTok{=} \StringTok{"Sinusitis (Yes vs No)"}\NormalTok{,}
+        \StringTok{"diabetesYes"} \OtherTok{=} \StringTok{"Diabetes (Yes vs No)"}\NormalTok{,}
+        \StringTok{"immunocompromiseYes"} \OtherTok{=} \StringTok{"Immuno (Yes vs No)"}\NormalTok{,}
+        \StringTok{"\textasciigrave{}drug/alc\textasciigrave{}Yes"} \OtherTok{=} \StringTok{"Drugs/Alcohol (Yes vs No)"}\NormalTok{,}
+        \StringTok{"asthmaYes"} \OtherTok{=} \StringTok{"Asthma (Yes vs No)"}\NormalTok{,}
+        \StringTok{"traumaYes"} \OtherTok{=} \StringTok{"Trauma (Yes vs No)"}\NormalTok{,}
+        \StringTok{"prior\_surgeryYes"} \OtherTok{=} \StringTok{"Prior Surgery (Yes vs No)"}\NormalTok{,}
+        \StringTok{"surgery\_admYes"} \OtherTok{=} \StringTok{"Surgery in Admission (Yes vs No)"}\NormalTok{,}
+        \StringTok{"dental\_infectionYes"} \OtherTok{=} \StringTok{"Dental (Yes vs No)"}\NormalTok{,}
+        \StringTok{"\textasciigrave{}nldo/infection\textasciigrave{}Yes"} \OtherTok{=} \StringTok{"NLDO (Yes vs No)"}\NormalTok{,}
+        \StringTok{"spaYes"} \OtherTok{=} \StringTok{"SPA (Yes vs No)"}\NormalTok{,}
+        \StringTok{"oaYes"} \OtherTok{=} \StringTok{"OA (Yes vs No)"}\NormalTok{)) }\SpecialCharTok{\%\textgreater{}\%} 
+  \FunctionTok{select}\NormalTok{(Predictor, n\_fbm, RR, RR\_ci, pct\_chg, p\_value) }\SpecialCharTok{\%\textgreater{}\%}
+  \FunctionTok{filter}\NormalTok{(Predictor }\SpecialCharTok{!=} \StringTok{"(Intercept)"}\NormalTok{) }\SpecialCharTok{\%\textgreater{}\%} 
+  \FunctionTok{gt}\NormalTok{() }\SpecialCharTok{\%\textgreater{}\%}
+  \FunctionTok{cols\_label}\NormalTok{(}
+    \AttributeTok{n\_fbm =} \StringTok{"N"}\NormalTok{, }
+    \AttributeTok{RR =} \StringTok{"OR"}\NormalTok{,}
+    \AttributeTok{pct\_chg =} \StringTok{"\%Δ in Odds"}\NormalTok{,}
+    \AttributeTok{RR\_ci =} \StringTok{"95\% CI"}\NormalTok{,}
+    \AttributeTok{p\_value  =} \StringTok{"P{-}value"}\NormalTok{) }\SpecialCharTok{\%\textgreater{}\%}
+  \FunctionTok{fmt\_number}\NormalTok{(}\AttributeTok{columns =} \FunctionTok{c}\NormalTok{(RR), }\AttributeTok{decimals =} \DecValTok{2}\NormalTok{) }\SpecialCharTok{\%\textgreater{}\%}
+  \FunctionTok{fmt\_number}\NormalTok{(}\AttributeTok{columns =} \FunctionTok{c}\NormalTok{(pct\_chg), }\AttributeTok{decimals =} \DecValTok{1}\NormalTok{) }\SpecialCharTok{\%\textgreater{}\%}
+  \FunctionTok{fmt\_number}\NormalTok{(}\AttributeTok{columns =}\NormalTok{ p\_value, }\AttributeTok{decimals =} \DecValTok{3}\NormalTok{) }\SpecialCharTok{\%\textgreater{}\%}
+    \CommentTok{\# bold specific text}
+  \FunctionTok{tab\_style}\NormalTok{(}\AttributeTok{style =} \FunctionTok{cell\_text}\NormalTok{(}\AttributeTok{weight =} \StringTok{"bold"}\NormalTok{),}
+    \AttributeTok{locations =} \FunctionTok{cells\_stub}\NormalTok{(}\AttributeTok{rows =} \FunctionTok{everything}\NormalTok{())) }\SpecialCharTok{\%\textgreater{}\%}
+  \FunctionTok{tab\_style}\NormalTok{(}\AttributeTok{style =} \FunctionTok{cell\_text}\NormalTok{(}\AttributeTok{weight =} \StringTok{"bold"}\NormalTok{),}
+    \AttributeTok{locations =} \FunctionTok{cells\_column\_labels}\NormalTok{()) }\SpecialCharTok{\%\textgreater{}\%}
+  \CommentTok{\# highlight significant predictors \textless{}0.05}
+  \FunctionTok{tab\_style}\NormalTok{(}\AttributeTok{style =} \FunctionTok{cell\_fill}\NormalTok{(}\AttributeTok{color =} \StringTok{"\#FFF3CD"}\NormalTok{),}
+            \AttributeTok{locations =} \FunctionTok{list}\NormalTok{(}
+              \FunctionTok{cells\_body}\NormalTok{(}\AttributeTok{rows =}\NormalTok{ p\_value }\SpecialCharTok{\textless{}} \FloatTok{0.05}\NormalTok{),}
+              \FunctionTok{cells\_stub}\NormalTok{(}\AttributeTok{rows =}\NormalTok{ p\_value }\SpecialCharTok{\textless{}} \FloatTok{0.05}\NormalTok{))) }\SpecialCharTok{\%\textgreater{}\%} 
+  \CommentTok{\# p{-}value formatting like your other tables}
+  \FunctionTok{text\_transform}\NormalTok{(}
+    \AttributeTok{locations =} \FunctionTok{cells\_body}\NormalTok{(}\AttributeTok{columns =}\NormalTok{ p\_value),}
+    \AttributeTok{fn =} \ControlFlowTok{function}\NormalTok{(x) }\FunctionTok{ifelse}\NormalTok{(}\FunctionTok{as.numeric}\NormalTok{(x) }\SpecialCharTok{\textless{}} \FloatTok{0.001}\NormalTok{, }\StringTok{"\textless{}0.001"}\NormalTok{,}
+                            \FunctionTok{format}\NormalTok{(}\FunctionTok{round}\NormalTok{(}\FunctionTok{as.numeric}\NormalTok{(x), }\DecValTok{3}\NormalTok{), }\AttributeTok{nsmall =} \DecValTok{3}\NormalTok{))) }\SpecialCharTok{\%\textgreater{}\%}
+  \FunctionTok{tab\_options}\NormalTok{(}\AttributeTok{table.font.size =} \StringTok{"small"}\NormalTok{) }\SpecialCharTok{\%\textgreater{}\%}
+  \FunctionTok{tab\_source\_note}\NormalTok{(}
+    \AttributeTok{source\_note =} \StringTok{"\%Δ in Odds represents percent change in the odds of needing surgery}
+\StringTok{    in the predictor (computed as (OR − 1) × 100). Negative values indicate lower}
+\StringTok{    odds of having an ICE."}\NormalTok{) }\SpecialCharTok{\%\textgreater{}\%} 
+  \FunctionTok{tab\_header}\NormalTok{(}
+    \AttributeTok{title =} \StringTok{"Factors Associated with ICE Among Adults Admitted for OC"}\NormalTok{,}
+    \AttributeTok{subtitle =} \StringTok{"Firth Logistic Regression Analysis"}\NormalTok{) }\SpecialCharTok{\%\textgreater{}\%} 
+  \FunctionTok{tab\_options}\NormalTok{(}
+    \AttributeTok{table.font.size =} \StringTok{"small"}\NormalTok{,}
+    \CommentTok{\#heading.align = "left",}
+    \AttributeTok{data\_row.padding =} \FunctionTok{px}\NormalTok{(}\DecValTok{3}\NormalTok{),}
+    \AttributeTok{table.width =} \FunctionTok{pct}\NormalTok{(}\DecValTok{85}\NormalTok{),}
+    \AttributeTok{table.border.top.width =} \FunctionTok{px}\NormalTok{(}\DecValTok{2}\NormalTok{),}
+    \AttributeTok{table.border.bottom.width =} \FunctionTok{px}\NormalTok{(}\DecValTok{2}\NormalTok{))}
+
+\NormalTok{ice\_tbl}
+\end{Highlighting}
+\end{Shaded}
+
+\begin{table}[t]
+\caption*{
+{\fontsize{20}{25}\selectfont  Factors Associated with ICE Among Adults Admitted for OC\small } \\ 
+{\fontsize{14}{17}\selectfont  Firth Logistic Regression Analysis\small }
+} 
+\begin{tabular*}{0.85\linewidth}{@{\extracolsep{\fill}}lrrrrr}
+\toprule
+{\bfseries Predictor} & N & OR & 95\% CI & \%\ensuremath{\Delta} in Odds & P-value \\ 
+\midrule\addlinespace[2.5pt]
+Age (per 1yr) & 297 & 1.01 & (0.98, 1.03) & 0.6 & 0.577 \\ 
+{\cellcolor[HTML]{FFF3CD}{Sex (Male vs Female)}} & {\cellcolor[HTML]{FFF3CD}{297}} & {\cellcolor[HTML]{FFF3CD}{0.43}} & {\cellcolor[HTML]{FFF3CD}{(0.20, 0.90)}} & {\cellcolor[HTML]{FFF3CD}{-57.2}} & {\cellcolor[HTML]{FFF3CD}{0.026}} \\ 
+HL vs Blk non-HL & 297 & 1.78 & (0.29, 19.71) & 78.0 & 0.559 \\ 
+White non-HL vs Blk non-HL) & 297 & 1.13 & (0.23, 11.32) & 13.3 & 0.893 \\ 
+{\cellcolor[HTML]{FFF3CD}{Sinusitis (Yes vs No)}} & {\cellcolor[HTML]{FFF3CD}{297}} & {\cellcolor[HTML]{FFF3CD}{0.31}} & {\cellcolor[HTML]{FFF3CD}{(0.13, 0.67)}} & {\cellcolor[HTML]{FFF3CD}{-69.1}} & {\cellcolor[HTML]{FFF3CD}{0.003}} \\ 
+{\cellcolor[HTML]{FFF3CD}{Diabetes (Yes vs No)}} & {\cellcolor[HTML]{FFF3CD}{297}} & {\cellcolor[HTML]{FFF3CD}{0.30}} & {\cellcolor[HTML]{FFF3CD}{(0.09, 0.81)}} & {\cellcolor[HTML]{FFF3CD}{-70.4}} & {\cellcolor[HTML]{FFF3CD}{0.016}} \\ 
+Immuno (Yes vs No) & 297 & 0.57 & (0.19, 1.53) & -42.7 & 0.277 \\ 
+Drugs/Alcohol (Yes vs No) & 297 & 0.96 & (0.31, 2.72) & -3.7 & 0.945 \\ 
+Asthma (Yes vs No) & 297 & 1.40 & (0.29, 5.53) & 40.1 & 0.650 \\ 
+Trauma (Yes vs No) & 297 & 0.91 & (0.34, 2.35) & -8.8 & 0.852 \\ 
+Prior Surgery (Yes vs No) & 297 & 0.78 & (0.23, 2.37) & -21.9 & 0.673 \\ 
+{\cellcolor[HTML]{FFF3CD}{Surgery in Admission (Yes vs No)}} & {\cellcolor[HTML]{FFF3CD}{297}} & {\cellcolor[HTML]{FFF3CD}{5.65}} & {\cellcolor[HTML]{FFF3CD}{(2.66, 12.99)}} & {\cellcolor[HTML]{FFF3CD}{465.1}} & {\cellcolor[HTML]{FFF3CD}{<0.001}} \\ 
+Dental (Yes vs No) & 297 & 0.88 & (0.14, 3.98) & -11.6 & 0.881 \\ 
+NLDO (Yes vs No) & 297 & 0.10 & (0.00, 1.45) & -90.3 & 0.095 \\ 
+{\cellcolor[HTML]{FFF3CD}{SPA (Yes vs No)}} & {\cellcolor[HTML]{FFF3CD}{297}} & {\cellcolor[HTML]{FFF3CD}{0.03}} & {\cellcolor[HTML]{FFF3CD}{(0.00, 0.23)}} & {\cellcolor[HTML]{FFF3CD}{-97.1}} & {\cellcolor[HTML]{FFF3CD}{<0.001}} \\ 
+\bottomrule
+\end{tabular*}
+\begin{minipage}{\linewidth}
+\%\ensuremath{\Delta} in Odds represents percent change in the odds of needing surgery
+    in the predictor (computed as (OR \ensuremath{-} 1) \texttimes 100). Negative values indicate lower
+    odds of having an ICE.\\
+\end{minipage}
+\end{table}
+
+\protect\phantomsection\label{refs}
+\begin{CSLReferences}{1}{0}
+\bibitem[\citeproctext]{ref-brizredon2025mixture}
+Briz-Redón, Á., Corberán-Vallet, A., Iftimi, A., \& Íñiguez, C. (2025). A mixture of distributed lag non-linear models to account for spatially heterogeneous exposure--lag--response associations. Retrieved from \url{https://doi.org/10.48550/arXiv.2512.01508}
+
+\bibitem[\citeproctext]{ref-gasparrini2025dlnm}
+Gasparrini, A. (2025). \emph{Dlnm: Distributed lag non-linear models}. Comprehensive R Archive Network (CRAN). Retrieved from \url{https://cran.r-project.org/web/packages/dlnm/dlnm.pdf}
+
+\bibitem[\citeproctext]{ref-luong2025dlnmworkshop}
+Luong, N. T. (2025). Distributed lag non-linear models (DLNM). \url{https://ntluong95.quarto.pub/gothenburg_ws2025/2-dlnm/dlnm.html}.
+
+\bibitem[\citeproctext]{ref-openai2025}
+OpenAI. (2025). ChatGPT. Retrieved from \url{https://chat.openai.com/}
+
+\bibitem[\citeproctext]{ref-shafqat2025dlnm}
+Shafqat, A., \& Park, E. (2025). \href{https://doi.org/10.1029/2025GH001608}{Broad applications of distributed lag non-linear model in public health: A comprehensive review}. \emph{GeoHealth}, \emph{9}, e2025GH001608.
+
+\end{CSLReferences}
+
+\end{document}
